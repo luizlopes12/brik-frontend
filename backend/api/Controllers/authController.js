@@ -5,7 +5,7 @@ require('dotenv').config()
 const express = require('express')
 const e = require('express')
 class authController{
-    static userRegistration = async(req, res) => {
+    static userRegistration = async (req, res) => {
         const { userName, email, phone, password } = req.body
         // insert on db
         let verifyData = await User.findOne({
@@ -23,8 +23,9 @@ class authController{
                 password: encryptedPass,
                 admin: false
             })
-            let token = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, { expiresIn: 30000})
-            res.status(200).json({email, userName, token})
+            let token = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, { expiresIn: 4000})
+            let refreshToken = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, { expiresIn: 500000})
+            res.status(200).json({email, userName, token, refreshToken})
         }else if(verifyData?.email){
             res.status(406).json({message: 'Usuário já cadastrado'})
         }else{
@@ -41,8 +42,9 @@ class authController{
               })
               bcrypt.compare(password, verifyData.password, (err, result) => {
                 if(result){
-                    let token = jwt.sign({id: verifyData.id}, process.env.JWT_SECRET, { expiresIn: 30000})
-                    res.status(200).json({name: verifyData.name, email: verifyData.email, token})
+                    let token = jwt.sign({id: verifyData.id}, process.env.JWT_SECRET, { expiresIn: '1h'})
+                    let refreshToken = jwt.sign({id: verifyData.id}, process.env.JWT_SECRET, { expiresIn: '10d'})
+                    res.status(200).json({name: verifyData.name, email: verifyData.email, token, refreshToken})
                   }else{
                     res.status(403).json({message: 'Email ou senha inválidos'})
                   }
