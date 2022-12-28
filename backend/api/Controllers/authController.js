@@ -24,7 +24,7 @@ class authController{
             })
             let token = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, { expiresIn: 4000})
             let refreshToken = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, { expiresIn: 500000})
-            res.status(200).json({email, userName, token, refreshToken})
+            res.status(200).json({email, name: userName, phone, token, refreshToken})
         }else if(verifyData?.email){
             res.status(406).json({message: 'Usuário já cadastrado'})
         }else{
@@ -43,7 +43,7 @@ class authController{
                 if(result){
                     let token = jwt.sign({id: verifyData.id}, process.env.JWT_SECRET, { expiresIn: '1h'})
                     let refreshToken = jwt.sign({id: verifyData.id}, process.env.JWT_SECRET, { expiresIn: '10d'})
-                    res.status(200).json({name: verifyData.name, email: verifyData.email, token, refreshToken})
+                    res.status(200).json({name: verifyData.name, email: verifyData.email, phone: verifyData.phone, token, refreshToken})
                   }else{
                     res.status(403).json({message: 'Email ou senha inválidos'})
                   }
