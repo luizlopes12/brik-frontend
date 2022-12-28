@@ -2,8 +2,7 @@ const User = require('../Models/User.js')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
-const express = require('express')
-const e = require('express')
+
 class authController{
     static userRegistration = async (req, res) => {
         const { userName, email, phone, password } = req.body
