@@ -6,7 +6,7 @@ const Partner = require('../Models/Partner.js')
 
 // to do: crud divisions, crud lots and updates in lot views and lotQuantity inside Division model
 
-class divisionsController {
+class divisionsController { 
     static listDivisionsAndTheirLots = async(req, res) =>{
         let divisionsList = await Division.findAll({
             include: [{
