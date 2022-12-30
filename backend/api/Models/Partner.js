@@ -18,7 +18,7 @@ const Partner = db.connection.define('Partners', {
 
 Partner.belongsTo(Lot, {
     constraint: true,
-    foreignKey: 'idLot'
+    foreignKey: 'idLote'
 })
 
 module.exports = Partner

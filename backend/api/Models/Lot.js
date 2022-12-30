@@ -1,7 +1,7 @@
 const db = require('../config/database.js')
 const Division = require('./Division')
 
-const Lot = db.connection.define('Lots', {
+const Lot = db.connection.define('Lotes', {
     name: {
         type: db.Sequelize.STRING,
         required: true
@@ -42,10 +42,7 @@ const Lot = db.connection.define('Lots', {
     }
 })
 
-Lot.belongsTo(Division, {
-    constraint: true,
-    foreignKey: 'idLoteamento'
-})
+Division.hasMany(Lot,{as: 'lotes', foreignKey: 'idLoteamento'})
 
 module.exports = Lot
 

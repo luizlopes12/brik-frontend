@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
-class authController{
+class authController {
     static userRegistration = async (req, res) => {
         const { userName, email, phone, password } = req.body
         // insert on db

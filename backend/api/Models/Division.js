@@ -1,6 +1,6 @@
 const db = require('../config/database.js')
 
-const Division = db.connection.define('Divisions', {
+const Division = db.connection.define('loteamentos', {
     name: {
         type: db.Sequelize.STRING,
         required: true
@@ -23,6 +23,7 @@ const Division = db.connection.define('Divisions', {
         required: false,
     }
 })
+
 
 module.exports = Division
 

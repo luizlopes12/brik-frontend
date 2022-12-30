@@ -1,7 +1,7 @@
 const db = require('../config/database.js')
 const Lot = require('./Lot')
 
-const LotImage = db.connection.define('LotImages', {
+const LotImage = db.connection.define('LoteImages', {
     imageUrl: {
         type: db.Sequelize.STRING,
         required: true,
@@ -10,7 +10,7 @@ const LotImage = db.connection.define('LotImages', {
 
 LotImage.belongsTo(Lot, {
     constraint: true,
-    foreignKey: 'idLot'
+    foreignKey: 'idLote'
 })
 
 module.exports = LotImage
