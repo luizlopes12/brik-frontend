@@ -70,4 +70,5 @@ class divisionsController {
 
     }
 }
+
 module.exports = divisionsController
