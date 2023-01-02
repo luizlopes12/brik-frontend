@@ -72,11 +72,11 @@ class divisionsController {
         }
     }
     static deleteDivision = async(req, res) =>{
-        console.log('a')
         let {id: divisionId} = req.params
         console.log(divisionId)
         let divisionSelected = await Division.destroy({where: {id: divisionId}})
-        if(divisionSelected.length == 1){
+        console.log(divisionSelected)
+        if(divisionSelected){
             res.status(200).json({message: 'Loteamento excluído com sucesso.'})
         }else{
             res.status(404).json({message: 'Loteamento não encontrado'})
