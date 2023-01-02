@@ -5,7 +5,6 @@ const LotImage = require('../Models/LotImage.js')
 const Partner = require('../Models/Partner.js')
 
 // to do: crud divisions, crud lots and updates in lot views and lotQuantity inside Division model
-
 class divisionsController { 
     static listDivisionsAndTheirLots = async(req, res) =>{
         let divisionsList = await Division.findAll({
@@ -22,7 +21,13 @@ class divisionsController {
         }
     }
     static listDivisionById = async(req, res) =>{
-
+        let {id: divisionId} = req.params
+        let divisionSelected = await Division.findAll({where: {id: divisionId}})
+        if(divisionSelected.length == 1){
+            res.status(200).json(divisionSelected)
+        }else{
+            res.status(404).json({message: 'Loteamento não encontrado'})
+        }
     }
     static addNewDivision = async (req, res) =>{
         // Logo and blueprint will be a imgur url to the image
@@ -67,7 +72,15 @@ class divisionsController {
         }
     }
     static deleteDivision = async(req, res) =>{
-
+        console.log('a')
+        let {id: divisionId} = req.params
+        console.log(divisionId)
+        let divisionSelected = await Division.destroy({where: {id: divisionId}})
+        if(divisionSelected.length == 1){
+            res.status(200).json({message: 'Loteamento excluído com sucesso.'})
+        }else{
+            res.status(404).json({message: 'Loteamento não encontrado'})
+        }
     }
 }
 

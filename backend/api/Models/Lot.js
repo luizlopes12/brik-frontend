@@ -42,7 +42,7 @@ const Lot = db.connection.define('Lotes', {
     }
 })
 
-Division.hasMany(Lot,{as: 'lotes', foreignKey: 'idLoteamento'})
+Division.hasMany(Lot, {as: 'lotes', foreignKey: 'idLoteamento', onDelete: 'cascade', hooks: true})
 
 module.exports = Lot
 

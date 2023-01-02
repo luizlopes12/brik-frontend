@@ -2,6 +2,8 @@
 const express = require('express')
 const divisionsController = require('../Controllers/divisionsController.js')
 const router = express.Router()
+const jwtAuth = require('../middlewares/jwtAuth.js')
+// Remind: add jwt auth in all of these routes
 
 router
 .get('/divisions/list', divisionsController.listDivisionsAndTheirLots)
