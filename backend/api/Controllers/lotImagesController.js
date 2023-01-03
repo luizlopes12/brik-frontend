@@ -1,11 +1,8 @@
-const Lot = require('../Models/Lot.js')
 const LotImage = require('../Models/LotImage.js')
 require('dotenv').config()
 
-// to do: crud lots, list lots data with their partners, images and data about their division
 class lotImagesController { 
     static addImage = async (req, res) =>{
-        // to do: receive the lot images, upload to imgur and store urls in database
             let { url } = req.body
             let { id } = req.params
             if(!url){
