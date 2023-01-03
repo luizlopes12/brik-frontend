@@ -8,16 +8,17 @@ const LotImage = db.connection.define('LoteImages', {
     }
 })
 
-LotImage.belongsTo(Lot, {
-    constraint: true,
-    foreignKey: 'idLote'
-})
+// LotImage.belongsTo(Lot, {
+//     constraint: true,
+//     foreignKey: 'idLote'
+// })
+Lot.hasMany(LotImage, {as: 'loteImages', foreignKey: 'idLote', onDelete: 'cascade', hooks: true})
 
 module.exports = LotImage
 
 // LotImage.sync({force: true})
 
 // LotImage.create({
-//     imageUrl: 'AAA',
-//     idLot: 1
+//     imageUrl: 'https://i.imgur.com/Urn.png',
+//     idLote: 4
 // })

@@ -17,8 +17,6 @@ class lotsController {
             finalPrice,
             description,
         } = req.body
-        // to do: receive the lot images, upload to imgur and store urls in database
-        
     }
     static listLots = async (req, res) =>{
         

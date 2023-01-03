@@ -49,8 +49,8 @@ module.exports = Lot
 // Lot.sync({force: true})
 
 // Lot.create({
-//     name: 'Teste',
+//     name: 'TestBBBBe',
 //     location: 'AAAA',
 //     metrics: '25m',
-//     idLoteamento: 1
+//     idLoteamento: 3
 // })
