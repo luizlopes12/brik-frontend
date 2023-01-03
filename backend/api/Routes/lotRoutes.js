@@ -7,5 +7,6 @@ const jwtAuth = require('../middlewares/jwtAuth.js')
 
 router
 .get('/lots/list', lotsController.listLots)
+.get('/lots/list/:id', lotsController.listLotById)
 
 module.exports = router

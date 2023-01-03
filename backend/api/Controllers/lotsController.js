@@ -6,16 +6,30 @@ const Partner = require('../Models/Partner.js')
 
 // to do: crud lots, list lots data with their partners, images and data about their division
 class lotsController { 
-    static addLot = () =>{
+    static addLot = async (req, res) =>{
+        // to do: req lot data and add on database, to think about how relate the images and partners data to each lot
+        let {
+            name, 
+            lotType, 
+            location, 
+            metrics, 
+            basePrice,
+            finalPrice,
+            description,
+        } = req.body
+        // to do: receive the lot images, upload to imgur and store urls in database
+        
+    }
+    static listLots = async (req, res) =>{
+        
+    }
+    static listLotById = async (req, res) =>{
 
     }
-    static listLots = () =>{
+    static updateLots = async (req, res) =>{
         
     }
-    static updateLots = () =>{
-        
-    }
-    static deleteLots = () =>{
+    static deleteLots = async (req, res) =>{
 
     }
 }
