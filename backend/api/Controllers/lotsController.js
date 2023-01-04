@@ -37,11 +37,18 @@ class lotsController {
     }
     static listLots = async (req, res) =>{
         let list = await Lot.findAll({
-            include: [{
+            include: [
+            {
                 model: LotImage,
                 as: 'loteImages',
                 required: false               
-            }]
+            },
+            {
+                model: Partner,
+                as: 'lotePartners',
+                required: false 
+            }
+        ]
         })
         if(list){
             res.status(200).json(list)

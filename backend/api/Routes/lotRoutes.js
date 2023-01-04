@@ -2,6 +2,8 @@
 const express = require('express')
 const lotImagesController = require('../Controllers/lotImagesController.js')
 const lotsController = require('../Controllers/lotsController.js')
+const lotPartnersController = require('../Controllers/lotPartnersController.js')
+
 const router = express.Router()
 const jwtAuth = require('../middlewares/jwtAuth.js')
 // Remind: add jwt auth in all of these routes
@@ -14,6 +16,8 @@ router
 .delete('/lots/delete/:id', lotsController.deleteLot)
 .post('/lots/:id/images/add', lotImagesController.addImage)
 .delete('/lots/images/delete/:id', lotImagesController.deleteImage)
-.post('/lots/:id/partners')
+.post('/lots/:id/partners/add', lotPartnersController.addPartner)
+.patch('/lots/partners/edit/:id', lotPartnersController.updatePartner)
+.delete('/lots/partners/delete/:id', lotPartnersController.deletePartner)
 
 module.exports = router

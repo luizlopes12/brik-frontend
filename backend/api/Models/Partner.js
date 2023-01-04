@@ -16,18 +16,16 @@ const Partner = db.connection.define('Partners', {
     },
 })
 
-Partner.belongsTo(Lot, {
-    constraint: true,
-    foreignKey: 'idLote'
-})
+Lot.hasMany(Partner, {as: 'lotePartners', foreignKey: 'idLote', onDelete: 'cascade', hooks: true})
+
 
 module.exports = Partner
 
 // Partner.sync({force: true})
 
 // Partner.create({
-//     name: 'Luiz',
+//     name: 'Berreca',
 //     CPF: '444444444444',
 //     percentage: 5.5,
-//     idLot: 1
+//     idLote: 6
 // })
