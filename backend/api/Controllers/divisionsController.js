@@ -22,7 +22,12 @@ class divisionsController {
     }
     static listDivisionById = async(req, res) =>{
         let {id: divisionId} = req.params
-        let divisionSelected = await Division.findAll({where: {id: divisionId}})
+        let divisionSelected = await Division.findAll({where: {id: divisionId},            
+            include: [{
+            model: Lot,
+            as: 'lotes',
+            required: true
+           }]})
         if(divisionSelected.length == 1){
             res.status(200).json(divisionSelected)
         }else{

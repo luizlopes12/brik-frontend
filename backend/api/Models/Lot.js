@@ -6,6 +6,11 @@ const Lot = db.connection.define('Lotes', {
         type: db.Sequelize.STRING,
         required: true
     },
+    thumb: {
+        type: db.Sequelize.STRING,
+        required: false,
+        defaultValue: 'https://i.imgur.com/YQOzMWA.png'
+    },
     lotType: {
         type: db.Sequelize.STRING,
         required: false,

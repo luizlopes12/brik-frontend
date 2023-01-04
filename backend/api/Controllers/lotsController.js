@@ -11,6 +11,7 @@ class lotsController {
         let {
             name, 
             lotType, 
+            thumb,
             location, 
             metrics, 
             basePrice,
@@ -23,6 +24,7 @@ class lotsController {
             let newLot = await Lot.create({
                 name, 
                 lotType, 
+                thumb,
                 location, 
                 metrics, 
                 basePrice,
@@ -58,7 +60,19 @@ class lotsController {
     }
     static listLotById = async (req, res) =>{
         let { id } = req.params
-        let list = await Lot.findAll({where: {id}})
+        let list = await Lot.findAll({where: {id},
+            include: [
+            {
+                model: LotImage,
+                as: 'loteImages',
+                required: false               
+            },
+            {
+                model: Partner,
+                as: 'lotePartners',
+                required: false 
+            }
+        ]})
         if(list){
             res.status(200).json(list)
         }else{
@@ -68,7 +82,8 @@ class lotsController {
     static updateLot = async (req, res) =>{
         let { id } = req.params
         let {
-            name, 
+            name,
+            thumb,
             lotType, 
             location, 
             metrics, 
@@ -79,6 +94,7 @@ class lotsController {
         } = req.body
         let updateLot = await Lot.update({
             name,
+            thumb,
             lotType,
             location,
             metrics, 
