@@ -14,5 +14,6 @@ router
 .delete('/lots/delete/:id', lotsController.deleteLot)
 .post('/lots/:id/images/add', lotImagesController.addImage)
 .delete('/lots/images/delete/:id', lotImagesController.deleteImage)
+.post('/lots/:id/partners')
 
 module.exports = router

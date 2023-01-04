@@ -36,16 +36,70 @@ class lotsController {
         }
     }
     static listLots = async (req, res) =>{
-        
+        let list = await Lot.findAll({
+            include: [{
+                model: LotImage,
+                as: 'loteImages',
+                required: false               
+            }]
+        })
+        if(list){
+            res.status(200).json(list)
+        }else{
+            res.status(500).json({message: 'Erro no servidor.'})
+        }
     }
     static listLotById = async (req, res) =>{
-
+        let { id } = req.params
+        let list = await Lot.findAll({where: {id}})
+        if(list){
+            res.status(200).json(list)
+        }else{
+            res.status(500).json({message: 'Erro no servidor.'})
+        }
     }
     static updateLot = async (req, res) =>{
-        
+        let { id } = req.params
+        let {
+            name, 
+            lotType, 
+            location, 
+            metrics, 
+            basePrice,
+            finalPrice,
+            description,
+            idLoteamento
+        } = req.body
+        let updateLot = await Lot.update({
+            name,
+            lotType,
+            location,
+            metrics, 
+            basePrice,
+            finalPrice,
+            description,
+            idLoteamento
+        },
+        {
+            where: { id }
+        }
+        )
+        if(updateLot){
+            let updatedLot = await Lot.findByPk(id)
+            res.status(200).json({message: 'Lote atualizado com sucesso', data: updatedLot})
+        }else{
+            res.status(200).json({message: 'Erro ao atualizar o lote'})
+        }
     }
     static deleteLot = async (req, res) =>{
-
+        let { id } = req.params
+        let list = await Lot.destroy({where: {id}})
+        if(list){
+            let newList = await Lot.findAll({})
+            res.status(200).json({message: 'Lote excluido com sucesso', newList})
+        }else{
+            res.status(500).json({message: 'Erro no servidor.'})
+        }
     }
 }
 

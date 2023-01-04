@@ -20,5 +20,5 @@ module.exports = LotImage
 
 // LotImage.create({
 //     imageUrl: 'https://i.imgur.com/Urn.png',
-//     idLote: 4
+//     idLote: 6
 // })
