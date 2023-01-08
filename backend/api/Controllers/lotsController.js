@@ -71,7 +71,7 @@ class lotsController {
                 model: Partner,
                 as: 'lotePartners',
                 required: false 
-            }
+            },
         ]})
         if(list){
             res.status(200).json(list)

@@ -2,7 +2,6 @@
 const Lot = require('../Models/Lot.js')
 const Partner = require('../Models/Partner.js')
 
-// to do: crud lots, list lots data with their partners, images and data about their division
 class lotPartnersController { 
     static addPartner = async (req, res) =>{
         let { name, CPF, percentage } = req.body
