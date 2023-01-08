@@ -11,8 +11,13 @@ class divisionsController {
             include: [{
               model: Lot,
               as: 'lotes',
-              required: true
+              required: true,
+              include: [{
+                model: LotImage,
+                as: 'loteImages',
+                required: true
              }]
+            }]
           })
         if(divisionsList){
             res.status(200).json(divisionsList)
