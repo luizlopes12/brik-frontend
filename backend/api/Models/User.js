@@ -20,7 +20,28 @@ const User = db.connection.define('Users', {
     admin:{
         type: db.Sequelize.BOOLEAN,
         defaultValue: false
-    }
+    },
+    // Permissions    
+    editDivisions:{
+        type: db.Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    editLots:{
+        type: db.Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    editPartners:{
+        type: db.Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    editBanners:{
+        type: db.Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    editTaxes:{
+        type: db.Sequelize.BOOLEAN,
+        defaultValue: false
+    },
 })
 
 module.exports = User
