@@ -26,7 +26,8 @@ module.exports = Banner
 
 // Banner.sync({force: true});
 
-// Division.create({
+// Banner.create({
 //     name: 'Teste',
-//     location: 'AAAA',
+//     link: 'www.github.com/luizlopes12',
+//     imageUrl: 'www.github.com/luizlopes12.png'
 // })
