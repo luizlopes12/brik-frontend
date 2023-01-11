@@ -11,11 +11,11 @@ class divisionsController {
             include: [{
               model: Lot,
               as: 'lotes',
-              required: true,
+              required: false,
               include: [{
                 model: LotImage,
                 as: 'loteImages',
-                required: true
+                required: false
              }]
             }]
           })
@@ -29,10 +29,15 @@ class divisionsController {
         let {id: divisionId} = req.params
         let divisionSelected = await Division.findAll({where: {id: divisionId},            
             include: [{
-            model: Lot,
-            as: 'lotes',
-            required: true
-           }]})
+                model: Lot,
+                as: 'lotes',
+                required: false,
+                include: [{
+                  model: LotImage,
+                  as: 'loteImages',
+                  required: false
+               }]
+              }]})
         if(divisionSelected.length == 1){
             res.status(200).json(divisionSelected)
         }else{

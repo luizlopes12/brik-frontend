@@ -27,5 +27,5 @@ module.exports = Partner
 //     name: 'Berreca',
 //     CPF: '444444444444',
 //     percentage: 5.5,
-//     idLote: 6
+//     idLote: 2
 // })

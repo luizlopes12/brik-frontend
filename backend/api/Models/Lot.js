@@ -31,10 +31,10 @@ const Lot = db.connection.define('Lotes', {
         type: db.Sequelize.STRING,
         required: false,
     },
-    status:{
-        type: db.Sequelize.STRING,
+    isAvaible:{
+        type: db.Sequelize.BOOLEAN,
         required: false,
-        defaultValue: 'Disponível',
+        defaultValue: true,
     },
     userViews: {
         type: db.Sequelize.INTEGER,
@@ -52,5 +52,5 @@ module.exports = Lot
 //     name: 'TestBBBBe',
 //     location: 'AAAA',
 //     metrics: '25m',
-//     idLoteamento: 3
+//     idLoteamento: 1
 // })
