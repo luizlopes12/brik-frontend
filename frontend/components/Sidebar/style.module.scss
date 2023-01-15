@@ -36,17 +36,18 @@
                stroke: $green_color-3;
             }
             span{
-               font-weight: 700;
+               font-weight: 500;
             }
             .navText{
-               font-weight: 700;
+               font-weight: 500;
             }
          }
          a{
             display: flex;
-            padding: 12px 20px;
+            padding: 12px 40px 12px 20px;
             align-items: center;
             gap: 5px;
+            max-width: 100%;
             img{
                   stroke: red;
             }

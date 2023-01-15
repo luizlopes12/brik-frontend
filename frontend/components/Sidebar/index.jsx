@@ -73,8 +73,8 @@ const Sidebar = () => {
       </div>
       <nav className={style.nav}>
         <ul>
-          <li className={router.pathname == '/admin/overview' ? style.active : null}>
-            <Link href='/admin/overview'>
+          <li className={router.pathname == '/admin' ? style.active : null}>
+            <Link href='/admin'>
             <OverviewIconSvg/>
             <span className={style.navText}>
             Overview
