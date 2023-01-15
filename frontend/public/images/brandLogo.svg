@@ -1,0 +1,32 @@
+<svg width="205" height="105" viewBox="0 0 205 105" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_24_513)">
+<circle cx="30.5" cy="53.5" r="24" stroke="#658F01" stroke-width="13"/>
+<path d="M0 13H14V41C14 46.5228 9.52285 51 4 51H0V13Z" fill="#658F01"/>
+<mask id="mask0_24_513" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="66" y="22" width="41" height="56">
+<mask id="path-3-outside-1_24_513" maskUnits="userSpaceOnUse" x="66" y="22" width="41" height="56" fill="black">
+<rect fill="white" x="66" y="22" width="41" height="56"/>
+<path d="M94 65C92.0302 65 90.0796 64.612 88.2597 63.8582C86.4399 63.1044 84.7863 61.9995 83.3934 60.6066C82.0005 59.2137 80.8956 57.5601 80.1418 55.7403C79.388 53.9204 79 51.9698 79 50C79 48.0302 79.388 46.0796 80.1418 44.2597C80.8956 42.4399 82.0005 40.7863 83.3934 39.3934C84.7863 38.0005 86.4399 36.8956 88.2598 36.1418C90.0796 35.388 92.0302 35 94 35L94 50V65Z"/>
+</mask>
+<path d="M94 65C92.0302 65 90.0796 64.612 88.2597 63.8582C86.4399 63.1044 84.7863 61.9995 83.3934 60.6066C82.0005 59.2137 80.8956 57.5601 80.1418 55.7403C79.388 53.9204 79 51.9698 79 50C79 48.0302 79.388 46.0796 80.1418 44.2597C80.8956 42.4399 82.0005 40.7863 83.3934 39.3934C84.7863 38.0005 86.4399 36.8956 88.2598 36.1418C90.0796 35.388 92.0302 35 94 35L94 50V65Z" stroke="black" stroke-width="24.4" mask="url(#path-3-outside-1_24_513)"/>
+</mask>
+<g mask="url(#mask0_24_513)">
+<rect x="66" y="17" width="28" height="25" fill="#658F01"/>
+</g>
+<rect x="68" y="42" width="13.3" height="40" fill="#658F01"/>
+<rect x="88" y="85" width="31" height="10" fill="#658F01"/>
+<rect x="128" y="82" width="58" height="13" transform="rotate(-90 128 82)" fill="#658F01"/>
+<rect x="151" y="82" width="72" height="13" transform="rotate(-90 151 82)" fill="#658F01"/>
+<mask id="mask1_24_513" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="161" y="0" width="60" height="104">
+<rect x="161" y="50.9117" width="72" height="12" transform="rotate(-45 161 50.9117)" fill="white"/>
+<rect x="169.784" y="44.4087" width="72" height="12" transform="rotate(45 169.784 44.4087)" fill="white"/>
+</mask>
+<g mask="url(#mask1_24_513)">
+<rect x="154" y="24" width="60" height="58" fill="#658F01"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_24_513">
+<rect width="205" height="105" fill="white"/>
+</clipPath>
+</defs>
+</svg>

@@ -15,6 +15,10 @@ a, button {
     cursor: revert;
 }
 
+*, html, body{
+    font-family: 'Inter', sans-serif;
+}
+
 /* Remove list styles (bullets/numbers) */
 ol, ul, menu {
     list-style: none;
