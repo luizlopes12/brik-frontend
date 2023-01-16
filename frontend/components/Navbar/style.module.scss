@@ -1,0 +1,33 @@
+@import '../../styles/colors.scss';
+
+.notificationBar{
+    max-width: 100%;
+    background: $gray_color-6;
+    display: flex;
+    padding: 5px 20px 5px 5px;
+    border-radius: 20px 0px 20px 20px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.userData{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    img{
+        width: 40px;
+    }
+    span{
+        font-size: 1rem;
+    }
+}
+
+.date{
+    font-size: .9rem;
+}
+
+.notifications{
+    img{
+        width: 30px;
+    }
+}

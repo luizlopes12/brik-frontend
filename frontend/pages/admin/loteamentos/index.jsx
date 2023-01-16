@@ -1,8 +1,11 @@
 import React from 'react'
+import Navbar from '../../../components/Navbar'
 
 const Loteamentos = () => {
   return (
-    <div>Loteamentos</div>
+    <>
+    Loteamentos
+    </>
   )
 }
 

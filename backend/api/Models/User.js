@@ -1,6 +1,11 @@
 const db = require('../config/database.js')
 
 const User = db.connection.define('Users', {
+    profileImage:{
+        type: db.Sequelize.STRING,
+        required: false,
+        defaultValue: 'https://i.imgur.com/cwVOOqb.jpg'
+    },
     name: {
         type: db.Sequelize.STRING,
         required: true
