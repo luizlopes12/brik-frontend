@@ -1,0 +1,17 @@
+@import '../../styles/colors.scss';
+
+.searchContent{
+ border-bottom: 2px solid $text-black;
+ display: flex;
+ gap: 5px;
+}
+
+.searchInput{
+    max-width: 150px;
+}
+
+.searchBtn{
+    img{
+        max-width: 25px;
+    }
+}

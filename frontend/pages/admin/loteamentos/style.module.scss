@@ -1,0 +1,48 @@
+@import '../../../styles/mixins.scss';
+
+.loteamentosContainer{
+    display: flex;
+    flex-direction: column;
+    margin-top: 3rem;
+    gap: 3rem;
+}
+.heading{
+    display: flex;
+    min-width: 100%;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.topActions{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px
+}
+
+.dropdownMenu{
+    @include dropDown();
+}
+
+.lotFilters{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+}
+.dropdownsContainer{
+    display: flex;
+    gap: 10px;
+}
+.lotHandleActions{
+    width: 30%;
+    display: flex;
+    gap: 10px;
+    justify-content: center
+}
+.btnTaxes{
+@include actionButton($bg_white-color, $bg_dark-color);
+}
+.btnLot{
+    @include actionButton($text-black, $green_color-2);
+}

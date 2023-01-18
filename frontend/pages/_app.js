@@ -25,7 +25,9 @@ function MyApp({ Component, pageProps }) {
       <Sidebar/>
       <section className={styles.contentContainer}>
       <Navbar/>
+      <section className={styles.content}>
       <Component {...pageProps} />
+      </section>
       </section>
       </main>
       </userContext.Provider>
