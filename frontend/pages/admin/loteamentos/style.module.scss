@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     margin-top: 3rem;
-    gap: 3rem;
+    gap: 2rem;
 }
 .heading{
     display: flex;
@@ -17,7 +17,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 30px
+    gap: 30px;
+    flex-wrap: wrap;
 }
 
 .dropdownMenu{
@@ -29,6 +30,8 @@
     justify-content: space-between;
     align-items: center;
     flex-grow: 1;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 .dropdownsContainer{
     display: flex;
@@ -38,7 +41,8 @@
     width: 30%;
     display: flex;
     gap: 10px;
-    justify-content: center
+    justify-content: center;
+    min-width: 320px;
 }
 .btnTaxes{
 @include actionButton($bg_white-color, $bg_dark-color);
@@ -46,3 +50,113 @@
 .btnLot{
     @include actionButton($text-black, $green_color-2);
 }
+
+.listsContainer{
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    .lotsList{
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-height: calc(100vh - 40vh);
+        overflow-y: scroll;
+        &::-webkit-scrollbar{
+            background: $gray_color-1;
+            border-radius: 5px;
+        }
+        &::-webkit-scrollbar-thumb{
+            background: darken($gray_color-1, 25%);
+            border-radius: 5px;
+        }
+        .lotsListItem{
+            position: relative;
+            display: flex;
+            background: $gray_color-6;
+            flex-grow: 1;
+            padding: 15px;
+            gap: 20px;
+            max-height: 180px;
+            border-radius: 12px 0 0 12px;
+            .lotImage{
+                display: flex;
+                img{
+                    width: 200px;
+                    height: 120px;
+                    border-radius: 8px;
+                    object-fit: cover;
+                }
+            }
+            .lotInfos{
+                display: flex;
+                gap: 20px;
+                align-items: flex-start;
+                padding-top: 1rem;
+            }
+            .lotSpecs{
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                .lotName{
+                    color: $text-black;
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                }
+                .divName{
+                    font-size: 1rem;
+                    font-weight: 300;
+                }
+                .location{
+                    display: flex;
+                    gap: 20px;
+                    span{
+                    display: flex;
+                    align-items: flex-start;
+                        font-weight: 300;
+                        img{
+                            margin-right: 3px;
+                        }
+                    }
+                    sup{
+                        vertical-align: top;
+                        font-size: smaller;
+                    }
+                }
+            }
+            .lotPrice{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                p{
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    color: $text-black;
+                }
+                p:nth-of-type(2){
+                    font-size: .9rem;
+                    font-weight: 300;
+                }
+            }
+        .lotOptionsBtn{
+            transform: rotate(90deg);
+            font-weight: 900;
+            font-size: 1.2rem;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            &:hover{
+                cursor: pointer;
+            }
+        }
+        }
+    }
+    .divisionssList{
+        min-width: 30%;
+        background: $bg_dark-color;
+        border-radius: 8px;
+    }
+}
+
+
+
