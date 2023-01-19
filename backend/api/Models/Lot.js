@@ -20,7 +20,7 @@ const Lot = db.connection.define('Lotes', {
         required: true,
     },
     basePrice: {
-        type: db.Sequelize.REAL,
+        type: db.Sequelize.STRING,
         required: false,
     },
     finalPrice: {

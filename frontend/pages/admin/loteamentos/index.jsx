@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import style from './style.module.scss'
 import SearchInput from '../../../components/SearchInput'
 import HeadingText from '../../../components/HeadingText'
+import formatCurrency from '../../../helpers/formatCurrency'
 
 export async function getStaticProps() {
     const divisionsData = await fetch('http://localhost:8080/divisions/list').then(res => res.json())
@@ -78,8 +79,8 @@ const Loteamentos = ({ divisionsData }) => {
                                     </div>
                                 </div>
                                 <div className={style.lotPrice}>
-                                    <p>R$ {lot.finalPrice}</p>
-                                    <p>R$ {lot.basePrice}</p>
+                                    <p>{formatCurrency(lot.finalPrice)}</p>
+                                    <p>{formatCurrency(lot.basePrice)}</p>
                                 </div>
                                 <button className={style.lotOptionsBtn} onClick={() => alert('Options')}>...</button>
                             </div>
@@ -87,7 +88,7 @@ const Loteamentos = ({ divisionsData }) => {
                     ))}
                 </ul>
                 <ul className={style.divisionssList}>
-                    
+
                 </ul>
             </div>
         </section>
