@@ -209,7 +209,7 @@
                 border-radius: 5px;
             }
             &::-webkit-scrollbar-thumb{
-                background: $green_color-4;
+                background: transparentize($green_color-4, 0.4);
                 border-radius: 5px;
             }
         }

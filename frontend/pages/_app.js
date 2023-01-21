@@ -10,6 +10,7 @@ import LotRegisterPopUp from '../components/LotRegisterPopUp'
 import DivisionRegisterPopUp from '../components/DivisionRegisterPopUp'
 import popUpsContext from '../context/popUpsContext'
 import TaxesEditPopUp from '../components/taxesEditPopUp'
+import DivisionEditPopUp from '../components/DivisionEditPopUp'
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
@@ -21,7 +22,8 @@ function MyApp({ Component, pageProps }) {
   const [popUps, setPopUps] = useState({
     lotRegister: false,
     taxesEdit: false,
-    divisionRegister: false
+    divisionRegister: false,
+    divisionEdit: false,
   }) 
   return (
     router.pathname.includes('/admin') ? (
@@ -35,6 +37,7 @@ function MyApp({ Component, pageProps }) {
       <LotRegisterPopUp/>
       <TaxesEditPopUp/>
       <DivisionRegisterPopUp/>
+      <DivisionEditPopUp/>
       <Sidebar/>
       <section className={styles.contentContainer}>
       <Navbar/>

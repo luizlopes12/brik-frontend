@@ -39,6 +39,9 @@ const Loteamentos = ({ divisionsData }) => {
     const handlePopUps = (e) =>{
         setPopUps((prevState) => ({...prevState, [e.target.name]: !popUps[e.target.name]}))
     }       
+    const handleEditDivision = () => {
+        setPopUps((prevState) => ({...prevState, divisionEdit: true}))
+    }
     /* Side effects */
 
     // useEffect(() =>{
@@ -49,7 +52,7 @@ const Loteamentos = ({ divisionsData }) => {
         <section className={style.loteamentosContainer}>
             <div className={style.heading}>
                 <HeadingText>Lotes e Loteamentos</HeadingText>
-                <SearchInput value={divisionSearch} onChange={(e)=>setDivisionSearch(e.target.value)}/>
+                <SearchInput value={divisionSearch} onChange={(e)=>setDivisionSearch(e.target.value.toLowercase())}/>
             </div>
             <div className={style.topActions}>
                 <div className={style.lotFilters}>
@@ -126,7 +129,7 @@ const Loteamentos = ({ divisionsData }) => {
                 <h2>Loteamentos</h2>
                 <ul className={style.divisionsList}>
                         {divisions.filter(divisionByName => divisionByName.name.includes(divisionSearch)).map((division, key) =>(
-                            <li key={key}>
+                            <li key={key} onClick={handleEditDivision}>
                                 <img src={division.logoUrl} alt="logotipo" />
                                 <div className={style.divInfo}>
                                     <p>{division.name.length > 25 ? division.name.substring(0, 25) + '...': division.name}</p>
