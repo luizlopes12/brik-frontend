@@ -22,6 +22,7 @@ const Loteamentos = ({ divisionsData }) => {
         availability: 'avaible',
     })
     const [lotsSearch, setLotsSearch] = useState('')
+    const [divisionSearch, setDivisionSearch] = useState('')
 
     /* Memos */
     const divisions = useMemo(() =>{
@@ -48,7 +49,7 @@ const Loteamentos = ({ divisionsData }) => {
         <section className={style.loteamentosContainer}>
             <div className={style.heading}>
                 <HeadingText>Lotes e Loteamentos</HeadingText>
-                <SearchInput/>
+                <SearchInput value={divisionSearch} onChange={(e)=>setDivisionSearch(e.target.value)}/>
             </div>
             <div className={style.topActions}>
                 <div className={style.lotFilters}>
@@ -90,7 +91,11 @@ const Loteamentos = ({ divisionsData }) => {
                             <div className={style.lotInfos}>
                                 <div className={style.lotSpecs}>
                                     <span className={style.lotName}>{lot.name}</span>
-                                    <span className={style.divName}>{divisions.find(division => division.id == lot.idLoteamento).name.substring(0, 20) + '...'}</span>
+                                    <span className={style.divName}>{
+                                    divisions.find(division => division.id == lot.idLoteamento).name.length > 20 ?
+                                    divisions.find(division => division.id == lot.idLoteamento).name.substring(0, 20) + '...':
+                                    divisions.find(division => division.id == lot.idLoteamento).name
+                                    }</span>
                                     <div className={style.location}>
                                         <span>
                                         <img src="/images/locationIcon.svg" />
@@ -117,9 +122,21 @@ const Loteamentos = ({ divisionsData }) => {
                         </li>
                     ))}
                 </ul>
-                <ul className={style.divisionssList}>
-
+                <div className={style.divisionsListContainer}>
+                <h2>Loteamentos</h2>
+                <ul className={style.divisionsList}>
+                        {divisions.filter(divisionByName => divisionByName.name.includes(divisionSearch)).map((division, key) =>(
+                            <li key={key}>
+                                <img src={division.logoUrl} alt="logotipo" />
+                                <div className={style.divInfo}>
+                                    <p>{division.name.length > 25 ? division.name.substring(0, 25) + '...': division.name}</p>
+                                    <span>{division.location.length > 25 ? division.location.substring(0, 25) + '...': division.location}</span>
+                                </div>
+                            </li>
+                        ))}
                 </ul>
+                <button className={style.addDivisionBtn} onClick={() => alert('Cadastrar Loteamento')}><img src='/images/plusIcon-green.svg' /> Cadastrar Loteamento</button>
+                </div>
             </div>
         </section>
     )

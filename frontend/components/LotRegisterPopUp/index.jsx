@@ -10,7 +10,7 @@ const LotRegisterPopUp = () => {
   return (
     <div className={ popUps.lotRegister ? style.popUpBackdrop : style.popUpDisabled }>
       <div className={style.popUpWrapper}>
-        AAAAAA
+        
       </div>
     </div>
   )
