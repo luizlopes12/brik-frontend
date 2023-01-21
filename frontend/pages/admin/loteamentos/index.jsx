@@ -37,7 +37,7 @@ const Loteamentos = ({ divisionsData }) => {
         setSelectValues(previousState => ({ ...previousState, [e.target.name]: e.target.value }))
     }
     const handlePopUps = (e) =>{
-        setPopUps({...popUps, [e.target.name]: !popUps[e.target.name]})
+        setPopUps((prevState) => ({...prevState, [e.target.name]: !popUps[e.target.name]}))
     }       
     /* Side effects */
 
@@ -72,7 +72,7 @@ const Loteamentos = ({ divisionsData }) => {
                     <SearchInput value={lotsSearch} onChange={(e)=>setLotsSearch(e.target.value)} />
                 </div>
                 <div className={style.lotHandleActions}>
-                    <button className={style.btnTaxes} onClick={() => alert('Editar juros')}><img src='/images/taxesIcon.svg' />Editar juros</button>
+                    <button className={style.btnTaxes} onClick={handlePopUps} name='taxesEdit'><img src='/images/taxesIcon.svg' />Editar juros</button>
                     <button className={style.btnLot} onClick={handlePopUps} name='lotRegister'><img src='/images/plusIcon.svg' />Cadastrar lote</button>
                 </div>
             </div>
@@ -135,7 +135,7 @@ const Loteamentos = ({ divisionsData }) => {
                             </li>
                         ))}
                 </ul>
-                <button className={style.addDivisionBtn} onClick={() => alert('Cadastrar Loteamento')}><img src='/images/plusIcon-green.svg' /> Cadastrar Loteamento</button>
+                <button className={style.addDivisionBtn} onClick={handlePopUps} name='divisionRegister'><img src='/images/plusIcon-green.svg' /> Cadastrar Loteamento</button>
                 </div>
             </div>
         </section>

@@ -7,7 +7,9 @@ import styles from './style.module.scss'
 import userContext from '../context/userContext'
 import { useState } from 'react'
 import LotRegisterPopUp from '../components/LotRegisterPopUp'
+import DivisionRegisterPopUp from '../components/DivisionRegisterPopUp'
 import popUpsContext from '../context/popUpsContext'
+import TaxesEditPopUp from '../components/taxesEditPopUp'
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
@@ -18,7 +20,8 @@ function MyApp({ Component, pageProps }) {
   })
   const [popUps, setPopUps] = useState({
     lotRegister: false,
-    taxesEdit: false
+    taxesEdit: false,
+    divisionRegister: false
   }) 
   return (
     router.pathname.includes('/admin') ? (
@@ -30,6 +33,8 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <main className={styles.mainContainer}>
       <LotRegisterPopUp/>
+      <TaxesEditPopUp/>
+      <DivisionRegisterPopUp/>
       <Sidebar/>
       <section className={styles.contentContainer}>
       <Navbar/>
