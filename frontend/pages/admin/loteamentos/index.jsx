@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useContext } from 'react'
 import style from './style.module.scss'
 import SearchInput from '../../../components/SearchInput'
 import HeadingText from '../../../components/HeadingText'
 import formatCurrency from '../../../helpers/formatCurrency'
+import popUpsContext from '../../../context/popUpsContext'
 
 export async function getStaticProps() {
     const divisionsData = await fetch('http://localhost:8080/divisions/list').then(res => res.json())
@@ -10,29 +11,49 @@ export async function getStaticProps() {
         props: { divisionsData }
     }
 }
+const Availabilities = [{ name: 'Disponível', value: 'avaible' }, { name: 'Indisponível', value: 'unavaible' }, { name: 'Reservado', value: 'reserved' }]
 
 const Loteamentos = ({ divisionsData }) => {
-    const Availabilities = [{ name: 'Disponível', value: 'avaible' }, { name: 'Indisponível', value: 'unavaible' }, { name: 'Reservado', value: 'reserved' }]
+    /* Contexts */
+    const { popUps, setPopUps } = useContext(popUpsContext)
+    /* States */
     const [selectValues, setSelectValues] = useState({
         division: 'all',
-        availability: 'avaible'
+        availability: 'avaible',
     })
-    const [lotsData, setLotsData] = useState(divisionsData.map((division) => division.lotes).flat())
-    console.log(lotsData)
-    const handleSelectItem = (e) => {
+    const [lotsSearch, setLotsSearch] = useState('')
+
+    /* Memos */
+    const divisions = useMemo(() =>{
+        return divisionsData.flat()
+    },[ divisionsData ])
+    const lotsData = useMemo(() =>{
+        return divisions.map((division) => division.lotes).flat()
+    },[ divisions ])
+    
+    /* Handles */
+    const handleSelectFilters = (e) => {
         setSelectValues(previousState => ({ ...previousState, [e.target.name]: e.target.value }))
     }
+    const handlePopUps = (e) =>{
+        setPopUps({...popUps, [e.target.name]: !popUps[e.target.name]})
+    }       
+    /* Side effects */
+
+    // useEffect(() =>{
+    //     console.log(popUps)
+    // },[popUps])
 
     return (
         <section className={style.loteamentosContainer}>
             <div className={style.heading}>
                 <HeadingText>Lotes e Loteamentos</HeadingText>
-                <SearchInput />
+                <SearchInput/>
             </div>
             <div className={style.topActions}>
                 <div className={style.lotFilters}>
                     <div className={style.dropdownsContainer}>
-                        <select onChange={handleSelectItem} value={selectValues.division} name='division' className={style.dropdownMenu}>
+                        <select onChange={handleSelectFilters} value={selectValues.division} name='division' className={style.dropdownMenu}>
                             <option value='all'>Todos</option>
                             {divisionsData.map((item, index) => (
                                 <>
@@ -40,23 +61,28 @@ const Loteamentos = ({ divisionsData }) => {
                                 </>
                             ))}
                         </select>
-                        <select onChange={handleSelectItem} value={selectValues.availability} name='availability' className={style.dropdownMenu}>
+                        <select onChange={handleSelectFilters} value={selectValues.availability} name='availability' className={style.dropdownMenu}>
                             {Availabilities.map((item, index) => (
                                 <option key={index} value={item.value}>{item.name}</option>
                             ))}
                         </select>
                     </div>
 
-                    <SearchInput />
+                    <SearchInput value={lotsSearch} onChange={(e)=>setLotsSearch(e.target.value)} />
                 </div>
                 <div className={style.lotHandleActions}>
                     <button className={style.btnTaxes} onClick={() => alert('Editar juros')}><img src='/images/taxesIcon.svg' />Editar juros</button>
-                    <button className={style.btnLot} onClick={() => alert('Cadastrar lote')}><img src='/images/plusIcon.svg' />Cadastrar lote</button>
+                    <button className={style.btnLot} onClick={handlePopUps} name='lotRegister'><img src='/images/plusIcon.svg' />Cadastrar lote</button>
                 </div>
             </div>
             <div className={style.listsContainer}>
                 <ul className={style.lotsList}>
-                    {lotsData.map((lot) => (
+                    {
+                    lotsData
+                    .filter(lotByDivision => lotByDivision.idLoteamento == (selectValues.division != 'all' ? selectValues.division : lotByDivision.idLoteamento))
+                    .filter(lotByAvaibility => lotByAvaibility.isAvaible == selectValues.availability)
+                    .filter(lotByName => lotByName.name.includes(lotsSearch))
+                    .map((lot) => (
                         <li className={style.lotsListItem}>
                             <div className={style.lotImage}>
                                 <img src={lot.loteImages[0]?.imageUrl} alt="Imagem do lote" />
@@ -64,7 +90,7 @@ const Loteamentos = ({ divisionsData }) => {
                             <div className={style.lotInfos}>
                                 <div className={style.lotSpecs}>
                                     <span className={style.lotName}>{lot.name}</span>
-                                    <span className={style.divName}>{divisionsData.find(division => division.id == lot.idLoteamento).name.substring(0, 20) + '...'}</span>
+                                    <span className={style.divName}>{divisions.find(division => division.id == lot.idLoteamento).name.substring(0, 20) + '...'}</span>
                                     <div className={style.location}>
                                         <span>
                                         <img src="/images/locationIcon.svg" />
@@ -83,6 +109,10 @@ const Loteamentos = ({ divisionsData }) => {
                                     <p>{formatCurrency(lot.basePrice)}</p>
                                 </div>
                                 <button className={style.lotOptionsBtn} onClick={() => alert('Options')}>...</button>
+                                <div className={style.lotViews} onClick={() => alert('Options')}>
+                                    <span>{lot.userViews}</span>
+                                    <img src="/images/viewIcon.svg" alt="Visualizações"/>
+                                </div>
                             </div>
                         </li>
                     ))}

@@ -5,6 +5,7 @@ const LotImage = db.connection.define('LoteImages', {
     imageUrl: {
         type: db.Sequelize.STRING,
         required: true,
+        defaultValue: 'https://i.imgur.com/8CiJy7t.png'
     }
 })
 

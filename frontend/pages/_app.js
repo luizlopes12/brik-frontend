@@ -6,6 +6,8 @@ import { useRouter } from 'next/router'
 import styles from './style.module.scss'
 import userContext from '../context/userContext'
 import { useState } from 'react'
+import LotRegisterPopUp from '../components/LotRegisterPopUp'
+import popUpsContext from '../context/popUpsContext'
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
@@ -14,14 +16,20 @@ function MyApp({ Component, pageProps }) {
     userEmail: 'Luiz@luiz.com',
     userPhone: '13996440101'
   })
+  const [popUps, setPopUps] = useState({
+    lotRegister: false,
+    taxesEdit: false
+  }) 
   return (
     router.pathname.includes('/admin') ? (
       <userContext.Provider value={{userData, setUserData}}>
+      <popUpsContext.Provider value={{popUps, setPopUps}}>
       <Head>
         <title>Brik Admin</title>
         <link rel='icon' href='/images/favicons/pageIcon.png'/>
       </Head>
       <main className={styles.mainContainer}>
+      <LotRegisterPopUp/>
       <Sidebar/>
       <section className={styles.contentContainer}>
       <Navbar/>
@@ -30,6 +38,7 @@ function MyApp({ Component, pageProps }) {
       </section>
       </section>
       </main>
+      </popUpsContext.Provider>
       </userContext.Provider>
     )
     :
