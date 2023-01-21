@@ -9,6 +9,8 @@ app.use(cors())
 app.use(express.json())
 routes(app)
 
+app.get('/', (req, res) => res.json({message: 'inicio'}))
+
 app.listen(PORT, () =>{
     console.log(`Servidor rodando, porta ${PORT}`)
 })
