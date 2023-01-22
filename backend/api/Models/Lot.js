@@ -1,5 +1,6 @@
 const db = require('../config/database.js')
 const Division = require('./Division')
+const Sales = require('./Sales')
 
 const Lot = db.connection.define('Lotes', {
     name: {
@@ -36,13 +37,16 @@ const Lot = db.connection.define('Lotes', {
         required: false,
         defaultValue: 'avaible',
     },
+    isSolded: {
+        type: db.Sequelize.BOOLEAN,
+        defaultValue: false
+    },
     userViews: {
         type: db.Sequelize.INTEGER,
         defaultValue: 0,
     }
 })
 
-Division.hasMany(Lot, {as: 'lotes', foreignKey: 'idLoteamento', onDelete: 'cascade', hooks: true})
 
 module.exports = Lot
 

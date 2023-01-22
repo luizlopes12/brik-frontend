@@ -52,7 +52,7 @@ const Loteamentos = ({ divisionsData }) => {
         <section className={style.loteamentosContainer}>
             <div className={style.heading}>
                 <HeadingText>Lotes e Loteamentos</HeadingText>
-                <SearchInput value={divisionSearch} onChange={(e)=>setDivisionSearch(e.target.value.toLowercase())}/>
+                <SearchInput value={divisionSearch} onChange={(e)=>setDivisionSearch(e.target.value)}/>
             </div>
             <div className={style.topActions}>
                 <div className={style.lotFilters}>

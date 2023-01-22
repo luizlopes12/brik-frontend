@@ -1,7 +1,7 @@
 const db = require('../config/database.js')
 
 const User = db.connection.define('Users', {
-    profileImage:{
+    profileImage: {
         type: db.Sequelize.STRING,
         required: false,
         defaultValue: 'https://i.imgur.com/cwVOOqb.jpg'
@@ -9,6 +9,10 @@ const User = db.connection.define('Users', {
     name: {
         type: db.Sequelize.STRING,
         required: true
+    },
+    CPF: {
+        type: db.Sequelize.STRING,
+        required: false,
     },
     email: {
         type: db.Sequelize.STRING,
@@ -22,33 +26,33 @@ const User = db.connection.define('Users', {
         type: db.Sequelize.STRING,
         required: true,
     },
-    admin:{
+    admin: {
         type: db.Sequelize.BOOLEAN,
         defaultValue: false
     },
     // Permissions    
-    editDivisions:{
+    editDivisions: {
         type: db.Sequelize.BOOLEAN,
         defaultValue: false
     },
-    editLots:{
+    editLots: {
         type: db.Sequelize.BOOLEAN,
         defaultValue: false
     },
-    editPartners:{
+    editPartners: {
         type: db.Sequelize.BOOLEAN,
         defaultValue: false
     },
-    editBanners:{
+    editBanners: {
         type: db.Sequelize.BOOLEAN,
         defaultValue: false
     },
-    editTaxes:{
+    editTaxes: {
         type: db.Sequelize.BOOLEAN,
         defaultValue: false
     },
 })
 
-module.exports = User
-
 // User.sync({force: true})
+
+module.exports = User
