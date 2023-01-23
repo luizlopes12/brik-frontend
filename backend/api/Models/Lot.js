@@ -1,6 +1,4 @@
 const db = require('../config/database.js')
-const Division = require('./Division')
-const Sales = require('./Sales')
 
 const Lot = db.connection.define('Lotes', {
     name: {
