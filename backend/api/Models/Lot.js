@@ -1,4 +1,5 @@
 const db = require('../config/database.js')
+const Division = require('./Division')
 
 const Lot = db.connection.define('Lotes', {
     name: {
@@ -45,7 +46,8 @@ const Lot = db.connection.define('Lotes', {
     }
 })
 
-
+Division.hasMany(Lot, {as: 'lotes', foreignKey: 'idLoteamento', onDelete: 'cascade', hooks: true})
+ 
 module.exports = Lot
 
 // Lot.sync({force: true})

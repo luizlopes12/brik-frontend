@@ -3,10 +3,16 @@ import style from './style.module.scss'
 import SearchInput from '../../../components/SearchInput'
 import HeadingText from '../../../components/HeadingText'
 import formatCurrency from '../../../helpers/formatCurrency'
-import popUpsContext from '../../../context/popUpsContext'
+import { popUpsContext } from '../../../context/popUpsContext'
+import {selectedDivisionContext} from '../../../context/selectedDivisionContext'
 
 export async function getStaticProps() {
-    const divisionsData = await fetch('http://localhost:8080/divisions/list').then(res => res.json())
+    let divisionsData; 
+    try {
+        divisionsData = await fetch('http://localhost:8080/divisions/list').then(res => res.json())
+    } catch (error) {
+        divisionsData = []
+    }
     return {
         props: { divisionsData }
     }
@@ -16,6 +22,7 @@ const Availabilities = [{ name: 'Disponível', value: 'avaible' }, { name: 'Indi
 const Loteamentos = ({ divisionsData }) => {
     /* Contexts */
     const { popUps, setPopUps } = useContext(popUpsContext)
+    const { divisionSelected,  setDivisionSelected } = useContext(selectedDivisionContext)
     /* States */
     const [selectValues, setSelectValues] = useState({
         division: 'all',
@@ -23,6 +30,7 @@ const Loteamentos = ({ divisionsData }) => {
     })
     const [lotsSearch, setLotsSearch] = useState('')
     const [divisionSearch, setDivisionSearch] = useState('')
+    const [showOptions, setShowOptions] = useState({id: null, selected: false})
 
     /* Memos */
     const divisions = useMemo(() =>{
@@ -31,7 +39,14 @@ const Loteamentos = ({ divisionsData }) => {
     const lotsData = useMemo(() =>{
         return divisions.map((division) => division.lotes).flat()
     },[ divisions ])
-    
+    const dataFiltered = useMemo(() =>{
+        return (
+        lotsData
+        .filter(lotByDivision => lotByDivision.idLoteamento == (selectValues.division != 'all' ? selectValues.division : lotByDivision.idLoteamento))
+        .filter(lotByAvaibility => lotByAvaibility.isAvaible == selectValues.availability)
+        .filter(lotByName => lotByName.name.includes(lotsSearch))
+        )
+    },[ lotsSearch,  selectValues, lotsData])
     /* Handles */
     const handleSelectFilters = (e) => {
         setSelectValues(previousState => ({ ...previousState, [e.target.name]: e.target.value }))
@@ -39,8 +54,17 @@ const Loteamentos = ({ divisionsData }) => {
     const handlePopUps = (e) =>{
         setPopUps((prevState) => ({...prevState, [e.target.name]: !popUps[e.target.name]}))
     }       
-    const handleEditDivision = () => {
+    const handleEditDivision = (selectedDivision) => {
+        setDivisionSelected(selectedDivision)
         setPopUps((prevState) => ({...prevState, divisionEdit: true}))
+        console.log(selectedDivision)
+    }
+    const handleLotOptions = (selectedLot) =>{
+       if(showOptions.id == selectedLot.id ){
+        setShowOptions({id: null, selected: false})
+       }else{
+        setShowOptions({id: selectedLot.id, selected: true})
+       }
     }
     /* Side effects */
 
@@ -81,12 +105,8 @@ const Loteamentos = ({ divisionsData }) => {
             </div>
             <div className={style.listsContainer}>
                 <ul className={style.lotsList}>
-                    {
-                    lotsData
-                    .filter(lotByDivision => lotByDivision.idLoteamento == (selectValues.division != 'all' ? selectValues.division : lotByDivision.idLoteamento))
-                    .filter(lotByAvaibility => lotByAvaibility.isAvaible == selectValues.availability)
-                    .filter(lotByName => lotByName.name.includes(lotsSearch))
-                    .map((lot) => (
+                    {dataFiltered.length > 0 ?
+                     dataFiltered.map((lot) => (
                         <li className={style.lotsListItem}>
                             <div className={style.lotImage}>
                                 <img src={lot.loteImages[0]?.imageUrl} alt="Imagem do lote" />
@@ -116,20 +136,26 @@ const Loteamentos = ({ divisionsData }) => {
                                     <p>{formatCurrency(lot.finalPrice)}</p>
                                     <p>{formatCurrency(lot.basePrice)}</p>
                                 </div>
-                                <button className={style.lotOptionsBtn} onClick={() => alert('Options')}>...</button>
-                                <div className={style.lotViews} onClick={() => alert('Options')}>
+                                <button className={style.lotOptionsBtn} onClick={() => handleLotOptions(lot)}>...</button>
+                                {(lot.id == showOptions.id && showOptions.selected) && (
+                                    <span className={style.lotOptions} >
+                                        <button>Editar</button>
+                                        <button>Visualizar</button>
+                                    </span>
+                                )}
+                                <div className={style.lotViews}>
                                     <span>{lot.userViews}</span>
                                     <img src="/images/viewIcon.svg" alt="Visualizações"/>
                                 </div>
                             </div>
                         </li>
-                    ))}
+                    )): (<p className={style.nullAlert}>Nenhum item encontrado.</p>)}
                 </ul>
                 <div className={style.divisionsListContainer}>
                 <h2>Loteamentos</h2>
                 <ul className={style.divisionsList}>
                         {divisions.filter(divisionByName => divisionByName.name.includes(divisionSearch)).map((division, key) =>(
-                            <li key={key} onClick={handleEditDivision}>
+                            <li key={key} onClick={() => handleEditDivision(division)}>
                                 <img src={division.logoUrl} alt="logotipo" />
                                 <div className={style.divInfo}>
                                     <p>{division.name.length > 25 ? division.name.substring(0, 25) + '...': division.name}</p>

@@ -248,5 +248,32 @@
     }
 }
 
+.nullAlert{
+    width: 100%;
+    text-align: center;
+}
 
-
+.lotOptions{
+    background: $bg_white-color;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 5px 0 5px 5px;
+    position: absolute;
+    top: 28px;
+    right: 25px;
+    box-shadow: -1px 1px 5px lighten($bg_dark-color, 70%);
+    button{
+        font-size: .8rem;
+        width: 100px;
+        padding: 4px;
+        text-align: center;
+        border-radius: 4px;
+        border-bottom: 1px solid darken($bg_white-color, 5%);
+        &:hover{
+            cursor: pointer;
+            background: darken($bg_white-color, 5%);
+        }
+    }
+}

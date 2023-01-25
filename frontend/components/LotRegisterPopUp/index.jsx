@@ -1,6 +1,6 @@
 import React,{ useEffect, useContext } from 'react'
 import style from './style.module.scss'
-import popUpsContext from '../../context/popUpsContext'
+import {popUpsContext} from '../../context/popUpsContext'
 
 const LotRegisterPopUp = () => {
   const { popUps, setPopUps } = useContext(popUpsContext)

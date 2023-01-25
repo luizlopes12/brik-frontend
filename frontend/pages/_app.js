@@ -4,31 +4,25 @@ import Sidebar from '../components/Sidebar'
 import Navbar from '../components/Navbar'
 import { useRouter } from 'next/router'
 import styles from './style.module.scss'
-import userContext from '../context/userContext'
-import { useState } from 'react'
+import {UserProvider} from '../context/userContext'
 import LotRegisterPopUp from '../components/LotRegisterPopUp'
 import DivisionRegisterPopUp from '../components/DivisionRegisterPopUp'
-import popUpsContext from '../context/popUpsContext'
+import {PopUpsProvider} from '../context/popUpsContext'
 import TaxesEditPopUp from '../components/taxesEditPopUp'
 import DivisionEditPopUp from '../components/DivisionEditPopUp'
+import { LotSelectedProvider } from '../context/selectedLotContext'
+import { DivisionSelectedProvider } from '../context/selectedDivisionContext'
+
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
-  const [userData, setUserData] = useState({
-    userName: 'Luiz',
-    userEmail: 'Luiz@luiz.com',
-    userPhone: '13996440101'
-  })
-  const [popUps, setPopUps] = useState({
-    lotRegister: false,
-    taxesEdit: false,
-    divisionRegister: false,
-    divisionEdit: false,
-  }) 
+
   return (
     router.pathname.includes('/admin') ? (
-      <userContext.Provider value={{userData, setUserData}}>
-      <popUpsContext.Provider value={{popUps, setPopUps}}>
+      <UserProvider>
+      <PopUpsProvider>
+        <DivisionSelectedProvider>
+        <LotSelectedProvider>
       <Head>
         <title>Brik Admin</title>
         <link rel='icon' href='/images/favicons/pageIcon.png'/>
@@ -46,8 +40,10 @@ function MyApp({ Component, pageProps }) {
       </section>
       </section>
       </main>
-      </popUpsContext.Provider>
-      </userContext.Provider>
+      </LotSelectedProvider>
+      </DivisionSelectedProvider>
+      </PopUpsProvider>
+      </UserProvider>
     )
     :
     (

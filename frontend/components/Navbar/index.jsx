@@ -1,6 +1,6 @@
 import React,{useContext} from 'react'
 import style from './style.module.scss'
-import userContext from '../../context/userContext'
+import {userContext} from '../../context/userContext'
 
 const Navbar = () => {
   Date.prototype.toShortFormat = function () {
