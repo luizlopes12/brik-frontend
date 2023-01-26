@@ -1,4 +1,5 @@
 @import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
 
 
 .popUpBackdrop{
@@ -21,6 +22,7 @@
     border-radius: 5px;
     max-width: 60vw;
     position: relative;
+    min-height: 70vh;
 }
 
 .closeBtn{
@@ -38,4 +40,118 @@
 .heading{
     font-size: 1.4rem;
     font-weight: 600;
+    text-align: center;
+}
+
+
+.divisionContent{
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    gap: 1rem;
+    align-items: center;
+    .divisionLogo{
+        border: 1px solid $gray_color-1;
+        border-radius: 50%;
+        width: 140px;
+        transition: all .2s ease-in-out;
+        &:hover{
+            filter: brightness(80%);
+            cursor: pointer;
+        }
+    }
+    .popUpsInputs{
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    .inputField{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        span{
+            min-width: 100px;
+            text-align: end;
+        }
+        input{
+            min-width: 400px;
+            background: $gray_color-6;
+            border: .5px solid $gray_color-2;
+            padding: 5px 5px;
+            line-height: 1.2rem;
+            font-size: 1rem;
+            border-radius: 5px;
+        }
+    }
+    .uploadImage{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        input{
+            width: 140px;
+            height: 140px;
+            position: absolute;
+            z-index: 2;
+            opacity: 0;
+            top: 0;
+            left: 0;
+            &::file-selector-button{
+                cursor: pointer;
+            }
+            &:hover{
+                ~.divisionLogo{
+                    filter: brightness(80%);
+                    cursor: pointer;
+                }
+                cursor: pointer;
+            }
+        }
+        .divisionLogo{
+            z-index: 1;
+        }
+    }
+}
+
+
+.saveBtn{
+    @include actionButton($text-white, $green_color-1);
+    padding: 10px 40px;
+    margin: 20px 0;
+    align-self: flex-end;
+}
+
+.blueprint{
+    display: flex;
+    gap: 10px;
+    .uploadBlueprint{
+        position: relative;
+        @include actionButton($text-white, $green_color-1);
+        img{
+            width: 20px;
+            transform: rotate(180deg);
+            filter: invert(1)
+        }
+        input{
+            max-width: max-content;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            opacity: 0;
+        }
+    }   
+    .downloadBlueprint{
+        @include actionButton($text-black, $bg_white-color);
+        img{
+            width: 20px;
+        }
+    }
+}
+
+.alertMessage{
+    font-size: .9rem;
+    color: $alert__font-color;
 }

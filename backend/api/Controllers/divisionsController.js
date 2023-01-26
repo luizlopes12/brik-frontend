@@ -64,7 +64,7 @@ class divisionsController {
     static editExistingDivision = async (req, res) =>{
         // Logo and blueprint will be a imgur url to the image
         let id = parseInt(req.params.id)
-        let {name, logo, location, blueprint } = req.body
+        let { name, logo, location, blueprint } = req.body
 
         let updateDivision = await Division.update({
             name: name,
@@ -76,7 +76,7 @@ class divisionsController {
             where: { id: id }
         }
         )
-
+        console.log(req.body)
         let updatedDivision = await Division.findByPk(id);
 
         if(updateDivision){

@@ -5,7 +5,9 @@ const PORT = process.env.PORT || 3000
 const routes = require('./Routes/index.js')
 
 const app = express()
-app.use(cors())
+app.use(cors({
+    origin: '*'
+}))
 app.use(express.json())
 routes(app)
 
