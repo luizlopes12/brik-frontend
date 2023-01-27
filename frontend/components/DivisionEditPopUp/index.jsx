@@ -2,8 +2,12 @@ import React,{ useEffect, useContext, useState, useMemo,useRef } from 'react'
 import style from './style.module.scss'
 import {popUpsContext} from '../../context/popUpsContext'
 import {selectedDivisionContext} from '../../context/selectedDivisionContext'
+import {globalDivisionsDataContext} from '../../context/globalDivisionsDataContext'
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { storage } from '../../configs/firebase'
 
 const DivisionEditPopUp = () => {
+  const {  globalDivisionsData , setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
   const uploadLogoForm = useRef()
   const uploadBlueprintForm = useRef()
   const { popUps, setPopUps } = useContext(popUpsContext)
@@ -19,8 +23,11 @@ const DivisionEditPopUp = () => {
       save: ''
     })
   },[popUps])
-  console.log(divisionData)
-  const [ newDivisionData, setNewDivisionData ] = useState(divisionData)
+  const [successMessage, setSuccessMessage] = useState({
+    logo: '',
+    blueprint: '',
+    save: ''
+  })
   const [alertMessage, setAlertMessage] = useState({
     logo: '',
     blueprint: '',
@@ -39,45 +46,65 @@ const DivisionEditPopUp = () => {
     return new Promise(promiseCallback)
   }
   const handleUploadLogo = async (e) =>{
-      let image = new FormData()
-      image.append('image', e.target.files[0])
-      doUpload('https://api.imgur.com/3/image',{
-        method: 'POST',
-        body: image,
-        headers: {
-          'Authorization': `Client-ID ${process.env.IMGUR_CLIENT_ID}`
-        }
-      }).then(res => {
-        uploadForm.reset()
-        setDivisionSelected(prev => ({...prev, logoUrl: res.link}))
-      })
-      .catch(err => {
-        console.log(err)
+      let image = e.target?.files[0]
+      // reiceves reader.result and this need to be uploaded and updated on backend
+      if(!image){
         setAlertMessage(prev => ({...prev, logo: 'Não foi possível realizar o upload, tente novamente.'}))
-      })
-  }
-  const handleUploadBlueprint = (e) =>{
-    let image = new FormData()
-    image.append('image', e.target.files[0])
-    doUpload('https://api.imgur.com/3/image',{
-      method: 'POST',
-      body: image,
-      headers: {
-        'Authorization': `Client-ID ${process.env.IMGUR_CLIENT_ID}`
+        setSuccessMessage(prev => ({...prev, logo: ''}))
+      }else{
+        const currentDate = new Date().getTime();
+        const storageRef = ref(storage, `files/logos/${currentDate}_${image.name}`)
+        const uploadTask = uploadBytesResumable(storageRef, image)
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+          },
+          (error) => {
+            alert(error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              setDivisionSelected(prev => ({...prev, logoUrl: downloadURL}))
+              setAlertMessage(prev => ({...prev, logo: ''}))
+              setSuccessMessage(prev => ({...prev, logo: 'Upload realizado com sucesso.'}))
+            });
+          }
+        );
       }
-    }).then(res => {
-      setDivisionSelected(prev => ({...prev, blueprint: res.link}))
-      uploadLogoForm.reset()
-    })
-    .catch(err => {
-      console.log(err)
+      uploadLogoForm.current.reset()
+    }
+  const handleUploadBlueprint = (e) =>{
+    let image = e.target?.files[0]
+    // reiceves reader.result and this need to be uploaded and updated on backend
+    if(!image){
       setAlertMessage(prev => ({...prev, blueprint: 'Não foi possível realizar o upload, tente novamente.'}))
-    })
+      setSuccessMessage(prev => ({...prev, blueprint: ''}))
+    }else{
+      const currentDate = new Date().getTime();
+      const storageRef = ref(storage, `files/blueprints/${currentDate}_${image.name}`)
+      const uploadTask = uploadBytesResumable(storageRef, image)
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+        },
+        (error) => {
+          alert(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setDivisionSelected(prev => ({...prev, blueprint: downloadURL}))
+            setAlertMessage(prev => ({...prev, blueprint: ''}))
+            setSuccessMessage(prev => ({...prev, blueprint: 'Upload realizado com sucesso.'}))
+          });
+        }
+      );
+    }
+    uploadBlueprintForm.current.reset()
   }
   const handleSaveData = async() => {
     let divisionDataToRequest = JSON.stringify({
       name: divisionData.name,
-      logo: divisionData.logo,
+      logo: divisionData.logoUrl,
       location: divisionData.location,
       blueprint: divisionData.blueprint
     })
@@ -88,15 +115,19 @@ const DivisionEditPopUp = () => {
       },
       body: divisionDataToRequest
     }).then(res => res.json())
-    .then(data => {
-      console.log(data)
+    .then(async data => {
+      await fetch('http://localhost:8080/divisions/list')
+      .then(updatedResponse => updatedResponse.json())
+      .then(updatedData => setGlobalDivisionsData(updatedData))
       setDivisionSelected(data.data)
       setDataSaved(true)
       setTimeout(() => setDataSaved(false),5000)
     }).catch(err => {
       console.log(err)
       setAlertMessage(prev => ({...prev, save: 'Não foi possível salvar os dados, tente novamente.'}))
+      setSuccessMessage(prev => ({...prev, save: ''}))
     })
+
 
   }
   const handleDownloadBlueprint = () => {
@@ -112,7 +143,6 @@ const DivisionEditPopUp = () => {
     element.click();
   }
 
-  console.log(newDivisionData.name)
   return (
     <div className={ popUps.divisionEdit ? style.popUpBackdrop : style.popUpDisabled }>
       <div className={style.popUpWrapper}>
@@ -123,7 +153,8 @@ const DivisionEditPopUp = () => {
           <div className={style.uploadImage}>
             <input type="file" name='logoUrl' accept="image/*" onChange={(e) => handleUploadLogo(e)}/>
             <img src={divisionData.logoUrl} className={style.divisionLogo} alt="Logo" />
-            <p className={style.alertMessage}> {alertMessage.logo} </p>
+            {alertMessage.logo.length > 0 && <p className={style.alertMessage}> {alertMessage.logo} </p>}
+            {successMessage.logo.length > 0 && <p className={style.successMessage}> {successMessage.logo} </p>}
           </div>
           </form>
           <ul className={style.popUpsInputs}>
@@ -145,7 +176,8 @@ const DivisionEditPopUp = () => {
           </a>
           </form>
           </div>
-          <p className={style.alertMessage}> {alertMessage.blueprint} </p>
+          {alertMessage.blueprint.length > 0 && <p className={style.alertMessage}> {alertMessage.blueprint} </p>}
+          {successMessage.blueprint.length > 0 && <p className={style.successMessage}> {successMessage.blueprint} </p>}
           <button className={style.saveBtn} onClick={handleSaveData}>{ dataSaved ? 'Salvo!' :  'Salvar' } </button>
           <p className={style.alertMessage}> {alertMessage.save} </p>
         </div>

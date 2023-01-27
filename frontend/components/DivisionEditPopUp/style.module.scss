@@ -54,6 +54,7 @@
         border: 1px solid $gray_color-1;
         border-radius: 50%;
         width: 140px;
+        height: 140px;
         transition: all .2s ease-in-out;
         &:hover{
             filter: brightness(80%);
@@ -154,4 +155,9 @@
 .alertMessage{
     font-size: .9rem;
     color: $alert__font-color;
+}
+
+.successMessage{
+    font-size: .9rem;
+    color: $success__font-color;
 }

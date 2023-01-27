@@ -12,13 +12,15 @@ import TaxesEditPopUp from '../components/taxesEditPopUp'
 import DivisionEditPopUp from '../components/DivisionEditPopUp'
 import { LotSelectedProvider } from '../context/selectedLotContext'
 import { DivisionSelectedProvider } from '../context/selectedDivisionContext'
-
+import { GlobalDivisionsDataProvider } from '../context/globalDivisionsDataContext'
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
 
   return (
     router.pathname.includes('/admin') ? (
+      <GlobalDivisionsDataProvider>
+
       <UserProvider>
       <PopUpsProvider>
         <DivisionSelectedProvider>
@@ -44,6 +46,7 @@ function MyApp({ Component, pageProps }) {
       </DivisionSelectedProvider>
       </PopUpsProvider>
       </UserProvider>
+      </GlobalDivisionsDataProvider>
     )
     :
     (

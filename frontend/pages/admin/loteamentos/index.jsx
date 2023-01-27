@@ -5,22 +5,25 @@ import HeadingText from '../../../components/HeadingText'
 import formatCurrency from '../../../helpers/formatCurrency'
 import { popUpsContext } from '../../../context/popUpsContext'
 import {selectedDivisionContext} from '../../../context/selectedDivisionContext'
+import {globalDivisionsDataContext} from '../../../context/globalDivisionsDataContext'
 
 export async function getStaticProps() {
-    let divisionsData; 
+    let firstDivisionsData; 
     try {
-        divisionsData = await fetch('http://localhost:8080/divisions/list').then(res => res.json())
+        firstDivisionsData = await fetch('http://localhost:8080/divisions/list').then(res => res.json())
     } catch (error) {
-        divisionsData = []
+        firstDivisionsData = []
     }
     return {
-        props: { divisionsData }
+        props: { firstDivisionsData }
     }
 }
 const Availabilities = [{ name: 'Disponível', value: 'avaible' }, { name: 'Indisponível', value: 'unavaible' }, { name: 'Reservado', value: 'reserved' }]
 
-const Loteamentos = ({ divisionsData }) => {
+const Loteamentos = ({ firstDivisionsData }) => {
+
     /* Contexts */
+    const {  globalDivisionsData , setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
     const { popUps, setPopUps } = useContext(popUpsContext)
     const { divisionSelected,  setDivisionSelected } = useContext(selectedDivisionContext)
     /* States */
@@ -34,8 +37,9 @@ const Loteamentos = ({ divisionsData }) => {
 
     /* Memos */
     const divisions = useMemo(() =>{
-        return divisionsData.flat()
-    },[ divisionsData ])
+        return globalDivisionsData.flat()
+    },[ globalDivisionsData ])
+    
     const lotsData = useMemo(() =>{
         return divisions.map((division) => division.lotes).flat()
     },[ divisions ])
@@ -68,9 +72,9 @@ const Loteamentos = ({ divisionsData }) => {
     }
     /* Side effects */
 
-    // useEffect(() =>{
-    //     console.log(popUps)
-    // },[popUps])
+    useEffect(() =>{
+        setGlobalDivisionsData(globalDivisionsData.length > 0 ? globalDivisionsData : firstDivisionsData)
+    },[ firstDivisionsData, globalDivisionsData ])
 
     return (
         <section className={style.loteamentosContainer}>
@@ -83,7 +87,7 @@ const Loteamentos = ({ divisionsData }) => {
                     <div className={style.dropdownsContainer}>
                         <select onChange={handleSelectFilters} value={selectValues.division} name='division' className={style.dropdownMenu}>
                             <option value='all'>Todos</option>
-                            {divisionsData.map((item, index) => (
+                            {globalDivisionsData.map((item, index) => (
                                 <>
                                     <option key={index} value={item.id}>{item.name}</option>
                                 </>
@@ -158,8 +162,8 @@ const Loteamentos = ({ divisionsData }) => {
                             <li key={key} onClick={() => handleEditDivision(division)}>
                                 <img src={division.logoUrl} alt="logotipo" />
                                 <div className={style.divInfo}>
-                                    <p>{division.name.length > 25 ? division.name.substring(0, 25) + '...': division.name}</p>
-                                    <span>{division.location.length > 25 ? division.location.substring(0, 25) + '...': division.location}</span>
+                                    <p>{division.name.length > 20 ? division.name.substring(0, 18) + '...': division.name}</p>
+                                    <span>{division.location.length > 20 ? division.location.substring(0, 18) + '...': division.location}</span>
                                 </div>
                             </li>
                         ))}
