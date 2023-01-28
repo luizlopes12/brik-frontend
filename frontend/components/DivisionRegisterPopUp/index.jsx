@@ -144,7 +144,6 @@ const DivisionRegisterPopUp = () => {
       setDataSaved(true)
       setTimeout(() => setDataSaved(false),5000)
     }).catch(err => {
-      console.log(err)
       setAlertMessage(prev => ({...prev, save: 'Não foi possível salvar os dados, tente novamente.'}))
       setSuccessMessage(prev => ({...prev, save: ''}))
     })

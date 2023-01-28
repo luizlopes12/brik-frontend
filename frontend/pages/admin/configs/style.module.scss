@@ -1,7 +1,6 @@
-@import '../../styles/colors.scss';
-@import '../../styles/mixins.scss';
+@import '../../../styles/mixins.scss';
 
-.overviewContainer{
+.configsContainer{
     display: flex;
     flex-direction: column;
     margin-top: 2rem;

@@ -4,9 +4,7 @@ import {popUpsContext} from '../../context/popUpsContext'
 
 const TaxesEditPopUp = () => {
   const { popUps, setPopUps } = useContext(popUpsContext)
-  useEffect(() =>{
-    console.log(popUps)
-  },[popUps])
+
   return (
     <div className={ popUps.taxesEdit ? style.popUpBackdrop : style.popUpDisabled }>
       <div className={style.popUpWrapper}>

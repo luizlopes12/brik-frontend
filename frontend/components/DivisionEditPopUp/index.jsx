@@ -15,6 +15,9 @@ const DivisionEditPopUp = () => {
   const [dataSaved, setDataSaved] = useState(false)
   const [partnerPopUp, setPartnerPopUp] = useState(false)
   const [partnerData, setPartnerData] = useState({})
+  const partnerValues = useMemo(() => { 
+    return partnerData
+  }, [partnerData])
   const handleExitPopUp = () => {
     setPopUps(popUps.divisionEdit = false)
     setDivisionSelected({})
@@ -22,7 +25,6 @@ const DivisionEditPopUp = () => {
   const divisionData = useMemo(() => {
     return divisionSelected
   }, [divisionSelected])
-
   useEffect(() => {
     setAlertMessage({
       logo: '',
@@ -107,7 +109,6 @@ const DivisionEditPopUp = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            console.log(downloadURL)
             setDivisionSelected(prev => ({ ...prev, blueprint: downloadURL }))
             setAlertMessage(prev => ({ ...prev, blueprint: '' }))
             setSuccessMessage(prev => ({ ...prev, blueprint: 'Upload realizado com sucesso.' }))
@@ -140,14 +141,12 @@ const DivisionEditPopUp = () => {
         setDataSaved(true)
         setTimeout(() => setDataSaved(false), 5000)
       }).catch(err => {
-        console.log(err)
         setAlertMessage(prev => ({ ...prev, save: 'Não foi possível salvar os dados, tente novamente.' }))
         setSuccessMessage(prev => ({ ...prev, save: '' }))
         setTimeout(() => setAlertMessage(prev => ({ ...prev, save: '' })), 5000)
       })
   }
   const handleDownloadBlueprint = () => {
-    console.log(divisionSelected.blueprint)
     var element = document.createElement("a");
     var file = new Blob(
       [
@@ -156,7 +155,6 @@ const DivisionEditPopUp = () => {
       { type: "image/png" }
     );
     element.href = URL.createObjectURL(file);
-    console.log(file.type)
     element.download = `${divisionSelected.name}`;
     element.click();
   }
@@ -165,14 +163,14 @@ const DivisionEditPopUp = () => {
     setPartnerPopUp(prev => !prev)
   }
   const handleAddPartnertoDivision = async () => {
-    if (partnerData.name?.length > 0 && partnerData.CPF?.length >= 11 && partnerData?.percentage > 0) {
+    if (partnerValues.name?.length > 0 && partnerValues.CPF?.length >= 11 && partnerValues?.percentage > 0) {
       setPartnerPopUp(false)
       await fetch(`http://localhost:8080/divisions/${divisionData.id}/partners/add`, {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
         },
-        body: JSON.stringify(partnerData)
+        body: JSON.stringify(partnerValues)
       })
         .then(res => res.json())
         .then(data => {
@@ -247,9 +245,9 @@ const DivisionEditPopUp = () => {
             ))}
             {partnerPopUp && ((
               <li className={style.partnerAddForm}>
-                <input type="text" placeholder='Nome' name='name' onChange={handlePartnerData} />
-                <input type="text" placeholder='CPF' name='CPF'pattern="(\d{3}\.?\d{3}\.?\d{3}-?\d{2})|(\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2})"  onChange={handlePartnerData} />
-                <input type="number" placeholder='%' name='percentage' max='100' min='0' onChange={handlePartnerData} />
+                <input type="text" placeholder='Nome' name='name' value={partnerValues.name} onChange={handlePartnerData} />
+                <input type="text" placeholder='CPF' name='CPF'  value={partnerValues.CPF}  pattern="(\d{3}\.?\d{3}\.?\d{3}-?\d{2})|(\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2})"  onChange={handlePartnerData} />
+                <input type="number" placeholder='%' name='percentage' value={partnerValues.percentage}  max='100' min='0' onChange={handlePartnerData} />
               </li>
             ))}
 
