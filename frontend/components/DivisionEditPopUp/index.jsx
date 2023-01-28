@@ -190,7 +190,7 @@ const DivisionEditPopUp = () => {
     <div className={popUps.divisionEdit ? style.popUpBackdrop : style.popUpDisabled}>
       <div className={style.popUpWrapper}>
         <button className={style.closeBtn} onClick={handleExitPopUp} name='lotRegister'><img src="/images/closeIcon.svg" alt="Sair" /></button>
-        <h2 className={style.heading}>Editar loteamento</h2>
+        {/* <h2 className={style.heading}>Editar loteamento</h2> */}
         <div className={style.divisionContent}>
           <form ref={uploadLogoForm}>
             <div className={style.uploadImage}>

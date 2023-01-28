@@ -194,7 +194,7 @@ const DivisionRegisterPopUp = () => {
     <div className={ popUps.divisionRegister ? style.popUpBackdrop : style.popUpDisabled }>
       <div className={style.popUpWrapper}>
         <button className={style.closeBtn} onClick={handleExitPopUp} name='lotRegister'><img src="/images/closeIcon.svg" alt="Sair" /></button>
-        <h2 className={style.heading}>Cadastrar loteamento</h2>
+        {/* <h2 className={style.heading}>Cadastrar loteamento</h2> */}
         <div className={style.divisionContent}>
           <form ref={uploadLogoForm}>
             <div className={style.uploadImage}>
