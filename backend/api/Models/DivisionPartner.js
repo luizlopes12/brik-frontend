@@ -1,7 +1,7 @@
 const db = require('../config/database.js')
-const Lot = require('./Lot')
+const Division = require('./Division.js')
 
-const Partner = db.connection.define('Partners', {
+const DivisionPartner = db.connection.define('DivisionPartners', {
     name: {
         type: db.Sequelize.STRING,
         required: true,
@@ -17,19 +17,20 @@ const Partner = db.connection.define('Partners', {
     profileImage: { 
         type: db.Sequelize.STRING,
         required: false,
+        defaultValue: 'https://i.imgur.com/cwVOOqb.jpg'
     },
 })
 
-Lot.hasMany(Partner, {as: 'lotePartners', foreignKey: 'idLote', onDelete: 'cascade', hooks: true})
+Division.hasMany(DivisionPartner, {as: 'divisionPartners', foreignKey: 'idLoteamento', onDelete: 'cascade', hooks: true})
 
 
-module.exports = Partner
+module.exports = DivisionPartner
 
-// Partner.sync({force: true})
+// DivisionPartner.sync({force: true})
 
-// Partner.create({
+// DivisionPartner.create({
 //     name: 'Berreca',
 //     CPF: '444444444444',
 //     percentage: 5.5,
-//     idLote: 2
+//     idLoteamento: 2
 // })

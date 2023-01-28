@@ -1,4 +1,5 @@
 @import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
 
 
 .popUpBackdrop{
@@ -21,6 +22,7 @@
     border-radius: 5px;
     max-width: 60vw;
     position: relative;
+    min-height: max-content;
 }
 
 .closeBtn{
@@ -33,4 +35,240 @@
     &:hover{
         cursor: pointer;
     }
+}
+
+.heading{
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+
+.divisionContent{
+    display: flex;
+    margin-top: 2rem;
+    gap: 1rem;
+    align-items: center;
+    .divisionLogo{
+        border: 1px solid $gray_color-5;
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        transition: all .2s ease-in-out;
+        &:hover{
+            filter: brightness(80%);
+            cursor: pointer;
+        }
+    }
+    .popUpsInputs{
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .inputField{
+        &:nth-of-type(1){
+        input{
+            font-weight: 700;
+            font-size: 1.8rem;
+            border-bottom: 2px solid $bg_dark-color;
+            max-width: fit-content;
+        }
+        }
+        &:nth-of-type(2){
+            input{
+                font-weight: 400;
+                font-size: 1rem;
+            }
+            display: flex;
+            gap: 10px;	
+            align-items: center;
+        }
+    }
+    .uploadImage{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        input{
+            width: 140px;
+            height: 140px;
+            position: absolute;
+            z-index: 2;
+            opacity: 0;
+            top: 0;
+            left: 0;
+            &::file-selector-button{
+                cursor: pointer;
+            }
+            &:hover{
+                ~.divisionLogo{
+                    filter: brightness(80%);
+                    cursor: pointer;
+                }
+                cursor: pointer;
+            }
+        }
+        .divisionLogo{
+            z-index: 1;
+        }
+    }
+}
+
+
+.saveBtn{
+    @include actionButton($text-black, $green_color-2);
+    padding: 10px 40px;
+    margin: 20px 0;
+    align-self: flex-end;
+}
+
+.blueprint{
+    display: flex;
+    gap: 10px;
+    .uploadBlueprint{
+        position: relative;
+        @include actionButton($text-white, $green_color-1);
+        img{
+            width: 20px;
+            transform: rotate(180deg);
+            filter: invert(1)
+        }
+        input{
+            max-width: max-content;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            opacity: 0;
+        }
+    }   
+    .downloadBlueprint{
+        @include actionButton($text-black, $bg_white-color);
+        img{
+            width: 20px;
+        }
+    }
+}
+
+.alertMessage{
+    font-size: .9rem;
+    color: $alert__font-color;
+}
+
+.successMessage{
+    font-size: .9rem;
+    color: $success__font-color;
+}
+
+.partnersContent{
+    background: $text-dark-blue;
+    display: flex;
+    flex-direction: column;
+    color: $text-white;
+    padding: 2rem;
+    margin: 1rem 0;
+    .subHeading{
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    .partnersList{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        max-height: 170px;
+        max-width: 450px;
+        overflow-y: scroll;
+        padding-right: 5px;
+        &::-webkit-scrollbar{
+            width: 8px;
+            background: transparentize($gray_color-4, 0.8);
+            border-radius: 5px;
+        }
+        &::-webkit-scrollbar-thumb{
+            background: transparentize($green_color-4, 0.4);
+            border-radius: 5px;
+        }
+        .partner, .partnerHeader{
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid transparentize($text-white, 0.5);
+            padding: 5px 3px;
+            .partnerProfile{
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            p{
+                width: 120px;
+                word-wrap: break-word;
+            }
+            .partnerCPF{
+                min-width: max-content;
+                flex-grow: 1;
+            }
+            img{
+                width: 0px;
+                border-radius: 50%;
+                opacity: 0;
+            }
+        }
+        .partner{
+            flex-grow: 1;
+            &:hover{
+                cursor: pointer;
+                background: transparentize($text-white, 0.8);
+            }
+        }
+        .partnerHeader{
+            opacity: .5;
+        }
+    }
+    .addPartnerBtn{
+        @include actionButton($green_color-1, $text-dark-blue);
+        align-self: flex-end;
+        margin-top: 1rem;
+    }
+}
+
+
+.partnerAddForm{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+    input{
+        opacity: .8;
+        padding: 5px 3px;
+        border-bottom: 1px solid transparentize($text-white, 0.5);
+        &:nth-of-type(1){
+            width: 125px;
+        }
+        &:nth-of-type(2){
+            width: max-content;
+            flex-grow: 1;
+        }
+        &:nth-of-type(3){
+            text-align: end;
+            width: 50px;
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            }
+            &[type=number] {
+            -moz-appearance: textfield;
+            }
+        }
+    }
+}
+.saveBtnWrapper{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
 }

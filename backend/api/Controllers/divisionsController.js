@@ -3,6 +3,7 @@ const Division = require('../Models/Division.js')
 const Lot = require('../Models/Lot.js')
 const LotImage = require('../Models/LotImage.js')
 const Partner = require('../Models/Partner.js')
+const DivisionPartner = require('../Models/DivisionPartner.js')
 
 // to do: crud divisions, crud lots and updates in lot views and lotQuantity inside Division model
 class divisionsController { 
@@ -16,9 +17,21 @@ class divisionsController {
                 model: LotImage,
                 as: 'loteImages',
                 required: false
-             }]
+             }
+            ]
+            },
+            {
+             model: DivisionPartner,
+             as: 'divisionPartners',
+             required: false,
             }]
           })
+        //   divisionsList.lotes.sort((a,b) =>{
+        //     return new Date(b.updatedAt) - new Date(a.updatedAt);
+        //   })
+          divisionsList.sort(function(a,b){
+            return new Date(b.updatedAt) - new Date(a.updatedAt);
+          });
         if(divisionsList){
             res.status(200).json(divisionsList)
         }else{
@@ -36,7 +49,13 @@ class divisionsController {
                   model: LotImage,
                   as: 'loteImages',
                   required: false
-               }]
+               }
+              ]
+              },
+              {
+               model: DivisionPartner,
+               as: 'divisionPartners',
+               required: false,
               }]})
         if(divisionSelected.length == 1){
             res.status(200).json(divisionSelected)
@@ -46,13 +65,14 @@ class divisionsController {
     }
     static addNewDivision = async (req, res) =>{
         // Logo and blueprint will be a imgur url to the image
-        let { name, logo, location, blueprint } = req.body
+        let { name, logo, location, blueprint, divisionPartners } = req.body
         let newDivision = await Division.create({
             name: name,
             logoUrl: logo,
             lotsQuantity: 0,
             location: location,
             bluePrint: blueprint,
+            divisionPartners: divisionPartners
         })
         if(newDivision){
             res.status(200).json({message: "Novo loteamento criado com sucesso.", data: newDivision})
@@ -64,20 +84,37 @@ class divisionsController {
     static editExistingDivision = async (req, res) =>{
         // Logo and blueprint will be a imgur url to the image
         let id = parseInt(req.params.id)
-        let { name, logo, location, blueprint } = req.body
+        let { name, logo, location, blueprint, divisionPartners } = req.body
 
         let updateDivision = await Division.update({
             name: name,
             logoUrl: logo,
             location: location,
             bluePrint: blueprint,
+            divisionPartners: divisionPartners
         },
         {
             where: { id: id }
         }
         )
         console.log(req.body)
-        let updatedDivision = await Division.findByPk(id);
+        let updatedDivision = await Division.findAll({where: {id: id},
+            include: [{
+                model: Lot,
+                as: 'lotes',
+                required: false,
+                include: [{
+                  model: LotImage,
+                  as: 'loteImages',
+                  required: false
+               }
+              ]
+              },
+              {
+               model: DivisionPartner,
+               as: 'divisionPartners',
+               required: false,
+              }]});
 
         if(updateDivision){
             res.status(200).json({message: "Loteamento atualizado com sucesso.", data: updatedDivision})
