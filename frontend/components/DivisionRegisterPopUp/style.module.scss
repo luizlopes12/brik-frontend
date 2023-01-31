@@ -92,8 +92,8 @@
         align-items: center;
         gap: 10px;
         input{
-            width: 140px;
-            height: 140px;
+            width: 100px;
+            height: 100px;
             position: absolute;
             z-index: 2;
             opacity: 0;
@@ -127,12 +127,13 @@
 .blueprint{
     display: flex;
     gap: 10px;
+    justify-content: center;
+    margin: 2rem 0 1rem;
     .uploadBlueprint{
         position: relative;
         @include actionButton($text-white, $green_color-1);
         img{
             width: 20px;
-            transform: rotate(180deg);
             filter: invert(1)
         }
         input{
@@ -142,10 +143,13 @@
             height: 100%;
             left: 0;
             opacity: 0;
+            &::file-selector-button{
+                cursor: pointer;
+            }   
         }
     }   
     .downloadBlueprint{
-        @include actionButton($text-black, $bg_white-color);
+        @include actionButton($text-black, $gray_color-5);
         img{
             width: 20px;
         }
@@ -159,6 +163,7 @@
 
 .successMessage{
     font-size: .9rem;
+    text-align: center;
     color: $success__font-color;
 }
 

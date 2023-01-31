@@ -1,3 +1,4 @@
+import React, { lazy } from 'react'
 import '../styles/main.scss'
 import Head from 'next/head'
 import Sidebar from '../components/Sidebar'
@@ -20,7 +21,6 @@ function MyApp({ Component, pageProps }) {
   return (
     router.pathname.includes('/admin') ? (
       <GlobalDivisionsDataProvider>
-
       <UserProvider>
       <PopUpsProvider>
         <DivisionSelectedProvider>

@@ -23,6 +23,8 @@
     max-width: 60vw;
     position: relative;
     min-height: max-content;
+    display: flex;
+    flex-direction: column;
 }
 
 .closeBtn{
@@ -46,7 +48,6 @@
 
 .divisionContent{
     display: flex;
-    margin-top: 2rem;
     gap: 1rem;
     align-items: center;
     .divisionLogo{
@@ -79,7 +80,6 @@
             input{
                 font-weight: 400;
                 font-size: 1rem;
-                flex-grow: 1;
             }
             display: flex;
             gap: 10px;	
@@ -93,8 +93,8 @@
         align-items: center;
         gap: 10px;
         input{
-            width: 140px;
-            height: 140px;
+            width: 100px;
+            height: 100px;
             position: absolute;
             z-index: 2;
             opacity: 0;
@@ -121,19 +121,20 @@
 .saveBtn{
     @include actionButton($text-black, $green_color-2);
     padding: 10px 40px;
-    margin: 20px auto;
+    margin: 20px 0;
     align-self: flex-end;
 }
 
 .blueprint{
     display: flex;
     gap: 10px;
+    justify-content: center;
+    margin: .2rem 0 .2rem;
     .uploadBlueprint{
         position: relative;
         @include actionButton($text-white, $green_color-1);
         img{
             width: 20px;
-            transform: rotate(180deg);
             filter: invert(1)
         }
         input{
@@ -143,10 +144,13 @@
             height: 100%;
             left: 0;
             opacity: 0;
+            &::file-selector-button{
+                cursor: pointer;
+            }   
         }
     }   
     .downloadBlueprint{
-        @include actionButton($text-black, $bg_white-color);
+        @include actionButton($text-black, $gray_color-5);
         img{
             width: 20px;
         }
@@ -160,6 +164,7 @@
 
 .successMessage{
     font-size: .9rem;
+    text-align: center;
     color: $success__font-color;
 }
 
@@ -179,7 +184,7 @@
         display: flex;
         flex-direction: column;
         gap: 5px;
-        max-height: 170px;
+        max-height: 160px;
         max-width: 450px;
         overflow-y: scroll;
         padding-right: 5px;
@@ -232,7 +237,7 @@
     .addPartnerBtn{
         @include actionButton($green_color-1, $text-dark-blue);
         align-self: flex-end;
-        margin-top: 1rem;
+        margin-top: .8rem;
     }
 }
 
@@ -266,5 +271,20 @@
             -moz-appearance: textfield;
             }
         }
+    }
+}
+.saveBtnWrapper{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.confirmPartnerWrapper{
+    margin-top: .8rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .addPartnerBtn{
+        margin: 0;
     }
 }

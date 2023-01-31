@@ -4,11 +4,11 @@ import SearchInput from '../../../components/SearchInput'
 import HeadingText from '../../../components/HeadingText'
 import formatCurrency from '../../../helpers/formatCurrency'
 import { popUpsContext } from '../../../context/popUpsContext'
-import {selectedDivisionContext} from '../../../context/selectedDivisionContext'
-import {globalDivisionsDataContext} from '../../../context/globalDivisionsDataContext'
+import { selectedDivisionContext } from '../../../context/selectedDivisionContext'
+import { globalDivisionsDataContext } from '../../../context/globalDivisionsDataContext'
 
 export async function getStaticProps() {
-    let firstDivisionsData; 
+    let firstDivisionsData;
     try {
         firstDivisionsData = await fetch('http://localhost:8080/divisions/list').then(res => res.json())
     } catch (error) {
@@ -23,9 +23,9 @@ const Availabilities = [{ name: 'Disponível', value: 'avaible' }, { name: 'Indi
 const Loteamentos = ({ firstDivisionsData }) => {
 
     /* Contexts */
-    const {  globalDivisionsData , setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
+    const { globalDivisionsData, setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
     const { popUps, setPopUps } = useContext(popUpsContext)
-    const { divisionSelected,  setDivisionSelected } = useContext(selectedDivisionContext)
+    const { divisionSelected, setDivisionSelected } = useContext(selectedDivisionContext)
     /* States */
     const [selectValues, setSelectValues] = useState({
         division: 'all',
@@ -33,53 +33,53 @@ const Loteamentos = ({ firstDivisionsData }) => {
     })
     const [lotsSearch, setLotsSearch] = useState('')
     const [divisionSearch, setDivisionSearch] = useState('')
-    const [showOptions, setShowOptions] = useState({id: null, selected: false})
+    const [showOptions, setShowOptions] = useState({ id: null, selected: false })
 
     /* Memos */
-    const divisions = useMemo(() =>{
+    const divisions = useMemo(() => {
         return globalDivisionsData.flat()
-    },[ globalDivisionsData ])
-    
-    const lotsData = useMemo(() =>{
+    }, [globalDivisionsData])
+
+    const lotsData = useMemo(() => {
         return divisions.map((division) => division.lotes).flat()
-    },[ divisions ])
-    const dataFiltered = useMemo(() =>{
+    }, [divisions])
+    const dataFiltered = useMemo(() => {
         return (
-        lotsData
-        .filter(lotByDivision => lotByDivision.idLoteamento == (selectValues.division != 'all' ? selectValues.division : lotByDivision.idLoteamento))
-        .filter(lotByAvaibility => lotByAvaibility.isAvaible == selectValues.availability)
-        .filter(lotByName => lotByName.name.includes(lotsSearch))
+            lotsData
+                .filter(lotByDivision => lotByDivision.idLoteamento == (selectValues.division != 'all' ? selectValues.division : lotByDivision.idLoteamento))
+                .filter(lotByAvaibility => lotByAvaibility.isAvaible == selectValues.availability)
+                .filter(lotByName => lotByName.name.includes(lotsSearch))
         )
-    },[ lotsSearch,  selectValues, lotsData])
+    }, [lotsSearch, selectValues, lotsData])
     /* Handles */
     const handleSelectFilters = (e) => {
         setSelectValues(previousState => ({ ...previousState, [e.target.name]: e.target.value }))
     }
-    const handlePopUps = (e) =>{
-        setPopUps((prevState) => ({...prevState, [e.target.name]: !popUps[e.target.name]}))
-    }       
+    const handlePopUps = (e) => {
+        setPopUps((prevState) => ({ ...prevState, [e.target.name]: !popUps[e.target.name] }))
+    }
     const handleEditDivision = (selectedDivision) => {
         setDivisionSelected(selectedDivision)
-        setPopUps((prevState) => ({...prevState, divisionEdit: true}))
+        setPopUps((prevState) => ({ ...prevState, divisionEdit: true }))
     }
-    const handleLotOptions = (selectedLot) =>{
-       if(showOptions.id == selectedLot.id ){
-        setShowOptions({id: null, selected: false})
-       }else{
-        setShowOptions({id: selectedLot.id, selected: true})
-       }
+    const handleLotOptions = (selectedLot) => {
+        if (showOptions.id == selectedLot.id) {
+            setShowOptions({ id: null, selected: false })
+        } else {
+            setShowOptions({ id: selectedLot.id, selected: true })
+        }
     }
     /* Side effects */
 
-    useEffect(() =>{
+    useEffect(() => {
         setGlobalDivisionsData(globalDivisionsData.length > 0 ? globalDivisionsData : firstDivisionsData)
-    },[ firstDivisionsData, globalDivisionsData ])
+    }, [firstDivisionsData, globalDivisionsData])
 
     return (
         <section className={style.loteamentosContainer}>
             <div className={style.heading}>
                 <HeadingText>Lotes e Loteamentos</HeadingText>
-                <SearchInput value={divisionSearch} onChange={(e)=>setDivisionSearch(e.target.value)}/>
+                <SearchInput value={divisionSearch} onChange={(e) => setDivisionSearch(e.target.value)} />
             </div>
             <div className={style.topActions}>
                 <div className={style.lotFilters}>
@@ -99,7 +99,7 @@ const Loteamentos = ({ firstDivisionsData }) => {
                         </select>
                     </div>
 
-                    <SearchInput value={lotsSearch} onChange={(e)=>setLotsSearch(e.target.value)} />
+                    <SearchInput value={lotsSearch} onChange={(e) => setLotsSearch(e.target.value)} />
                 </div>
                 <div className={style.lotHandleActions}>
                     <button className={style.btnTaxes} onClick={handlePopUps} name='taxesEdit'><img src='/images/taxesIcon.svg' />Editar juros</button>
@@ -109,65 +109,65 @@ const Loteamentos = ({ firstDivisionsData }) => {
             <div className={style.listsContainer}>
                 <ul className={style.lotsList}>
                     {dataFiltered.length > 0 ?
-                     dataFiltered.map((lot) => (
-                        <li className={style.lotsListItem}>
-                            <div className={style.lotImage}>
-                                <img src={lot.loteImages[0]?.imageUrl} alt="Imagem do lote" />
-                            </div>
-                            <div className={style.lotInfos}>
-                                <div className={style.lotSpecs}>
-                                    <span className={style.lotName}>{lot.name}</span>
-                                    <span className={style.divName}>{
-                                    divisions.find(division => division.id == lot.idLoteamento).name.length > 20 ?
-                                    divisions.find(division => division.id == lot.idLoteamento).name.substring(0, 20) + '...':
-                                    divisions.find(division => division.id == lot.idLoteamento).name
-                                    }</span>
-                                    <div className={style.location}>
-                                        <span>
-                                        <img src="/images/locationIcon.svg" />
-                                            {lot.location.substring(0, 20) + '...'}
-                                        </span>
-                                        <span>
-                                        <img src="/images/metricsIcon.svg" />
+                        dataFiltered.map((lot) => (
+                            <li className={style.lotsListItem}>
+                                <div className={style.lotImage}>
+                                    <img src={lot.loteImages[0]?.imageUrl} alt="Imagem do lote" />
+                                </div>
+                                <div className={style.lotInfos}>
+                                    <div className={style.lotSpecs}>
+                                        <span className={style.lotName}>{lot.name}</span>
+                                        <span className={style.divName}>{
+                                            divisions.find(division => division.id == lot.idLoteamento).name.length > 20 ?
+                                                divisions.find(division => division.id == lot.idLoteamento).name.substring(0, 20) + '...' :
+                                                divisions.find(division => division.id == lot.idLoteamento).name
+                                        }</span>
+                                        <div className={style.location}>
+                                            <span>
+                                                <img src="/images/locationIcon.svg" />
+                                                {lot.location.substring(0, 20) + '...'}
+                                            </span>
+                                            <span>
+                                                <img src="/images/metricsIcon.svg" />
 
-                                            {lot.metrics}
-                                            <sup>2</sup>
+                                                {lot.metrics}
+                                                <sup>2</sup>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className={style.lotPrice}>
+                                        <p>{formatCurrency(lot.finalPrice)}</p>
+                                        <p>{formatCurrency(lot.basePrice)}</p>
+                                    </div>
+                                    <button className={style.lotOptionsBtn} onClick={() => handleLotOptions(lot)}>...</button>
+                                    {(lot.id == showOptions.id && showOptions.selected) && (
+                                        <span className={style.lotOptions} >
+                                            <button>Editar</button>
+                                            <button>Visualizar</button>
                                         </span>
+                                    )}
+                                    <div className={style.lotViews}>
+                                        <span>{lot.userViews}</span>
+                                        <img src="/images/viewIcon.svg" alt="Visualizações" />
                                     </div>
                                 </div>
-                                <div className={style.lotPrice}>
-                                    <p>{formatCurrency(lot.finalPrice)}</p>
-                                    <p>{formatCurrency(lot.basePrice)}</p>
-                                </div>
-                                <button className={style.lotOptionsBtn} onClick={() => handleLotOptions(lot)}>...</button>
-                                {(lot.id == showOptions.id && showOptions.selected) && (
-                                    <span className={style.lotOptions} >
-                                        <button>Editar</button>
-                                        <button>Visualizar</button>
-                                    </span>
-                                )}
-                                <div className={style.lotViews}>
-                                    <span>{lot.userViews}</span>
-                                    <img src="/images/viewIcon.svg" alt="Visualizações"/>
-                                </div>
-                            </div>
-                        </li>
-                    )): (<p className={style.nullAlert}>Nenhum item encontrado.</p>)}
+                            </li>
+                        )) : (<p className={style.nullAlert}>Nenhum item encontrado.</p>)}
                 </ul>
                 <div className={style.divisionsListContainer}>
-                <h2>Loteamentos</h2>
-                <ul className={style.divisionsList}>
-                        {divisions.filter(divisionByName => divisionByName.name.includes(divisionSearch)).map((division, key) =>(
+                    <h2>Loteamentos</h2>
+                    <ul className={style.divisionsList}>
+                        {divisions.filter(divisionByName => divisionByName.name.includes(divisionSearch)).map((division, key) => (
                             <li key={key} onClick={() => handleEditDivision(division)}>
                                 <img src={division.logoUrl} alt="logotipo" />
                                 <div className={style.divInfo}>
-                                    <p>{division.name.length > 20 ? division.name.substring(0, 18) + '...': division.name}</p>
-                                    <span>{division.location.length > 20 ? division.location.substring(0, 18) + '...': division.location}</span>
+                                    <p>{division.name.length > 20 ? division.name.substring(0, 18) + '...' : division.name}</p>
+                                    <span>{division.location.length > 20 ? division.location.substring(0, 18) + '...' : division.location}</span>
                                 </div>
                             </li>
                         ))}
-                </ul>
-                <button className={style.addDivisionBtn} onClick={handlePopUps} name='divisionRegister'><img src='/images/plusIcon-green.svg' /> Cadastrar Loteamento</button>
+                    </ul>
+                    <button className={style.addDivisionBtn} onClick={handlePopUps} name='divisionRegister'><img src='/images/plusIcon-green.svg' /> Cadastrar Loteamento</button>
                 </div>
             </div>
         </section>

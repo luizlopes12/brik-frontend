@@ -20,6 +20,7 @@ const DivisionEditPopUp = () => {
   }, [partnerData])
   const handleExitPopUp = () => {
     setPopUps(popUps.divisionEdit = false)
+    setPartnerPopUp(false)
     setDivisionSelected({})
   }
   const divisionData = useMemo(() => {
@@ -208,20 +209,9 @@ const DivisionEditPopUp = () => {
             {alertMessage.logo.length > 0 && <p className={style.alertMessage}> {alertMessage.logo} </p>}
             {successMessage.logo.length > 0 && <p className={style.successMessage}> {successMessage.logo} </p>}
           </ul>
-          {/* <div className={style.blueprint}>
-          <a className={style.downloadBlueprint} onClick={handleDownloadBlueprint}><img src='/images/download.svg'/>
-              Planta baixa
-          </a>
-          <form ref={uploadBlueprintForm}>
-          <a className={style.uploadBlueprint}><img src='/images/download.svg'/>
-            <input type="file"  accept="image/*" onChange={(e) => handleUploadBlueprint(e)}/>
-            Planta baixa
-          </a>
-          </form>
-          </div> */}
-          {/* {alertMessage.blueprint.length > 0 && <p className={style.alertMessage}> {alertMessage.blueprint} </p>}
-          {successMessage.blueprint.length > 0 && <p className={style.successMessage}> {successMessage.blueprint} </p>} */}
+
         </div>
+
         <div className={style.partnersContent}>
           <h3 className={style.subHeading}>Sócios</h3>
           <ul className={style.partnersList}>
@@ -253,14 +243,25 @@ const DivisionEditPopUp = () => {
 
           </ul>
           {partnerPopUp ? (
-            <>
-              {alertMessage.partner.length > 0 && <span className={style.alertMessage}> {alertMessage.partner} </span>}
+            <div className={style.confirmPartnerWrapper}>
+              <span className={style.alertMessage}> {alertMessage.partner.length > 0 && alertMessage.partner} </span>
               <button className={style.addPartnerBtn} onClick={handleAddPartnertoDivision} name='addPartner'><img src='/images/confirm.svg' /> Confirmar</button>
-            </>
+            </div>
           ) : (
             <button className={style.addPartnerBtn} onClick={handleAddPartner} name='addPartner'><img src='/images/plusIcon-green.svg' /> Adicionar sócio</button>
           )}
         </div>
+        <div className={style.blueprint}>
+          <a className={style.downloadBlueprint} href={divisionData.blueprint} download target='noreferrer' onClick={handleDownloadBlueprint} ><img src='/images/goToPage.svg'/>
+              Planta baixa
+          </a>
+          <form ref={uploadBlueprintForm}>
+          <a className={style.uploadBlueprint}><img src='/images/uploadIcon.svg'/>
+            <input type="file" onChange={(e) => handleUploadBlueprint(e)}/>
+            Planta baixa
+          </a>
+          </form>
+          </div>
         <button className={style.saveBtn} onClick={handleSaveData}>{dataSaved ? 'Salvo!' : 'Salvar'} </button>
 
       </div>
