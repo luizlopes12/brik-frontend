@@ -43,7 +43,12 @@ const Lot = db.connection.define('Lotes', {
     userViews: {
         type: db.Sequelize.INTEGER,
         defaultValue: 0,
-    }
+    },
+    lotDescription: {
+        type: db.Sequelize.TEXT('long'),
+        required: false,
+    },
+
 })
 
 Division.hasMany(Lot, {as: 'lotes', foreignKey: 'idLoteamento', onDelete: 'cascade', hooks: true})

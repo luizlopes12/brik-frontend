@@ -15,6 +15,7 @@ const DivisionEditPopUp = () => {
   const [dataSaved, setDataSaved] = useState(false)
   const [partnerPopUp, setPartnerPopUp] = useState(false)
   const [partnerData, setPartnerData] = useState({})
+  const downloadBlueprintRef = useRef()
   const partnerValues = useMemo(() => { 
     return partnerData
   }, [partnerData])
@@ -29,32 +30,32 @@ const DivisionEditPopUp = () => {
   useEffect(() => {
     setAlertMessage({
       logo: '',
-      blueprint: '',
+      bluePrint: '',
       save: '',
       partner: ''
     })
     setSuccessMessage({
       logo: '',
-      blueprint: '',
+      bluePrint: '',
       save: ''
     })
   }, [popUps])
   useEffect(() => {
     setAlertMessage({
       logo: '',
-      blueprint: '',
+      bluePrint: '',
       save: '',
       partner: ''
     })
   }, [popUps])
   const [successMessage, setSuccessMessage] = useState({
     logo: '',
-    blueprint: '',
+    bluePrint: '',
     save: ''
   })
   const [alertMessage, setAlertMessage] = useState({
     logo: '',
-    blueprint: '',
+    bluePrint: '',
     save: ''
   })
   const handleDivisionData = (e) => {
@@ -66,7 +67,7 @@ const DivisionEditPopUp = () => {
     if (!image) {
       setAlertMessage(prev => ({ ...prev, logo: 'Não foi possível realizar o upload, tente novamente.' }))
       setSuccessMessage(prev => ({ ...prev, logo: '' }))
-      setTimeout(() => setAlertMessage(prev => ({ ...prev, blueprint: '' })), 5000)
+      setTimeout(() => setAlertMessage(prev => ({ ...prev, logo: '' })), 5000)
     } else {
       const currentDate = new Date().getTime();
       const storageRef = ref(storage, `files/logos/${currentDate}_${image.name}`)
@@ -94,12 +95,12 @@ const DivisionEditPopUp = () => {
     let image = e.target?.files[0]
     // reiceves reader.result and this need to be uploaded and updated on backend
     if (!image) {
-      setAlertMessage(prev => ({ ...prev, blueprint: 'Não foi possível realizar o upload, tente novamente.' }))
-      setSuccessMessage(prev => ({ ...prev, blueprint: '' }))
-      setTimeout(() => setAlertMessage(prev => ({ ...prev, blueprint: '' })), 5000)
+      setAlertMessage(prev => ({ ...prev, bluePrint: 'Não foi possível realizar o upload, tente novamente.' }))
+      setSuccessMessage(prev => ({ ...prev, bluePrint: '' }))
+      setTimeout(() => setAlertMessage(prev => ({ ...prev, bluePrint: '' })), 5000)
     } else {
       const currentDate = new Date().getTime();
-      const storageRef = ref(storage, `files/blueprints/${currentDate}_${image.name}`)
+      const storageRef = ref(storage, `files/bluePrints/${currentDate}_${image.name}`)
       const uploadTask = uploadBytesResumable(storageRef, image)
       uploadTask.on(
         "state_changed",
@@ -110,10 +111,10 @@ const DivisionEditPopUp = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setDivisionSelected(prev => ({ ...prev, blueprint: downloadURL }))
-            setAlertMessage(prev => ({ ...prev, blueprint: '' }))
-            setSuccessMessage(prev => ({ ...prev, blueprint: 'Upload realizado com sucesso.' }))
-            setTimeout(() => setSuccessMessage(prev => ({ ...prev, blueprint: '' })), 5000)
+            setDivisionSelected(prev => ({ ...prev, bluePrint: downloadURL }))
+            setAlertMessage(prev => ({ ...prev, bluePrint: '' }))
+            setSuccessMessage(prev => ({ ...prev, bluePrint: 'Upload realizado com sucesso.' }))
+            setTimeout(() => setSuccessMessage(prev => ({ ...prev, bluePrint: '' })), 5000)
           });
         }
       );
@@ -125,7 +126,7 @@ const DivisionEditPopUp = () => {
       name: divisionData.name,
       logo: divisionData.logoUrl,
       location: divisionData.location,
-      blueprint: divisionData.blueprint,
+      bluePrint: divisionData.bluePrint,
     })
     await fetch(`http://localhost:8080/divisions/edit/${divisionData.id}`, {
       method: 'PATCH',
@@ -148,16 +149,8 @@ const DivisionEditPopUp = () => {
       })
   }
   const handleDownloadBlueprint = () => {
-    var element = document.createElement("a");
-    var file = new Blob(
-      [
-        divisionSelected.blueprint
-      ],
-      { type: "image/png" }
-    );
-    element.href = URL.createObjectURL(file);
-    element.download = `${divisionSelected.name}`;
-    element.click();
+      downloadBlueprintRef.download = divisionData.bluePrint;
+      downloadBlueprintRef.href = divisionData.bluePrint;
   }
 
   const handleAddPartner = async () => {
@@ -251,8 +244,8 @@ const DivisionEditPopUp = () => {
             <button className={style.addPartnerBtn} onClick={handleAddPartner} name='addPartner'><img src='/images/plusIcon-green.svg' /> Adicionar sócio</button>
           )}
         </div>
-        <div className={style.blueprint}>
-          <a className={style.downloadBlueprint} href={divisionData.blueprint} download target='noreferrer' onClick={handleDownloadBlueprint} ><img src='/images/goToPage.svg'/>
+        <div className={style.bluePrint}>
+        <a className={style.downloadBlueprint} href={divisionData.bluePrint} download target='noreferrer' onClick={handleDownloadBlueprint} ><img src='/images/goToPage.svg'/>
               Planta baixa
           </a>
           <form ref={uploadBlueprintForm}>
@@ -262,6 +255,8 @@ const DivisionEditPopUp = () => {
           </a>
           </form>
           </div>
+          {alertMessage.bluePrint.length > 0 && <p className={style.alertMessage}> {alertMessage.bluePrint} </p>}
+          {successMessage.bluePrint.length > 0 && <p className={style.successMessage}> {successMessage.bluePrint} </p>}
         <button className={style.saveBtn} onClick={handleSaveData}>{dataSaved ? 'Salvo!' : 'Salvar'} </button>
 
       </div>

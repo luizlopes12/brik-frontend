@@ -1,4 +1,5 @@
 @import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
 
 
 .popUpBackdrop{
@@ -32,5 +33,148 @@
     }
     &:hover{
         cursor: pointer;
+    }
+}
+
+.lotInfoWrapper{
+    display: flex;
+    gap: 2rem;
+}
+.uploadImage{
+    position: relative;
+    @include actionButton($text-dark-blue, $gray_color-6);
+    img{
+        width: 20px;
+    }
+    input{
+        max-width: max-content;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        opacity: 0;
+        &::file-selector-button{
+            cursor: pointer;
+        }   
+    }
+}   
+
+.lotImagesWrapper{
+    width: 100%;
+    max-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+.lotImages{
+    outline: 1px solid $gray_color-4;
+    border-radius: 8px;
+    max-width: 100%;
+    position: relative;
+
+    .lotImagesCarrousel{
+        display: flex;
+        overflow: hidden;
+        transition: all .2s ease-in-out;
+        border-radius: 8px;
+        scroll-behavior: smooth;
+        img{
+            width: 100%;
+        }
+    }
+    .carrouselControllers{
+        overflow: hidden;
+        position: absolute;
+        border-radius: 8px;
+        top: 0;
+        left: 0;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        justify-content: space-between;
+        li{
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding: 0 5px 0 5px;
+            transition: all .2s ease-in-out;
+            img{
+                height: 20px;
+            }
+            .controlPrev{
+                border-radius: 0 8px 8px 0;
+            }
+        }
+        &:hover{
+            li{
+                opacity: 1;
+                background: transparentize($bg_dark-color, 0.6);
+                cursor: pointer;
+            }
+        }
+        &:not(:hover){
+            li{
+                opacity: 0;
+            }
+        }
+    }
+}
+
+.lotTexts{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.lotTitle{
+    input{
+        font-weight: 700;
+        font-size: 1.8rem;
+        max-width: fit-content;
+        color: $text-black;
+    }
+}
+.lotDescription{
+    flex-grow: 1;
+    textarea{
+        width: 100%;
+        height: 100px;
+        word-wrap: break-word;
+        resize: none;
+        font-size: 1rem;
+        color: lighten($text-black, 40%) ;
+        &::-webkit-scrollbar{
+            width: 8px;
+            background: transparentize($gray_color-4, 0.8);
+            border-radius: 5px;
+        }
+        &::-webkit-scrollbar-thumb{
+            background: transparentize($gray_color-1, 0.4);
+            border-radius: 5px;
+        }
+    }
+
+}
+
+.lotDivision{
+    display: flex;
+    align-items: center;
+    width: max-content;
+    gap: .5rem;
+    padding: 5px 12px 5px 5px;
+    border-radius: 12px;
+    &:hover{
+        cursor: pointer;
+        background: $gray_color-4;
+    }
+    img{
+        outline: 1px solid $gray_color-4;
+        border-radius: 50%;	
+        width: 50px;
+    }
+    span{
+        font-size: 1.2rem;
+        color: $text-black;
     }
 }

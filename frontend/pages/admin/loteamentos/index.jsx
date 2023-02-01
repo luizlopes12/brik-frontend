@@ -60,6 +60,7 @@ const Loteamentos = ({ firstDivisionsData }) => {
     }
     const handleEditDivision = (selectedDivision) => {
         setDivisionSelected(selectedDivision)
+        console.log(selectedDivision)
         setPopUps((prevState) => ({ ...prevState, divisionEdit: true }))
     }
     const handleLotOptions = (selectedLot) => {

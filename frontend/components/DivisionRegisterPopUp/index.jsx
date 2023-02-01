@@ -7,12 +7,12 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/
 import { storage } from '../../configs/firebase'
 
 const DivisionRegisterPopUp = () => {
-  const {setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
+  const { setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
   const uploadLogoForm = useRef()
   const uploadBlueprintForm = useRef()
   const { popUps, setPopUps } = useContext(popUpsContext)
   const [ dataSaved, setDataSaved ] = useState(false)
-  const [blueprintRef, setBlueprintRef] = useState('')
+  const [bluePrintRef, setBlueprintRef] = useState('')
   const downloadBlueprintRef = useRef()
 
   const [divisionData, setDivisionData] = useState({
@@ -20,6 +20,7 @@ const DivisionRegisterPopUp = () => {
     name: 'Nome do Loteamento',
     location: 'Endereço do Loteamento',
     divisionPartners: [],
+    bluePrint: '',
   })
   const handleExitPopUp = () => {
     setPopUps(popUps.divisionRegister = false)
@@ -34,23 +35,23 @@ const DivisionRegisterPopUp = () => {
   useEffect(() =>{
     setAlertMessage({
       logo: '',
-      blueprint: '',
+      bluePrint: '',
       save: ''
     })
     setSuccessMessage({
       logo: '',
-      blueprint: '',
+      bluePrint: '',
       save: ''
     })
   },[popUps])
   const [successMessage, setSuccessMessage] = useState({
     logo: '',
-    blueprint: '',
+    bluePrint: '',
     save: ''
   })
   const [alertMessage, setAlertMessage] = useState({
     logo: '',
-    blueprint: '',
+    bluePrint: '',
     save: ''
   })
   const handleDivisionData = (e) =>{
@@ -101,28 +102,28 @@ const DivisionRegisterPopUp = () => {
     let image = e.target?.files[0]
     // reiceves reader.result and this need to be uploaded and updated on backend
     if(!image){
-      setAlertMessage(prev => ({...prev, blueprint: 'Não foi possível realizar o upload, tente novamente.'}))
-      setSuccessMessage(prev => ({...prev, blueprint: ''}))
+      setAlertMessage(prev => ({...prev, bluePrint: 'Não foi possível realizar o upload, tente novamente.'}))
+      setSuccessMessage(prev => ({...prev, bluePrint: ''}))
     }else{
       const currentDate = new Date().getTime();
-      setBlueprintRef(`files/blueprints/${currentDate}_${image.name}`)
-      const storageRef = ref(storage, `files/blueprints/${currentDate}_${image.name}`)
+      setBlueprintRef(`files/bluePrints/${currentDate}_${image.name}`)
+      const storageRef = ref(storage, `files/bluePrints/${currentDate}_${image.name}`)
       const uploadTask = uploadBytesResumable(storageRef, image)
       uploadTask.on(
         "state_changed",
         (snapshot) => {
         },
         (error) => {
-          setAlertMessage(prev => ({...prev, blueprint: 'Não foi possível realizar o upload, tente novamente.'}))
-          setSuccessMessage(prev => ({...prev, blueprint: ''}))
-          setTimeout(() => setAlertMessage(prev => ({ ...prev, blueprint: '' })), 5000)
+          setAlertMessage(prev => ({...prev, bluePrint: 'Não foi possível realizar o upload, tente novamente.'}))
+          setSuccessMessage(prev => ({...prev, bluePrint: ''}))
+          setTimeout(() => setAlertMessage(prev => ({ ...prev, bluePrint: '' })), 5000)
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setDivisionData(prev => ({...prev, blueprint: downloadURL}))
-            setAlertMessage(prev => ({...prev, blueprint: ''}))
-            setSuccessMessage(prev => ({...prev, blueprint: 'Upload realizado com sucesso.'}))
-            setTimeout(() => setSuccessMessage(prev => ({ ...prev, blueprint: '' })), 5000)
+            setDivisionData(prev => ({...prev, bluePrint: downloadURL}))
+            setAlertMessage(prev => ({...prev, bluePrint: ''}))
+            setSuccessMessage(prev => ({...prev, bluePrint: 'Upload realizado com sucesso.'}))
+            setTimeout(() => setSuccessMessage(prev => ({ ...prev, bluePrint: '' })), 5000)
           });
         }
       );
@@ -134,7 +135,7 @@ const DivisionRegisterPopUp = () => {
       name: divisionData.name,
       logo: divisionData.logoUrl,
       location: divisionData.location,
-      blueprint: divisionData.blueprint
+      bluePrint: divisionData.bluePrint
     })
     await fetch(`http://localhost:8080/divisions/add`,{
       method: 'POST',
@@ -158,8 +159,8 @@ const DivisionRegisterPopUp = () => {
 
   }
   const handleDownloadBlueprint = () => {
-    downloadBlueprintRef.download = divisionData.blueprint;
-    downloadBlueprintRef.href = divisionData.blueprint;
+    downloadBlueprintRef.download = divisionData.bluePrint;
+    downloadBlueprintRef.href = divisionData.bluePrint;
   };
   
   return (
@@ -181,13 +182,11 @@ const DivisionRegisterPopUp = () => {
             <li className={style.inputField}>
               <span><img src="/images/locationIcon.svg" /></span><input value={divisionData.location} name="location" onChange={(e) => handleDivisionData(e)} />
             </li>
-            {/* {alertMessage.logo.length > 0 && <p className={style.alertMessage}> {alertMessage.logo} </p>}
-            {successMessage.logo.length > 0 && <p className={style.successMessage}> {successMessage.logo} </p>} */}
           </ul>
 
         </div>
-        <div className={style.blueprint}>
-          <a className={style.downloadBlueprint} href={divisionData.blueprint} download target='noreferrer' onClick={handleDownloadBlueprint} ><img src='/images/goToPage.svg'/>
+        <div className={style.bluePrint}>
+          <a className={style.downloadBlueprint} href={divisionData.bluePrint} download target='noreferrer' onClick={handleDownloadBlueprint} ><img src='/images/goToPage.svg'/>
               Planta baixa
           </a>
           <form ref={uploadBlueprintForm}>
@@ -197,8 +196,8 @@ const DivisionRegisterPopUp = () => {
           </a>
           </form>
           </div>
-          {alertMessage.blueprint.length > 0 && <p className={style.alertMessage}> {alertMessage.blueprint} </p>}
-          {successMessage.blueprint.length > 0 && <p className={style.successMessage}> {successMessage.blueprint} </p>}
+          {alertMessage.bluePrint.length > 0 && <p className={style.alertMessage}> {alertMessage.bluePrint} </p>}
+          {successMessage.bluePrint.length > 0 && <p className={style.successMessage}> {successMessage.bluePrint} </p>}
         <div className={style.saveBtnWrapper}>
         <button className={style.saveBtn} onClick={handleSaveData}>{dataSaved ? 'Salvo!' : 'Salvar'} </button>
         </div>

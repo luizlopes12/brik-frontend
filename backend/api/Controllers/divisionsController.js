@@ -65,13 +65,13 @@ class divisionsController {
     }
     static addNewDivision = async (req, res) =>{
         // Logo and blueprint will be a imgur url to the image
-        let { name, logo, location, blueprint, divisionPartners } = req.body
+        let { name, logo, location, bluePrint, divisionPartners } = req.body
         let newDivision = await Division.create({
             name: name,
             logoUrl: logo,
             lotsQuantity: 0,
             location: location,
-            bluePrint: blueprint,
+            bluePrint: bluePrint,
             divisionPartners: divisionPartners
         })
         if(newDivision){
