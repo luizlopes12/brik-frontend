@@ -38,11 +38,13 @@
 
 .lotInfoWrapper{
     display: flex;
-    gap: 2rem;
+    gap: 1rem;
 }
 .uploadImage{
     position: relative;
     @include actionButton($text-dark-blue, $gray_color-6);
+
+    justify-content: center;
     img{
         width: 20px;
     }
@@ -61,7 +63,7 @@
 
 .lotImagesWrapper{
     width: 100%;
-    max-width: 200px;
+    max-width: 240px;
     display: flex;
     flex-direction: column;
     gap: .5rem;
@@ -78,8 +80,11 @@
         transition: all .2s ease-in-out;
         border-radius: 8px;
         scroll-behavior: smooth;
-        img{
-            width: 100%;
+        max-width: 240px;
+        max-height: 120px;
+       >img{
+            max-width: 100%;
+            max-height: 100%;
         }
     }
     .carrouselControllers{
@@ -128,6 +133,8 @@
 }
 
 .lotTitle{
+    padding-left: 5px ;
+    
     input{
         font-weight: 700;
         font-size: 1.8rem;
@@ -137,6 +144,7 @@
 }
 .lotDescription{
     flex-grow: 1;
+    padding-left: 5px ;
     textarea{
         width: 100%;
         height: 100px;
@@ -158,23 +166,82 @@
 }
 
 .lotDivision{
+    position: relative;
+    .divisionSelected{
+        display: flex;
+        align-items: center;
+        max-width: 100%;
+        gap: .5rem;
+        padding: 5px 12px 5px 5px;
+        border-radius: 12px;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        &:hover{
+            cursor: pointer;
+            background: $gray_color-4;
+        }
+        img{
+            outline: 1px solid $gray_color-4;
+            border-radius: 50%;	
+            width: 50px;
+        }
+        span{
+            font-size: 1.2rem;
+            color: $text-black;
+        }
+    }
+}
+
+
+.divisionOptionsSelector{
+    position: absolute;
     display: flex;
-    align-items: center;
-    width: max-content;
+    flex-direction: column;
     gap: .5rem;
-    padding: 5px 12px 5px 5px;
-    border-radius: 12px;
-    &:hover{
-        cursor: pointer;
-        background: $gray_color-4;
+    top: 4rem;
+    left: 0;
+    background: $bg_white-color;
+    outline: 1px solid $gray_color-4;
+    max-height: 300px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 1rem 1rem 1.5rem;
+    border-radius: 5px;
+    &::-webkit-scrollbar{
+        width: 8px;
+        background: transparentize($gray_color-4, 0.8);
+        border-radius: 5px;
     }
-    img{
-        outline: 1px solid $gray_color-4;
-        border-radius: 50%;	
-        width: 50px;
+    &::-webkit-scrollbar-thumb{
+        background: transparentize($gray_color-1, 0.4);
+        border-radius: 5px;
     }
-    span{
-        font-size: 1.2rem;
-        color: $text-black;
+    .divisionSearchInput{
+        div{
+            justify-content: space-between;
+        }
     }
+    .divisionOption{
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: .5rem;
+        padding: 5px 12px 5px 5px;
+        border-radius: 12px;
+        &:hover{
+            cursor: pointer;
+            background: $gray_color-4;
+        }
+        img{
+            outline: 1px solid $gray_color-4;
+            border-radius: 50%;	
+            width: 50px;
+        }
+        span{
+            font-size: 1.2rem;
+            color: $text-black;
+        }
+    }
+
 }

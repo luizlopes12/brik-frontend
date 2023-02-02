@@ -48,7 +48,7 @@ const Loteamentos = ({ firstDivisionsData }) => {
             lotsData
                 .filter(lotByDivision => lotByDivision.idLoteamento == (selectValues.division != 'all' ? selectValues.division : lotByDivision.idLoteamento))
                 .filter(lotByAvaibility => lotByAvaibility.isAvaible == selectValues.availability)
-                .filter(lotByName => lotByName.name.includes(lotsSearch))
+                .filter(lotByName => lotsSearch.length > 0 ? lotByName.name.toLowerCase().includes(lotsSearch.toLowerCase()) : lotByName)
         )
     }, [lotsSearch, selectValues, lotsData])
     /* Handles */
@@ -158,7 +158,7 @@ const Loteamentos = ({ firstDivisionsData }) => {
                 <div className={style.divisionsListContainer}>
                     <h2>Loteamentos</h2>
                     <ul className={style.divisionsList}>
-                        {divisions.filter(divisionByName => divisionByName.name.includes(divisionSearch)).map((division, key) => (
+                        {divisions.filter(divisionByName => divisionByName.name.toLowerCase().includes(divisionSearch.toLowerCase())).map((division, key) => (
                             <li key={key} onClick={() => handleEditDivision(division)}>
                                 <img src={division.logoUrl} alt="logotipo" />
                                 <div className={style.divInfo}>

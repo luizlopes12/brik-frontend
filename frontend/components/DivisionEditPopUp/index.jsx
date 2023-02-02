@@ -77,7 +77,6 @@ const DivisionEditPopUp = () => {
         (snapshot) => {
         },
         (error) => {
-          alert(error);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -107,7 +106,6 @@ const DivisionEditPopUp = () => {
         (snapshot) => {
         },
         (error) => {
-          alert(error);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {

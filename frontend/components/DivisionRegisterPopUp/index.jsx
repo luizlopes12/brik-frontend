@@ -57,15 +57,7 @@ const DivisionRegisterPopUp = () => {
   const handleDivisionData = (e) =>{
     setDivisionData(prev => ({...prev, [e.target.name]: e.target.value}))
   }
-  const doUpload = (url, options) => {
-    const promiseCallback = (resolve, reject) =>{
-      fetch(url,options)
-      .then(response => response.json())
-      .then(resolve)
-      .catch(reject)
-    }
-    return new Promise(promiseCallback)
-  }
+
   const handleUploadLogo = async (e) =>{
       let image = e.target?.files[0]
       // reiceves reader.result and this need to be uploaded and updated on backend
@@ -81,7 +73,6 @@ const DivisionRegisterPopUp = () => {
           (snapshot) => {
           },
           (error) => {
-            alert(error);
           setAlertMessage(prev => ({...prev, logo: 'Não foi possível realizar o upload, tente novamente.'}))
           setSuccessMessage(prev => ({...prev, logo: ''}))
           setTimeout(() => setAlertMessage(prev => ({ ...prev, logo: '' })), 5000)
