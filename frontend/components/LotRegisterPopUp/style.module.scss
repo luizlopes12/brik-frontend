@@ -21,6 +21,7 @@
     padding: 30px 20px 20px;
     border-radius: 5px;
     max-width: 60vw;
+    max-height: 95vh;
     position: relative;
 }
 
@@ -147,7 +148,10 @@
     padding-left: 5px ;
     textarea{
         width: 100%;
-        height: 100px;
+        outline: 1px solid $gray_color-4;
+        border-radius: 3px;
+        padding: 3px;
+        height: 80px;
         word-wrap: break-word;
         resize: none;
         font-size: 1rem;
@@ -170,13 +174,14 @@
     .divisionSelected{
         display: flex;
         align-items: center;
-        max-width: 100%;
+        max-width: max-content;
         gap: .5rem;
         padding: 5px 12px 5px 5px;
         border-radius: 12px;
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        transition: all .2s ease-in-out;
         &:hover{
             cursor: pointer;
             background: $gray_color-4;
@@ -244,4 +249,280 @@
         }
     }
 
+}
+
+.lotDataWrapper{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    .lotDataInputs{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        width: 500px;
+        gap: 1rem;
+        .locationArea{
+            display: flex;
+            flex-direction: column;
+            gap: .4rem; 
+            h3{
+                font-size: 1.2rem;
+                color: $text-black;
+                font-weight: 700;
+            }
+            .locationInputs{
+                width: 100%;
+                display: flex;
+                font-size: .9rem;
+                input{
+                    border-bottom: 1px solid $gray_color-1;
+                    padding-bottom: 5px;
+                    &::placeholder {
+                        opacity: .5;
+                      }
+                }
+                input:nth-of-type(1){
+                   flex-grow: 1; 
+                }
+            }
+        }
+    }
+    .lotDataActions{
+        height: 100%;
+    }
+}
+
+.metricsArea{
+    display: flex;
+    justify-content: space-between;
+    h3{
+        font-size: 1.2rem;
+        color: $text-black;
+        font-weight: 700;
+    }
+    .metricsInputs{
+        display: flex;
+        input{
+            font-size: 1.2rem;
+            padding: 0 5px 0 5px;
+            text-align: end;
+            font-weight: 700;
+            max-width: 8ch;
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            }
+            background: $gray_color-5;
+            border-radius: 5px 0 0 5px;
+
+        }
+        span{
+            background: $green_color-2;
+            color: $text-black;
+            padding: 3px 5px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius:  0 5px 5px 0;
+        }
+        sup{
+            vertical-align: super;
+            font-size: smaller;
+        }
+    }
+}
+
+
+.priceArea{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    .salePrice{
+        display: flex;
+        justify-content: space-between;
+        h3{
+            font-size: 1.2rem;
+            color: $text-black;
+            font-weight: 700;
+        }
+        .priceInputs{
+            display: flex;
+        input{
+            font-size: 1.2rem;
+            font-weight: 700;
+            max-width: 8ch;
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            }
+            background: $gray_color-5;
+            border-radius:  0 5px 5px 0;
+            padding: 0 5px 0 0;
+        }
+        span{
+            background: $green_color-2;
+            color: $text-black;
+            padding: 3px 5px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 5px 0 0 5px;
+        }
+    
+    }
+    }
+    
+    .basePrice{
+        display: flex;
+        justify-content: space-between;
+        input{
+            max-width: 10ch;
+            padding: 0 5px 0 5px;
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            }
+        }
+    }
+}
+
+.hiddenPrice{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    span{
+        font-size: 1.1rem;
+    }
+    input[type=checkbox] {
+        position: relative;
+          border: 2px solid $bg_dark-color;
+          border-radius: 2px;
+          background: none;
+          cursor: pointer;
+          line-height: 0;
+          margin: 0 .4em 0 0;
+          outline: 0;
+          padding: 0 !important;
+          vertical-align: text-top;
+          height: 18px;
+          width: 18px;
+          -webkit-appearance: none;
+        opacity: .5;
+      }
+      
+      input[type=checkbox]:hover {
+        opacity: 1;
+      }
+      
+      input[type=checkbox]:checked {
+        background-color: $bg_dark-color;
+        opacity: 1;
+      }
+      
+      input[type=checkbox]:before {
+        content: "";
+        position: absolute;
+        right: 50%;
+        top: 50%;
+        width: 6px;
+        height: 12px;
+        border: solid #FFF;
+        border-width: 0 2px 2px 0;
+        margin: -1px -1px 0 0px;
+        transform: rotate(45deg) translate(-50%, -50%);
+        z-index: 2;
+    }
+}
+
+.parcelQuantity{
+    display: flex;
+    justify-content: space-between;
+
+
+    .parcelQuantityInput{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .2rem;
+        button{
+            background: $bg_white-color;
+            width: 20px;
+            height: 22px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            padding: 5px;
+            outline: .5px solid $gray_color-2;  
+        }
+        input{
+            font-size: 1.2rem;
+            color: $text-black;
+            font-weight: 600;
+            text-align: center;
+            width: 30px;
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            }
+        }
+    }
+    
+}
+
+
+.parcelArea{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    
+    .taxes{
+        font-size: 1.1rem;
+        display: flex;
+        width: 100%;
+        justify-content: space-between; 
+        input{
+            max-width: 4ch;
+            text-align: end;
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            }
+        }
+        span{
+            color: $text-black;
+            font-weight: 700;
+        }
+    }
+    .parcelQuantity{
+        h3 {
+            font-size: 1.2rem;
+            color: $text-black;
+            font-weight: 700;
+        }
+    }
+}
+.lotStatus{
+    display: flex;
+    justify-content: space-between;
+    h3 {
+        font-size: 1.2rem;
+        color: $text-black;
+        font-weight: 700;
+    }
+}
+
+.dropdownMenu{
+    @include dropDown();
+}
+.statusInfo{
+    font-size: .9rem;
+    font-weight: 400;
 }

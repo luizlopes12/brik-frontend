@@ -11,7 +11,6 @@ class lotsController {
         let {
             name, 
             lotType, 
-            thumb,
             location, 
             metrics, 
             basePrice,
@@ -24,7 +23,6 @@ class lotsController {
             let newLot = await Lot.create({
                 name, 
                 lotType, 
-                thumb,
                 location, 
                 metrics, 
                 basePrice,
