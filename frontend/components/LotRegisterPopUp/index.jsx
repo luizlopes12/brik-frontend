@@ -12,6 +12,7 @@ const LotRegisterPopUp = () => {
   const { popUps, setPopUps } = useContext(popUpsContext)
   const { globalDivisionsData, setGlobalDivisionsDataContext } = useContext(globalDivisionsDataContext)
   const [showDivisionOptions, setShowDivisionOptions] = useState(false)
+  const [deletePartnerFromLot, setDeletePartnerFromLot] = useState(false)
   const [lotImages, setLotImages] = useState([
     '/images/labels/without-image.png',
   ])
@@ -25,6 +26,18 @@ const LotRegisterPopUp = () => {
     hiddenPrice: false,
     parcelQuantity: 0,
     taxPercentage: 0,
+    partners: [
+      {
+        name: 'Nome do Parceiro',
+        CPF: '000.000.000-00',
+        percentage: 0,
+      },
+      {
+        name: 'Nome do Parceiro',
+        CPF: '000.000.000-00',
+        percentage: 1,
+      }
+    ],
   })
   const [divisionSearch, setDivisionSearch] = useState('')
   const [lotDivision, setLotDivision] = useState({
@@ -125,6 +138,13 @@ const LotRegisterPopUp = () => {
   }
   const Availabilities = [{ name: 'Disponível', value: 'avaible' }, { name: 'Indisponível', value: 'unavaible' }, { name: 'Reservado', value: 'reserved' }]
 
+  const handlePartnerActions = (partnerSelectedData) => {
+    console.log(partnerSelectedData)
+    setDeletePartnerFromLot(prev  => !prev)
+  }
+  const handleDeletePartnerFromLot = (partnerData) => {
+
+  }
   return (
     <div className={popUps.lotRegister ? style.popUpBackdrop : style.popUpDisabled}>
       <div className={style.popUpWrapper}>
@@ -254,7 +274,39 @@ const LotRegisterPopUp = () => {
                 
               </div>
         </div>
-          <div className={style.lotDataActions}></div>
+          <div className={style.lotDataActions}>
+            <div className={style.partnersArea}>
+              <div className={style.lotDataActionsHeader}>
+                <h3>Sócios</h3>
+                {deletePartnerFromLot && (
+                                  <div className={style.deletePartner} onClick={handleDeletePartnerFromLot}>
+                                  <img src="/images/deleteIcon.svg" alt="delete" />
+                              </div>
+                  )}
+
+              </div>
+              
+              <div className={style.partners}>
+                <ul className={style.partnersList}>
+                  <li className={style.partnersListHeader}>
+                    <span>Nome</span>
+                    <span>CPF</span>
+                    <span>%</span>
+                  </li>
+                  {lotData.partners.map((partner, index) => (
+                    <li className={style.partnersListItem}  onClick={() => handlePartnerActions(partner)}>
+                    <input value={partner.name} disabled type='text' className={style.partnerName}/>
+                    <input value={partner.CPF} disabled type='text' className={style.partnerCPF}/>
+                    <div>
+                    <input value={partner.percentage} min='0' disabled max='100' type='number' className={style.partnerPercentage}/>
+                    <span>%</span>
+                    </div>
+                  </li>
+                ))}
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

@@ -20,7 +20,6 @@
     background: $bg_white-color;
     padding: 30px 20px 20px;
     border-radius: 5px;
-    max-width: 60vw;
     max-height: 95vh;
     position: relative;
 }
@@ -525,4 +524,75 @@
 .statusInfo{
     font-size: .9rem;
     font-weight: 400;
+}
+
+.partnersArea{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    .lotDataActionsHeader{
+        display: flex;
+        justify-content: space-between;
+    }
+    .partners{
+        background: $text-dark-blue;
+        padding: 1rem;
+        .partnersListHeader{
+            color: $text-white;
+        }
+        .partnersList{
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+            .partnersListHeader{
+            display: flex;
+            opacity: .5;    
+            font-size: .9rem;
+
+            span{
+                width: 140px;
+                &:nth-of-type(3){
+                    width: 6ch;
+                    text-align: right;
+                }
+            }         
+            }
+            .partnersListItem{
+                color: $text-white;
+                display: flex;
+                font-size: .9rem;
+                padding: .2rem 0;
+                &:hover{
+                    background: transparentize($text-white, 0.8);
+                    cursor: pointer;
+                }
+                div{
+                    width: 6ch;
+                }
+                input{
+                    max-width: 140px;
+                    &.partnerPercentage{
+                        width: 4.5ch;
+                        text-align: right;
+                        &::-webkit-outer-spin-button,
+                        &::-webkit-inner-spin-button {
+                        -webkit-appearance: none;
+                        margin: 0;
+                    }
+                }
+            }
+
+        }
+    }
+}
+    h3{
+        font-size: 1.2rem;
+        color: $text-black;
+        font-weight: 700;
+    }
+}
+
+.deletePartner{
+    cursor: pointer;
+    max-height: 20px;
 }

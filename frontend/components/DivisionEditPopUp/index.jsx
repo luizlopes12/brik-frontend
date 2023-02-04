@@ -227,7 +227,7 @@ const DivisionEditPopUp = () => {
             {partnerPopUp && ((
               <li className={style.partnerAddForm}>
                 <input type="text" placeholder='Nome' name='name' value={partnerValues.name} onChange={handlePartnerData} />
-                <input type="text" placeholder='CPF' name='CPF'  value={partnerValues.CPF}  pattern="(\d{3}\.?\d{3}\.?\d{3}-?\d{2})|(\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2})"  onChange={handlePartnerData} />
+                <input type="text" placeholder='CPF' name='CPF'  value={partnerValues.CPF} onChange={handlePartnerData} />
                 <input type="number" placeholder='%' name='percentage' value={partnerValues.percentage}  max='100' min='0' onChange={handlePartnerData} />
               </li>
             ))}
