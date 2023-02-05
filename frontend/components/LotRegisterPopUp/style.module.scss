@@ -544,6 +544,17 @@
             display: flex;
             flex-direction: column;
             gap: .5rem;
+            max-height: 150px;
+            overflow-y: scroll;
+            &::-webkit-scrollbar{
+                width: 4px;
+                background: transparentize($gray_color-4, 0.8);
+                border-radius: 5px;
+            }
+            &::-webkit-scrollbar-thumb{
+                background: transparentize($green_color-1, 0.4);
+                border-radius: 5px;
+            }
             .partnersListHeader{
             display: flex;
             opacity: .5;    
@@ -595,4 +606,28 @@
 .deletePartner{
     cursor: pointer;
     max-height: 20px;
+}
+.partnersListItemEdit{
+    color: $text-white;
+    display: flex;
+    font-size: .9rem;
+    padding: .2rem 0;
+    background: transparentize($text-white, 0.8);
+    cursor: pointer;
+    div{
+        width: 6ch;
+    }
+    input{
+        max-width: 140px;
+        &.partnerPercentage{
+            width: 4.5ch;
+            text-align: right;
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    }
+    }
+    
 }

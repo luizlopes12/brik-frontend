@@ -12,7 +12,7 @@ const LotRegisterPopUp = () => {
   const { popUps, setPopUps } = useContext(popUpsContext)
   const { globalDivisionsData, setGlobalDivisionsDataContext } = useContext(globalDivisionsDataContext)
   const [showDivisionOptions, setShowDivisionOptions] = useState(false)
-  const [deletePartnerFromLot, setDeletePartnerFromLot] = useState(false)
+  const [editPartnerFromLot, setEditPartnerFromLot] = useState(false)
   const [lotImages, setLotImages] = useState([
     '/images/labels/without-image.png',
   ])
@@ -28,11 +28,39 @@ const LotRegisterPopUp = () => {
     taxPercentage: 0,
     partners: [
       {
+        id: 0,
         name: 'Nome do Parceiro',
         CPF: '000.000.000-00',
         percentage: 0,
       },
       {
+        id: 1,
+        name: 'Nome do Parceiro',
+        CPF: '000.000.000-00',
+        percentage: 1,
+      },
+      {
+        id: 2,
+        name: 'Nome do Parceiro',
+        CPF: '000.000.000-00',
+        percentage: 1,
+      },
+      {
+        id: 3,
+        name: 'Nome do Parceiro',
+        CPF: '000.000.000-00',
+        percentage: 1,
+      }
+      ,
+      {
+        id: 4,
+        name: 'Nome do Parceiro',
+        CPF: '000.000.000-00',
+        percentage: 1,
+      }
+      ,
+      {
+        id: 5,
         name: 'Nome do Parceiro',
         CPF: '000.000.000-00',
         percentage: 1,
@@ -127,7 +155,7 @@ const LotRegisterPopUp = () => {
   const handleSearchDivision = (e) => {
     setDivisionSearch(e.target.value)
   }
-  const handleAddParcel = () => { 
+  const handleAddParcel = () => {
     setLotData(prev => ({ ...prev, parcelQuantity: prev.parcelQuantity + 1 }))
   }
   const handleRemoveParcel = () => {
@@ -139,12 +167,20 @@ const LotRegisterPopUp = () => {
   const Availabilities = [{ name: 'Disponível', value: 'avaible' }, { name: 'Indisponível', value: 'unavaible' }, { name: 'Reservado', value: 'reserved' }]
 
   const handlePartnerActions = (partnerSelectedData) => {
-    console.log(partnerSelectedData)
-    setDeletePartnerFromLot(prev  => !prev)
-  }
-  const handleDeletePartnerFromLot = (partnerData) => {
+    setEditPartnerFromLot(partnerSelectedData)
 
   }
+  const handleDeletePartnerFromLot = (partnerData) => {
+    setLotData(prev => ({ ...prev, partners: prev.partners.filter(partner => partner.id !== partnerData.id) }))
+  }
+
+  const handlePartnerData = (e) => {
+    setLotData(prev => ({ ...prev, partners: prev.partners.map(partner => partner.id === editPartnerFromLot.id ? { ...partner, [e.target.name]: e.target.value } : partner) }))
+  }
+
+  useEffect(() => {
+    console.log(lotData.partners)
+  }, [lotData])
   return (
     <div className={popUps.lotRegister ? style.popUpBackdrop : style.popUpDisabled}>
       <div className={style.popUpWrapper}>
@@ -243,49 +279,49 @@ const LotRegisterPopUp = () => {
 
             </div>
             <div className={style.parcelArea}>
-            <div className={style.parcelQuantity}>
+              <div className={style.parcelQuantity}>
                 <h3>Quantidade máxima de parcelas</h3>
-                  <div className={style.parcelQuantityInput}>
-                    <button onClick={handleRemoveParcel}>-</button>
-                    <input type='number' placeholder='0' min='0' name='price' value={lotData.parcelQuantity} onChange={handleLotData} />
-                    <button onClick={handleAddParcel}>+</button>
-                  </div>
+                <div className={style.parcelQuantityInput}>
+                  <button onClick={handleRemoveParcel}>-</button>
+                  <input type='number' placeholder='0' min='0' name='price' value={lotData.parcelQuantity} onChange={handleLotData} />
+                  <button onClick={handleAddParcel}>+</button>
+                </div>
               </div>
               <div className={style.taxes}>
                 <h3>Juros</h3>
-                  <div className={style.basePriceInput}>
-                    <input type='number' placeholder='0' max='100' min='0' name='taxPercentage' value={lotData.taxPercentage} onChange={handleLotData} />
-                    <span>%</span>
-                  </div>
+                <div className={style.basePriceInput}>
+                  <input type='number' placeholder='0' max='100' min='0' name='taxPercentage' value={lotData.taxPercentage} onChange={handleLotData} />
+                  <span>%</span>
+                </div>
               </div>
+            </div>
+            <div className={style.lotStatus}>
+              <div>
+                <h3>Status do lote</h3>
+                <p className={style.statusInfo}>Esse lote está disponível para venda? </p>
+              </div>
+              <div className={style.lotStatusSelect}>
+                <select onChange={handleSelectFilters} value={selectValues.availability} name='availability' className={style.dropdownMenu}>
+                  {Availabilities.map((item, index) => (
+                    <option key={index} value={item.value}>{item.name}</option>
+                  ))}
+                </select>
+              </div>
+
+            </div>
           </div>
-          <div className={style.lotStatus}>
-                  <div>
-                  <h3>Status do lote</h3>
-                  <p className={style.statusInfo}>Esse lote está disponível para venda? </p>
-                  </div>
-                  <div className={style.lotStatusSelect}>
-                  <select onChange={handleSelectFilters} value={selectValues.availability} name='availability' className={style.dropdownMenu}>
-                            {Availabilities.map((item, index) => (
-                                <option key={index} value={item.value}>{item.name}</option>
-                            ))}
-                        </select>
-                  </div>
-                
-              </div>
-        </div>
           <div className={style.lotDataActions}>
             <div className={style.partnersArea}>
               <div className={style.lotDataActionsHeader}>
                 <h3>Sócios</h3>
-                {deletePartnerFromLot && (
-                                  <div className={style.deletePartner} onClick={handleDeletePartnerFromLot}>
-                                  <img src="/images/deleteIcon.svg" alt="delete" />
-                              </div>
-                  )}
+                {editPartnerFromLot && (
+                  <div className={style.deletePartner} onClick={handleDeletePartnerFromLot}>
+                    <img src="/images/deleteIcon.svg" alt="delete" />
+                  </div>
+                )}
 
               </div>
-              
+
               <div className={style.partners}>
                 <ul className={style.partnersList}>
                   <li className={style.partnersListHeader}>
@@ -294,15 +330,35 @@ const LotRegisterPopUp = () => {
                     <span>%</span>
                   </li>
                   {lotData.partners.map((partner, index) => (
-                    <li className={style.partnersListItem}  onClick={() => handlePartnerActions(partner)}>
-                    <input value={partner.name} disabled type='text' className={style.partnerName}/>
-                    <input value={partner.CPF} disabled type='text' className={style.partnerCPF}/>
-                    <div>
-                    <input value={partner.percentage} min='0' disabled max='100' type='number' className={style.partnerPercentage}/>
-                    <span>%</span>
-                    </div>
-                  </li>
-                ))}
+                    <li className={partner.id == editPartnerFromLot.id ? style.partnersListItemEdit : style.partnersListItem} onClick={() => handlePartnerActions(partner)}>
+                      <input 
+                      value={partner.name} 
+                      disabled={() => partner.id == editPartnerFromLot.id} 
+                      type='text' 
+                      className={style.partnerName} 
+                      onChange={(e) => handlePartnerData(e, partner.id)}
+                      name='name'
+                      />
+                      <input 
+                      value={partner.CPF} 
+                      disabled={() => partner.id == editPartnerFromLot.id} 
+                      type='text' className={style.partnerCPF} 
+                      onChange={(e) => handlePartnerData(e, partner.id)}
+                      name='CPF'
+                      />
+                      <div>
+                        <input 
+                        value={partner.percentage} 
+                        disabled={() => partner.id == editPartnerFromLot.id} 
+                        min='0' max='100' type='number' 
+                        className={style.partnerPercentage} 
+                        onChange={(e) => handlePartnerData(e, partner.id)}
+                        name='percentage'
+                        />
+                        <span>%</span>
+                      </div>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
