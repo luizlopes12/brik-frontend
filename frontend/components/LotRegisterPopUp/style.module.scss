@@ -20,7 +20,6 @@
     background: $bg_white-color;
     padding: 30px 20px 20px;
     border-radius: 5px;
-    max-height: 95vh;
     position: relative;
 }
 
@@ -129,6 +128,7 @@
 .lotTexts{
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
     gap: .5rem;
 }
 
@@ -544,8 +544,12 @@
             display: flex;
             flex-direction: column;
             gap: .5rem;
-            max-height: 150px;
+            max-height: 100px;
             overflow-y: scroll;
+            .partnersListItemWrapper{
+                display: flex;
+                flex-direction: column-reverse;
+            }
             &::-webkit-scrollbar{
                 width: 4px;
                 background: transparentize($gray_color-4, 0.8);
@@ -569,6 +573,7 @@
             }         
             }
             .partnersListItem{
+                border-bottom: 1px solid transparentize($text-white, .5) ;
                 color: $text-white;
                 display: flex;
                 font-size: .9rem;
@@ -577,6 +582,7 @@
                     background: transparentize($text-white, 0.8);
                     cursor: pointer;
                 }
+                
                 div{
                     width: 6ch;
                 }
@@ -630,4 +636,87 @@
     }
     }
     
+}
+
+.addPartner{
+    display: flex;
+    justify-content: space-between;
+    gap: .5rem;
+    .addPartnerToLot{
+        @include actionButton( $text-black, $gray_color-6 );
+        img{
+            max-height: 20px;
+        }
+        display: flex;
+        gap: 5px;
+    }
+    .addNewPartnerToLot{
+        @include actionButton( $text-white, $green_color-1 );
+        img{
+            max-height: 20px;
+            filter: invert(1);
+        }
+        display: flex;
+        gap: 5px;
+    }
+}
+.partnersOptionsSelector{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    background: $text-dark-blue;
+    color: $text-white;
+    padding: 1rem;
+    .partnersOptionsSelectorHeader{
+        border-bottom: 2px solid $text-white;
+        display: flex;
+        gap: 5px;
+        padding: 3px;
+        input{
+            flex-grow: 1;
+        }
+        img{
+            filter: invert(1);
+        }
+    }
+    .partnersOptionsSelectorList{
+        font-size: .9rem;
+        padding: .2rem 0;
+        display: flex;
+        flex-direction: column;
+        max-height: 150px;
+        overflow-y: scroll;
+        &::-webkit-scrollbar{
+            width: 8px;
+            background: transparentize($gray_color-4, 0.8);
+            border-radius: 5px;
+        }
+        &::-webkit-scrollbar-thumb{
+            background: transparentize($gray_color-1, 0.4);
+            border-radius: 5px;
+        }
+        .lotDivisionPartnersItem{
+            display: grid;
+            padding: 10px 5px;
+            grid-template-columns: .7fr .7fr .2fr;
+            &:hover{
+                background: transparentize($text-white, 0.8);
+                cursor: pointer;
+            }
+            span{
+                &:nth-of-type(1){
+                    text-align: left;
+                    overflow-x: hidden;
+                }
+                &:nth-of-type(2){
+                    text-align: left;
+                    overflow-x: hidden;
+                }
+                &:nth-of-type(3){
+                    text-align: right;
+                }
+            }
+        }
+    }
+
 }

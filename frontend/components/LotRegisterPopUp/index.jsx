@@ -12,7 +12,16 @@ const LotRegisterPopUp = () => {
   const { popUps, setPopUps } = useContext(popUpsContext)
   const { globalDivisionsData, setGlobalDivisionsDataContext } = useContext(globalDivisionsDataContext)
   const [showDivisionOptions, setShowDivisionOptions] = useState(false)
+  const [showPartnersOptions , setShowPartnersOptions] = useState(false)
   const [editPartnerFromLot, setEditPartnerFromLot] = useState(false)
+  const [ showNewPartnerInputs, setShowNewPartnerInputs ] = useState(false)
+  const [ partnerSearchInput, setPartnerSearchInput ] = useState('')
+  const partnersListRef = useRef()
+  const [newPartner, setNewPartner] = useState({
+    name: '',
+    CPF: '',
+    percentage: 0,
+  })
   const [lotImages, setLotImages] = useState([
     '/images/labels/without-image.png',
   ])
@@ -27,44 +36,6 @@ const LotRegisterPopUp = () => {
     parcelQuantity: 0,
     taxPercentage: 0,
     partners: [
-      {
-        id: 0,
-        name: 'Nome do Parceiro',
-        CPF: '000.000.000-00',
-        percentage: 0,
-      },
-      {
-        id: 1,
-        name: 'Nome do Parceiro',
-        CPF: '000.000.000-00',
-        percentage: 1,
-      },
-      {
-        id: 2,
-        name: 'Nome do Parceiro',
-        CPF: '000.000.000-00',
-        percentage: 1,
-      },
-      {
-        id: 3,
-        name: 'Nome do Parceiro',
-        CPF: '000.000.000-00',
-        percentage: 1,
-      }
-      ,
-      {
-        id: 4,
-        name: 'Nome do Parceiro',
-        CPF: '000.000.000-00',
-        percentage: 1,
-      }
-      ,
-      {
-        id: 5,
-        name: 'Nome do Parceiro',
-        CPF: '000.000.000-00',
-        percentage: 1,
-      }
     ],
   })
   const [divisionSearch, setDivisionSearch] = useState('')
@@ -72,6 +43,7 @@ const LotRegisterPopUp = () => {
     name: 'Selecione um Loteamento',
     logoUrl: 'https://i.imgur.com/YQOzMWA.png',
     id: 0,
+    partners: [],
   })
   const [selectValues, setSelectValues] = useState({
     availability: 'avaible',
@@ -137,12 +109,14 @@ const LotRegisterPopUp = () => {
   }
 
   const handleSelectDivisionToLot = (selectedDivision) => {
+
     setLotDivision({
       name: selectedDivision.name,
       logoUrl: selectedDivision.logoUrl,
       id: selectedDivision.id,
+      partners: selectedDivision.divisionPartners,
     })
-    console.log(selectedDivision)
+    setLotData(prev => ({ ...prev, partners: [] }))
     setShowDivisionOptions(false)
   }
   useEffect(() => {
@@ -166,17 +140,57 @@ const LotRegisterPopUp = () => {
   }
   const Availabilities = [{ name: 'Disponível', value: 'avaible' }, { name: 'Indisponível', value: 'unavaible' }, { name: 'Reservado', value: 'reserved' }]
 
+  const handleDeletePartnerFromLot = (partnerToDelete) => {
+    setLotData(prev => ({...prev, partners: prev.partners.filter(partner => partner !== partnerToDelete)}))
+    setEditPartnerFromLot(null)
+  }
   const handlePartnerActions = (partnerSelectedData) => {
     setEditPartnerFromLot(partnerSelectedData)
-
   }
-  const handleDeletePartnerFromLot = (partnerData) => {
-    setLotData(prev => ({ ...prev, partners: prev.partners.filter(partner => partner.id !== partnerData.id) }))
+  
+  const handlePartnerData = (e, selected) => {
+    setLotData(prev => {
+      let updatedPartners = [...prev.partners];
+      let index = updatedPartners.indexOf(selected);
+      if (index !== -1) {
+        updatedPartners[index] = { ...selected, [e.target.name]: e.target.value };
+      }
+      return { ...prev, partners: updatedPartners };
+    });
   }
-
-  const handlePartnerData = (e) => {
-    setLotData(prev => ({ ...prev, partners: prev.partners.map(partner => partner.id === editPartnerFromLot.id ? { ...partner, [e.target.name]: e.target.value } : partner) }))
+  
+  const handleAddPartner = (partnerData) => {
+    if (!lotData.partners.includes(partnerData)) {
+    setLotData(prev => ({ ...prev, partners: [...prev.partners, partnerData] }))
+    }
   }
+  const handleCreateNewPartner = () => {
+    setShowNewPartnerInputs(prev => {
+      if (prev & newPartner.name.length > 0 && newPartner.CPF.length > 0 && newPartner.percentage.length > 0) {
+        setLotData(prev => ({ ...prev, partners: [...prev.partners, newPartner] }))
+        setNewPartner({ name: '', CPF: '', percentage: '' })
+      }
+      return !prev
+    }
+      )
+    
+  }
+  const handleShowPartnersOptions = () => {
+    setShowPartnersOptions(prev => !prev)
+  }
+  const handleNewPartnerData = (e) => {
+    setNewPartner(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+  const handlePartnerSearch = (e) => {
+    setPartnerSearchInput(e.target.value)
+  }
+  const lotDivisionFiltered = useMemo (() => {
+    return (
+      lotDivision.partners?.filter(partner => 
+        partner.name.toLowerCase().includes(partnerSearchInput.toLowerCase())
+      ).filter(partnerToNotDisplay => lotData.partners.every(partner => partnerToNotDisplay !== partner))
+    )
+  }, [lotDivision, showDivisionOptions, partnerSearchInput,lotData.partners])
 
   useEffect(() => {
     console.log(lotData.partners)
@@ -234,7 +248,7 @@ const LotRegisterPopUp = () => {
             </div>
 
             <div className={style.lotDescription}>
-              <textarea placeholder='Descrição do loteamento' value={lotData.description} onChange={handleLotData} name='description' />
+              <textarea placeholder='Descrição do lote' value={lotData.description} onChange={handleLotData} name='description' />
             </div>
           </div>
         </div>
@@ -314,53 +328,125 @@ const LotRegisterPopUp = () => {
             <div className={style.partnersArea}>
               <div className={style.lotDataActionsHeader}>
                 <h3>Sócios</h3>
-                {editPartnerFromLot && (
-                  <div className={style.deletePartner} onClick={handleDeletePartnerFromLot}>
+                {editPartnerFromLot != null && (
+                  <div className={style.deletePartner} onClick={() => handleDeletePartnerFromLot(editPartnerFromLot)}>
                     <img src="/images/deleteIcon.svg" alt="delete" />
                   </div>
                 )}
 
               </div>
-
               <div className={style.partners}>
-                <ul className={style.partnersList}>
+                <ul ref={partnersListRef} className={style.partnersList}>
                   <li className={style.partnersListHeader}>
                     <span>Nome</span>
                     <span>CPF</span>
                     <span>%</span>
                   </li>
+                  <div className={style.partnersListItemWrapper}>
+
                   {lotData.partners.map((partner, index) => (
-                    <li className={partner.id == editPartnerFromLot.id ? style.partnersListItemEdit : style.partnersListItem} onClick={() => handlePartnerActions(partner)}>
+                    <li className={partner == editPartnerFromLot && !showNewPartnerInputs ? style.partnersListItemEdit : style.partnersListItem} onClick={() => handlePartnerActions(partner)}>
                       <input 
                       value={partner.name} 
-                      disabled={() => partner.id == editPartnerFromLot.id} 
+                      disabled={() => partner == editPartnerFromLot} 
                       type='text' 
                       className={style.partnerName} 
-                      onChange={(e) => handlePartnerData(e, partner.id)}
+                      onChange={(e) => handlePartnerData(e, partner)}
                       name='name'
                       />
                       <input 
                       value={partner.CPF} 
-                      disabled={() => partner.id == editPartnerFromLot.id} 
+                      disabled={() => partner == editPartnerFromLot} 
                       type='text' className={style.partnerCPF} 
-                      onChange={(e) => handlePartnerData(e, partner.id)}
+                      onChange={(e) => handlePartnerData(e, partner)}
                       name='CPF'
                       />
                       <div>
                         <input 
                         value={partner.percentage} 
-                        disabled={() => partner.id == editPartnerFromLot.id} 
+                        disabled={() => partner == editPartnerFromLot} 
                         min='0' max='100' type='number' 
                         className={style.partnerPercentage} 
-                        onChange={(e) => handlePartnerData(e, partner.id)}
+                        onChange={(e) => handlePartnerData(e, partner)}
                         name='percentage'
                         />
                         <span>%</span>
                       </div>
                     </li>
                   ))}
+                  { showNewPartnerInputs && (
+                  <li className={ style.partnersListItemEdit}>
+                  <input 
+                  value={newPartner.name} 
+                  type='text' 
+                  className={style.partnerName} 
+                  onChange={(e) => handleNewPartnerData(e)}
+                  name='name'
+                  />
+                  <input 
+                  value={newPartner.CPF}
+                  type='text' className={style.partnerCPF} 
+                  onChange={(e) => handleNewPartnerData(e)}
+                  name='CPF'
+                  />
+                  <div>
+                    <input 
+                    value={newPartner.percentage} 
+                    min='0' max='100' type='number' 
+                    className={style.partnerPercentage} 
+                    onChange={(e) => handleNewPartnerData(e)}
+                    name='percentage'
+                    />
+                    <span>%</span>
+                  </div>
+                </li>
+                  ) }
+                  </div>
+
                 </ul>
+                
               </div>
+              <div className={style.addPartner}>
+                  {showNewPartnerInputs ? (
+                  <button onClick={handleCreateNewPartner} className={style.addNewPartnerToLot}>
+                    <img src="/images/confirmIcon.svg"/>
+                    <span>Confirmar</span>
+                  </button>
+                  ):
+                  (
+                  <button onClick={handleCreateNewPartner} className={style.addNewPartnerToLot}>
+                    <img src="/images/addIcon.svg"/>
+                  </button>
+                  )
+                  }
+                  <button onClick={() => handleShowPartnersOptions()} className={style.addPartnerToLot}>
+                  
+                  { showPartnersOptions ? (<><img src="/images/closeIcon.svg"/>Fechar</>): (<><img src="/images/partnersIcon.svg"/>Adicionar sócio</>)}
+                  </button>
+              </div>
+              {showPartnersOptions && (
+                <div className={style.partnersOptionsSelector}>
+                  <div className={style.partnersOptionsSelectorHeader}>
+                  <input type='text' onChange={handlePartnerSearch} value={partnerSearchInput} />
+                  <img src='/images/searchIcon.svg'/>
+                  </div>
+                  <ul className={style.partnersOptionsSelectorList}>
+                    {
+                      lotDivisionFiltered?.length > 0 ? (
+                        lotDivisionFiltered.map((partner, index) => (
+                          <li className={style.lotDivisionPartnersItem} onClick={() => handleAddPartner(partner)} >
+                              <span>{partner.name}</span>
+                              <span>{partner.CPF}</span>
+                              <span>{partner.percentage}%</span>
+                          </li>
+                        ))
+                      ) : (
+                        <li>Nenhum sócio encontrado.</li>
+                      )
+                    }
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>
