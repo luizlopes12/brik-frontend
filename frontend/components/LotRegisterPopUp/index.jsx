@@ -57,6 +57,7 @@ const LotRegisterPopUp = () => {
   }, [divisionSearch, globalDivisionsData])
   const handleExitPopUp = () => {
     setPopUps(popUps.lotRegister = false)
+    setEditPartnerFromLot(null)
     setShowDivisionOptions(false)
     setLotData({
       title: '',
