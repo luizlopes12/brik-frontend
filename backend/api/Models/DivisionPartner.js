@@ -14,11 +14,6 @@ const DivisionPartner = db.connection.define('DivisionPartners', {
         type: db.Sequelize.REAL,
         required: true,
     },
-    profileImage: { 
-        type: db.Sequelize.STRING,
-        required: false,
-        defaultValue: 'https://i.imgur.com/cwVOOqb.jpg'
-    },
 })
 
 Division.hasMany(DivisionPartner, {as: 'divisionPartners', foreignKey: 'idLoteamento', onDelete: 'cascade', hooks: true})

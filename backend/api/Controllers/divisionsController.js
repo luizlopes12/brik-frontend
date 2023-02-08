@@ -24,7 +24,7 @@ class divisionsController {
              model: DivisionPartner,
              as: 'divisionPartners',
              required: false,
-            }]
+            }],
           })
         //   divisionsList.lotes.sort((a,b) =>{
         //     return new Date(b.updatedAt) - new Date(a.updatedAt);

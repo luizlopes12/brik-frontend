@@ -208,7 +208,6 @@ const DivisionEditPopUp = () => {
           <ul className={style.partnersList}>
             <li className={style.partnerHeader}>
               <div className={style.partnerProfile}>
-                {/* <img src='https://i.imgur.com/cwVOOqb.jpg'/> */}
                 <p>Nome</p>
                 <p className={style.partnerCPF}>CPF</p>
               </div>
@@ -217,7 +216,6 @@ const DivisionEditPopUp = () => {
             {divisionData.divisionPartners?.map((partner, index) => (
               <li className={style.partner} key={index}>
                 <div className={style.partnerProfile}>
-                  {/* <img src={partner.profileImage}/> */}
                   <p>{partner.name}</p>
                   <p className={style.partnerCPF}>{partner.CPF}</p>
                 </div>

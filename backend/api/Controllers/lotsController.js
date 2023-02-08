@@ -13,18 +13,19 @@ class lotsController {
             lotType, 
             location, 
             metrics, 
+            isAvaible,
             basePrice,
             finalPrice,
             description,
             idLoteamento
         } = req.body
-
         try {
             let newLot = await Lot.create({
                 name, 
                 lotType, 
                 location, 
                 metrics, 
+                isAvaible,
                 basePrice,
                 finalPrice,
                 description,
@@ -32,7 +33,7 @@ class lotsController {
             })
             res.status(200).json({message: 'Lote criado com sucessso.', newLot})
         } catch (error) {
-            res.status(403).json({message: 'Não foi possível adicionar o lote.'})
+            res.status(403).json({message: 'Não foi possível adicionar o lote.', error})
         }
     }
     static listLots = async (req, res) =>{

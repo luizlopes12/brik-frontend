@@ -49,6 +49,7 @@ const Loteamentos = ({ firstDivisionsData }) => {
                 .filter(lotByDivision => lotByDivision.idLoteamento == (selectValues.division != 'all' ? selectValues.division : lotByDivision.idLoteamento))
                 .filter(lotByAvaibility => lotByAvaibility.isAvaible == selectValues.availability)
                 .filter(lotByName => lotsSearch.length > 0 ? lotByName.name.toLowerCase().includes(lotsSearch.toLowerCase()) : lotByName)
+                .sort((a, b) => new Date(b.updatedAt) -  new Date(a.updatedAt))
         )
     }, [lotsSearch, selectValues, lotsData])
     /* Handles */
@@ -130,9 +131,7 @@ const Loteamentos = ({ firstDivisionsData }) => {
                                             </span>
                                             <span>
                                                 <img src="/images/metricsIcon.svg" />
-
-                                                {lot.metrics}
-                                                <sup>2</sup>
+                                                {lot.metrics}m<sup>2</sup>
                                             </span>
                                         </div>
                                     </div>

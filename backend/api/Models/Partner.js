@@ -14,10 +14,6 @@ const Partner = db.connection.define('Partners', {
         type: db.Sequelize.REAL,
         required: true,
     },
-    profileImage: { 
-        type: db.Sequelize.STRING,
-        required: false,
-    },
 })
 
 Lot.hasMany(Partner, {as: 'lotePartners', foreignKey: 'idLote', onDelete: 'cascade', hooks: true})

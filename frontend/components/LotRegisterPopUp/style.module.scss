@@ -260,7 +260,7 @@
         display: flex;
         flex-direction: column;
         width: 500px;
-        gap: 1rem;
+        gap: 1.5rem;
         .locationArea{
             display: flex;
             flex-direction: column;
@@ -288,7 +288,13 @@
         }
     }
     .lotDataActions{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex-grow: 1;
+        min-height: 400px;
         height: 100%;
+        align-items: flex-end;
     }
 }
 
@@ -348,6 +354,7 @@
         .priceInputs{
             display: flex;
         input{
+            text-align: end;
             font-size: 1.2rem;
             font-weight: 700;
             max-width: 8ch;
@@ -376,6 +383,7 @@
         display: flex;
         justify-content: space-between;
         input{
+            text-align: end;
             max-width: 10ch;
             padding: 0 5px 0 5px;
             &::-webkit-outer-spin-button,
@@ -719,4 +727,11 @@
         }
     }
 
+}
+
+
+.saveLotDataButton{
+    @include actionButton( $text-white, $green_color-1 );
+    padding: .5rem 4rem;
+    
 }

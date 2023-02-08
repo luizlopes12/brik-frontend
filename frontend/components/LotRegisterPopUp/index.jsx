@@ -10,13 +10,14 @@ import formatCurrency from '../../helpers/formatCurrency'
 
 const LotRegisterPopUp = () => {
   const { popUps, setPopUps } = useContext(popUpsContext)
-  const { globalDivisionsData, setGlobalDivisionsDataContext } = useContext(globalDivisionsDataContext)
+  const { globalDivisionsData, setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
   const [showDivisionOptions, setShowDivisionOptions] = useState(false)
   const [showPartnersOptions , setShowPartnersOptions] = useState(false)
   const [editPartnerFromLot, setEditPartnerFromLot] = useState(false)
   const [ showNewPartnerInputs, setShowNewPartnerInputs ] = useState(false)
   const [ partnerSearchInput, setPartnerSearchInput ] = useState('')
   const partnersListRef = useRef()
+  const [lotDataSaved , setLotDataSaved] = useState(false)
   const [newPartner, setNewPartner] = useState({
     name: '',
     CPF: '',
@@ -29,12 +30,12 @@ const LotRegisterPopUp = () => {
     title: '',
     description: '',
     location: '',
-    metrics: 0,
+    metrics: '',
     price: '',
     basePrice: '',
     hiddenPrice: false,
     parcelQuantity: 0,
-    taxPercentage: 0,
+    taxPercentage: '',
     partners: [
     ],
   })
@@ -57,16 +58,33 @@ const LotRegisterPopUp = () => {
   const handleExitPopUp = () => {
     setPopUps(popUps.lotRegister = false)
     setShowDivisionOptions(false)
+    setLotData({
+      title: '',
+      description: '',
+      location: '',
+      metrics: '',
+      price: '',
+      basePrice: '',
+      hiddenPrice: false,
+      parcelQuantity: 0,
+      taxPercentage: 0,
+      partners: [
+      ],
+    })
     setLotImages([
       '/images/labels/without-image.png',
     ])
+    setLotDivision({
+    name: 'Selecione um Loteamento',
+    logoUrl: 'https://i.imgur.com/YQOzMWA.png',
+    id: 0,
+    partners: [],
+  })
   }
   const handleUploadImage = (e) => {
     let image = e.target?.files[0]
-    console.log(image)
     // reiceves reader.result and this need to be uploaded and updated on backend
     if (!image) {
-      console.log('aaa')
     } else {
       const currentDate = new Date().getTime();
       const storageRef = ref(storage, `files/lotes/${currentDate}_${image.name}`)
@@ -80,7 +98,6 @@ const LotRegisterPopUp = () => {
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setLotImages(prev => {
-              console.log(prev.length)
               imagesCarouselRef.current.scrollLeft += imagesCarouselRef.current.offsetWidth
               return [...prev, downloadURL]
             })
@@ -119,12 +136,8 @@ const LotRegisterPopUp = () => {
     setLotData(prev => ({ ...prev, partners: [] }))
     setShowDivisionOptions(false)
   }
-  useEffect(() => {
-    console.log(lotData)
-  }, [lotData])
   const handleShowDivisionOptions = () => {
     setShowDivisionOptions(!showDivisionOptions)
-    console.log(globalDivisionsData)
   }
   const handleSearchDivision = (e) => {
     setDivisionSearch(e.target.value)
@@ -192,11 +205,92 @@ const LotRegisterPopUp = () => {
     )
   }, [lotDivision, showDivisionOptions, partnerSearchInput,lotData.partners])
 
-  useEffect(() => {
-    console.log(lotData.partners)
-  }, [lotData])
-  return (
-    <div className={popUps.lotRegister ? style.popUpBackdrop : style.popUpDisabled}>
+  const handleSaveLotData = async () => {
+    if(lotData.title.length > 0 && lotData.location.length > 0 && lotData.metrics.length > 0 && lotData.basePrice.length > 0 && lotData.price.length > 0 && lotData.description.length > 0){
+      let lotDataToAdd = JSON.stringify({
+        name: lotData.title,
+        location: lotData.location,
+        metrics: lotData.metrics,
+        basePrice: lotData.basePrice,
+      finalPrice: lotData.price,
+      description: lotData.description,
+      isAvaible: selectValues.availability,
+      idLoteamento: lotDivision.id,
+      })
+      await fetch('http://localhost:8080/lots/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: lotDataToAdd
+      }).then(res => res.json())
+      .then(async data => {
+        if(lotImages[0] !== '/images/labels/without-image.png'){
+          lotImages[0] = 'https://firebasestorage.googleapis.com/v0/b/brik-files.appspot.com/o/files%2Flotes%2Fwithout-image.png?alt=media&token=9f495f37-2003-4a9a-b733-71e5b603a2e4'
+          lotImages.forEach( async image => {
+            let newImage = JSON.stringify({url: image})
+            await fetch(`http://localhost:8080/lots/${data.newLot.id}/images/add`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: newImage
+            })
+            .catch(imageErr => console.log(imageErr))
+          })
+        }
+      lotData.partners.forEach( async partner => {
+        partner.idLote = data.newLot.id
+        let newPartner = JSON.stringify(partner)
+        await fetch(`http://localhost:8080/lots/${data.newLot.id}/partners/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: newPartner
+      })
+        .catch(partnerErr => console.log(partnerErr))
+      })
+    })
+    .catch(lotErr => console.log(lotErr))
+      .finally(async () => {
+        setLotDataSaved(true)
+          setTimeout(() => {
+            setLotDataSaved(false)
+          }, 3000)
+          setShowDivisionOptions(false)
+          setLotData({
+            title: '',
+            description: '',
+            location: '',
+            metrics: 0,
+            price: '',
+            basePrice: '',
+            hiddenPrice: false,
+            parcelQuantity: 0,
+            taxPercentage: 0,
+            partners: [
+            ],
+          })
+          setLotImages([
+            '/images/labels/without-image.png',
+          ])
+          setLotDivision({
+          name: 'Selecione um Loteamento',
+          logoUrl: 'https://i.imgur.com/YQOzMWA.png',
+          id: 0,
+          partners: [],
+        })
+        await fetch('http://localhost:8080/divisions/list')
+        .then(updatedResponse => updatedResponse.json())
+        .then(updatedData => setGlobalDivisionsData(updatedData), console.log('Lote cadastrado com sucesso!'))
+        .catch(err => console.log(err))
+      })
+      
+    }
+    }
+    return (
+      <div className={popUps.lotRegister ? style.popUpBackdrop : style.popUpDisabled}>
       <div className={style.popUpWrapper}>
         <button className={style.closeBtn} onClick={handleExitPopUp} name='lotRegister'><img src="/images/closeIcon.svg" alt="Sair" /></button>
         <div className={style.lotInfoWrapper}>
@@ -205,11 +299,11 @@ const LotRegisterPopUp = () => {
               <div className={style.lotImagesCarrousel} ref={imagesCarouselRef}>
                 {lotImages.map((image, index) => (
                   <img src={image} />
-                ))}
+                  ))}
                 {lotImages.length > 1 && (
                   <ul className={style.carrouselControllers}>
-                    <li className={style.controlPrev} onClick={() => imageSlide('prev')}><img src='/images/prevIcon.svg' /></li>
-                    <li className={style.controlNext} onClick={() => imageSlide('next')}><img src='/images/nextIcon.svg' /></li>
+                    <li key={0} className={style.controlPrev} onClick={() => imageSlide('prev')}><img src='/images/prevIcon.svg' /></li>
+                    <li key={1} className={style.controlNext} onClick={() => imageSlide('next')}><img src='/images/nextIcon.svg' /></li>
                   </ul>
                 )}
 
@@ -236,8 +330,8 @@ const LotRegisterPopUp = () => {
               {showDivisionOptions && (
                 <ul className={style.divisionOptionsSelector}>
                   <SearchInput placeholder='Pesquisar' className={style.divisionSearchInput} value={divisionSearch} onChange={handleSearchDivision} />
-                  {globalDivisionsDataFiltered.map((division) => (
-                    <li className={style.divisionOption} onClick={() => handleSelectDivisionToLot(division)}>
+                  {globalDivisionsDataFiltered.map((division, index) => (
+                    <li key={index} className={style.divisionOption} onClick={() => handleSelectDivisionToLot(division)}>
                       <img src={division.logoUrl} />
                       <span>{division.name.length > 18 ? division.name.substring(18, '...') : division.name}</span>
                     </li>
@@ -345,7 +439,7 @@ const LotRegisterPopUp = () => {
                   <div className={style.partnersListItemWrapper}>
 
                   {lotData.partners.map((partner, index) => (
-                    <li className={partner == editPartnerFromLot && !showNewPartnerInputs ? style.partnersListItemEdit : style.partnersListItem} onClick={() => handlePartnerActions(partner)}>
+                    <li key={index} className={partner == editPartnerFromLot && !showNewPartnerInputs ? style.partnersListItemEdit : style.partnersListItem} onClick={() => handlePartnerActions(partner)}>
                       <input 
                       value={partner.name} 
                       disabled={() => partner == editPartnerFromLot} 
@@ -434,7 +528,7 @@ const LotRegisterPopUp = () => {
                     {
                       lotDivisionFiltered?.length > 0 ? (
                         lotDivisionFiltered.map((partner, index) => (
-                          <li className={style.lotDivisionPartnersItem} onClick={() => handleAddPartner(partner)} >
+                          <li key={index} className={style.lotDivisionPartnersItem} onClick={() => handleAddPartner(partner)} >
                               <span>{partner.name}</span>
                               <span>{partner.CPF}</span>
                               <span>{partner.percentage}%</span>
@@ -448,6 +542,13 @@ const LotRegisterPopUp = () => {
                 </div>
               )}
             </div>
+            <div className={style.saveLotData}>
+
+              <button onClick={handleSaveLotData} className={style.saveLotDataButton}> 
+                { lotDataSaved ? 'Salvo!' : 'Salvar' }
+              </button>
+            </div>
+
           </div>
         </div>
       </div>
