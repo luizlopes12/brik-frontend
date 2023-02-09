@@ -112,7 +112,7 @@ const Loteamentos = ({ firstDivisionsData }) => {
                 <ul className={style.lotsList}>
                     {dataFiltered.length > 0 ?
                         dataFiltered.map((lot) => (
-                            <li className={style.lotsListItem}>
+                            <li className={style.lotsListItem} key={lot.id}>
                                 <div className={style.lotImage}>
                                     <img src={lot.loteImages[0]?.imageUrl} alt="Imagem do lote" />
                                 </div>
@@ -136,8 +136,14 @@ const Loteamentos = ({ firstDivisionsData }) => {
                                         </div>
                                     </div>
                                     <div className={style.lotPrice}>
+                                        { lot.hiddenPrice ? (
+                                            <p className={style.lotPriceHidden}>R$----</p>
+                                        ) : (
+                                            <>
                                         <p>{formatCurrency(lot.finalPrice)}</p>
                                         <p>{formatCurrency(lot.basePrice)}</p>
+                                        </>
+                                        )}
                                     </div>
                                     <button className={style.lotOptionsBtn} onClick={() => handleLotOptions(lot)}>...</button>
                                     {(lot.id == showOptions.id && showOptions.selected) && (

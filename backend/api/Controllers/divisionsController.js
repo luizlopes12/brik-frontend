@@ -17,7 +17,12 @@ class divisionsController {
                 model: LotImage,
                 as: 'loteImages',
                 required: false
-             }
+             },
+             {
+                model: Partner,
+                as: 'lotePartners',
+                required: false 
+            }
             ]
             },
             {

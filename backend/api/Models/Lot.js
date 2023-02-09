@@ -27,6 +27,22 @@ const Lot = db.connection.define('Lotes', {
         type: db.Sequelize.STRING,
         required: false,
     },
+    hiddenPrice: {
+        type: db.Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    taxPercentage: {
+        type: db.Sequelize.STRING,
+        required: false,
+    },
+    taxPercentage24: {
+        type: db.Sequelize.STRING,
+        required: false,
+    },
+    maxPortionsQuantity: {
+        type: db.Sequelize.REAL,
+        required: false,
+    },
     description: {
         type: db.Sequelize.STRING,
         required: false,

@@ -34,8 +34,9 @@ const LotRegisterPopUp = () => {
     price: '',
     basePrice: '',
     hiddenPrice: false,
-    parcelQuantity: 0,
+    maxPortionsQuantity: 0,
     taxPercentage: '',
+    taxPercentage24: '',
     partners: [
     ],
   })
@@ -67,8 +68,9 @@ const LotRegisterPopUp = () => {
       price: '',
       basePrice: '',
       hiddenPrice: false,
-      parcelQuantity: 0,
-      taxPercentage: 0,
+      maxPortionsQuantity: 0,
+      taxPercentage: '',
+      taxPercentage24: '',
       partners: [
       ],
     })
@@ -80,6 +82,9 @@ const LotRegisterPopUp = () => {
     logoUrl: 'https://i.imgur.com/YQOzMWA.png',
     id: 0,
     partners: [],
+  })
+  setSelectValues({
+    availability: 'avaible',
   })
   }
   const handleUploadImage = (e) => {
@@ -144,10 +149,10 @@ const LotRegisterPopUp = () => {
     setDivisionSearch(e.target.value)
   }
   const handleAddParcel = () => {
-    setLotData(prev => ({ ...prev, parcelQuantity: prev.parcelQuantity + 1 }))
+    setLotData(prev => ({ ...prev, maxPortionsQuantity: prev.maxPortionsQuantity + 1 }))
   }
   const handleRemoveParcel = () => {
-    setLotData(prev => ({ ...prev, parcelQuantity: prev.parcelQuantity > 0 && prev.parcelQuantity - 1 }))
+    setLotData(prev => ({ ...prev, maxPortionsQuantity: prev.maxPortionsQuantity > 0 && prev.maxPortionsQuantity - 1 }))
   }
   const handleSelectFilters = (e) => {
     setSelectValues(previousState => ({ ...previousState, [e.target.name]: e.target.value }))
@@ -207,89 +212,108 @@ const LotRegisterPopUp = () => {
   }, [lotDivision, showDivisionOptions, partnerSearchInput,lotData.partners])
 
   const handleSaveLotData = async () => {
-    if(lotData.title.length > 0 && lotData.location.length > 0 && lotData.metrics.length > 0 && lotData.basePrice.length > 0 && lotData.price.length > 0 && lotData.description.length > 0){
-      let lotDataToAdd = JSON.stringify({
+    try{
+      if(lotData.title.length > 0 && lotData.location.length > 0 && lotData.metrics.length > 0 && ((lotData.basePrice.length > 0 && lotData.price.length > 0)|| lotData.hiddenPrice) && lotData.description.length > 0){
+      console.log('a')
+        let lotDataToAdd = JSON.stringify({
         name: lotData.title,
         location: lotData.location,
         metrics: lotData.metrics,
         basePrice: lotData.basePrice,
-      finalPrice: lotData.price,
-      description: lotData.description,
-      isAvaible: selectValues.availability,
-      idLoteamento: lotDivision.id,
-      })
-      await fetch('http://localhost:8080/lots/add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: lotDataToAdd
-      }).then(res => res.json())
-      .then(async data => {
-        if(lotImages[0] !== '/images/labels/without-image.png'){
-          lotImages[0] = 'https://firebasestorage.googleapis.com/v0/b/brik-files.appspot.com/o/files%2Flotes%2Fwithout-image.png?alt=media&token=9f495f37-2003-4a9a-b733-71e5b603a2e4'
-          lotImages.forEach( async image => {
-            let newImage = JSON.stringify({url: image})
-            await fetch(`http://localhost:8080/lots/${data.newLot.id}/images/add`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: newImage
+        finalPrice: lotData.price,
+        description: lotData.description,
+        isAvaible: selectValues.availability,
+        idLoteamento: lotDivision.id,
+        maxPortionsQuantity: lotData.maxPortionsQuantity,
+        hiddenPrice: lotData.hiddenPrice,
+        taxPercentage : lotData.taxPercentage,
+        taxPercentage24 : lotData.taxPercentage24,
+        })
+        await fetch('http://localhost:8080/lots/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: lotDataToAdd
+        }).then(res => res.json())
+        .then(async data => {
+          if(lotImages[0] === '/images/labels/without-image.png'){
+            lotImages[0] = 'https://firebasestorage.googleapis.com/v0/b/brik-files.appspot.com/o/files%2Flotes%2Fwithout-image.png?alt=media&token=9f495f37-2003-4a9a-b733-71e5b603a2e4'
+          }
+            lotImages.forEach( async image => {
+              let newImage = JSON.stringify({url: image})
+              await fetch(`http://localhost:8080/lots/${await data.newLot.id}/images/add`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: newImage
+              })
+              .catch(imageErr => console.log(imageErr))
             })
-            .catch(imageErr => console.log(imageErr))
-          })
-        }
-      lotData.partners.forEach( async partner => {
-        partner.idLote = data.newLot.id
-        let newPartner = JSON.stringify(partner)
-        await fetch(`http://localhost:8080/lots/${data.newLot.id}/partners/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: newPartner
+          lotData.partners.forEach( async partner => {
+          partner.idLote = await data.newLot.id
+          let newPartner = JSON.stringify(partner)
+          await fetch(`http://localhost:8080/lots/${partner.idLote}/partners/add`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: newPartner
+        })
+          .catch(partnerErr => console.log(partnerErr))
+        })
       })
-        .catch(partnerErr => console.log(partnerErr))
-      })
-    })
-    .catch(lotErr => console.log(lotErr))
-      .finally(async () => {
-        setLotDataSaved(true)
-          setTimeout(() => {
-            setLotDataSaved(false)
-          }, 3000)
-          setShowDivisionOptions(false)
-          setLotData({
-            title: '',
-            description: '',
-            location: '',
-            metrics: 0,
-            price: '',
-            basePrice: '',
-            hiddenPrice: false,
-            parcelQuantity: 0,
-            taxPercentage: 0,
-            partners: [
-            ],
+      .catch(lotErr => console.log(lotErr))
+        .finally(async () => {
+          setLotDataSaved(true)
+            setTimeout(() => {
+              setLotDataSaved(false)
+            }, 3000)
+            setShowDivisionOptions(false)
+            setLotData({
+              title: '',
+              description: '',
+              location: '',
+              metrics: '',
+              price: '',
+              basePrice: '',
+              hiddenPrice: false,
+              maxPortionsQuantity: 0,
+              taxPercentage: '',
+              taxPercentage24: '',
+              partners: [
+              ],
+            })
+            setSelectValues({
+                availability: 'avaible',
+            })
+            setLotDivision({
+            name: 'Selecione um Loteamento',
+            logoUrl: 'https://i.imgur.com/YQOzMWA.png',
+            id: 0,
+            partners: [],
           })
           setLotImages([
             '/images/labels/without-image.png',
           ])
-          setLotDivision({
-          name: 'Selecione um Loteamento',
-          logoUrl: 'https://i.imgur.com/YQOzMWA.png',
-          id: 0,
-          partners: [],
+          await fetch('http://localhost:8080/divisions/list')
+          .then(updatedResponse => updatedResponse.json())
+          .then(updatedData => setGlobalDivisionsData(updatedData), console.log('Lote cadastrado com sucesso!'))
+          .catch(err => console.log(err))
         })
-        await fetch('http://localhost:8080/divisions/list')
-        .then(updatedResponse => updatedResponse.json())
-        .then(updatedData => setGlobalDivisionsData(updatedData), console.log('Lote cadastrado com sucesso!'))
-        .catch(err => console.log(err))
-      })
-      
+        
+      }
+    }catch(error){
+      alert('Ocorreu um erro ao cadastrar o lote, tente novamente!')
+      console.log(error)
     }
+
     }
+    const formatPrice = (num) => {
+      if (!num) return '';
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
     return (
       <div className={popUps.lotRegister ? style.popUpBackdrop : style.popUpDisabled}>
       <div className={style.popUpWrapper}>
@@ -368,7 +392,14 @@ const LotRegisterPopUp = () => {
                 {!lotData.hiddenPrice && (
                   <div className={style.priceInputs}>
                     <span>R$</span>
-                    <input type='number' placeholder='0' min='0' name='price' value={lotData.price} onChange={handleLotData} />
+                    <input type="text" placeholder="0" min="0" name="price" value={formatPrice(lotData.price)} onChange={(event) => {
+                      handleLotData({
+                        target: {
+                          name: event.target.name,
+                          value: parseFloat(event.target.value.replace(/\./g, ''))
+                        }
+                      });
+                    }} />
                   </div>
                 )}
               </div>
@@ -377,7 +408,14 @@ const LotRegisterPopUp = () => {
                 {!lotData.hiddenPrice && (
                   <div className={style.basePriceInput}>
                     <span>R$</span>
-                    <input type='number' placeholder='0' min='0' name='basePrice' value={lotData.basePrice} onChange={handleLotData} />
+                    <input type="text" placeholder="0" min="0" name="basePrice" value={formatPrice(lotData.basePrice)} onChange={(event) => {
+                      handleLotData({
+                        target: {
+                          name: event.target.name,
+                          value: parseFloat(event.target.value.replace(/\./g, ''))
+                        }
+                      });
+                    }} />
                   </div>
                 )}
               </div>
@@ -392,7 +430,7 @@ const LotRegisterPopUp = () => {
                 <h3>Quantidade máxima de parcelas</h3>
                 <div className={style.parcelQuantityInput}>
                   <button onClick={handleRemoveParcel}>-</button>
-                  <input type='number' placeholder='0' min='0' name='price' value={lotData.parcelQuantity} onChange={handleLotData} />
+                  <input type='number' placeholder='0' min='0' name='price' value={lotData.maxPortionsQuantity} onChange={handleLotData} />
                   <button onClick={handleAddParcel}>+</button>
                 </div>
               </div>
@@ -402,6 +440,15 @@ const LotRegisterPopUp = () => {
                   <input type='number' placeholder='0' max='100' min='0' name='taxPercentage' value={lotData.taxPercentage} onChange={handleLotData} />
                   <span>%</span>
                 </div>
+                
+              </div>
+              <div className={style.taxes}>
+                <h3>Juros(após 24 meses)</h3>
+                <div className={style.basePriceInput}>
+                  <input type='number' placeholder='0' max='100' min='0' name='taxPercentage24' value={lotData.taxPercentage24} onChange={handleLotData} />
+                  <span>%</span>
+                </div>
+                
               </div>
             </div>
             <div className={style.lotStatus}>
@@ -447,6 +494,7 @@ const LotRegisterPopUp = () => {
                       type='text' 
                       className={style.partnerName} 
                       onChange={(e) => handlePartnerData(e, partner)}
+                      onBlur={() => setEditPartnerFromLot(null)}
                       name='name'
                       />
                       <input 
@@ -454,6 +502,7 @@ const LotRegisterPopUp = () => {
                       disabled={() => partner == editPartnerFromLot} 
                       type='text' className={style.partnerCPF} 
                       onChange={(e) => handlePartnerData(e, partner)}
+                      onBlur={() => setEditPartnerFromLot(null)}
                       name='CPF'
                       />
                       <div>
@@ -463,6 +512,7 @@ const LotRegisterPopUp = () => {
                         min='0' max='100' type='number' 
                         className={style.partnerPercentage} 
                         onChange={(e) => handlePartnerData(e, partner)}
+                        onBlur={() => setEditPartnerFromLot(null)}
                         name='percentage'
                         />
                         <span>%</span>

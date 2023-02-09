@@ -8,7 +8,12 @@ const Partner = require('../Models/Partner.js')
 class lotsController { 
     static addLot = async (req, res) =>{
         // to do: req lot data and add on database, to think about how relate the images and partners data to each lot
+        
         let {
+            hiddenPrice,
+            taxPercentage,
+            taxPercentage24,
+            maxPortionsQuantity,
             name, 
             lotType, 
             location, 
@@ -21,6 +26,10 @@ class lotsController {
         } = req.body
         try {
             let newLot = await Lot.create({
+                hiddenPrice,
+                taxPercentage,
+                taxPercentage24,
+                maxPortionsQuantity,
                 name, 
                 lotType, 
                 location, 
@@ -29,7 +38,7 @@ class lotsController {
                 basePrice,
                 finalPrice,
                 description,
-                idLoteamento,
+                idLoteamento
             })
             res.status(200).json({message: 'Lote criado com sucessso.', newLot})
         } catch (error) {
@@ -81,22 +90,30 @@ class lotsController {
     static updateLot = async (req, res) =>{
         let { id } = req.params
         let {
-            name,
-            thumb,
+            hiddenPrice,
+            taxPercentage,
+            taxPercentage24,
+            maxPortionsQuantity,
+            name, 
             lotType, 
             location, 
             metrics, 
+            isAvaible,
             basePrice,
             finalPrice,
             description,
             idLoteamento
         } = req.body
         let updateLot = await Lot.update({
-            name,
-            thumb,
-            lotType,
-            location,
+            hiddenPrice,
+            taxPercentage,
+            taxPercentage24,
+            maxPortionsQuantity,
+            name, 
+            lotType, 
+            location, 
             metrics, 
+            isAvaible,
             basePrice,
             finalPrice,
             description,
