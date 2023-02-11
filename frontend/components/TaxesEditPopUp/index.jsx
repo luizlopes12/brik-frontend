@@ -21,8 +21,12 @@ const TaxesEditPopUp = () => {
       currentIGPM: currentIGPM.slice(-1)[0],
       currentIPCA: currentIPCA.slice(-1)[0]
     });
-    const currentTaxes = await fetch('http://localhost:8080/taxes/list').then(res => res.json());
-    setTaxes({ defaultTax: parseFloat(currentTaxes[0].defaultTax), after24Months: parseFloat(currentTaxes[0].after24Months) })
+    await fetch('http://localhost:8080/taxes/list').then(res => res.json())
+    .then(data => {
+      setTaxes({ defaultTax: parseFloat(data[0].defaultTax), after24Months: parseFloat(data[0].after24Months) })
+    })
+    .catch(err => console.log(err))
+    
   };
   const handleChangeTax = (e) => {
     setTaxes({ ...taxes, [e.target.name]: e.target.value })

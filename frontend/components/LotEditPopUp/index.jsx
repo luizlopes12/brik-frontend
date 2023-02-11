@@ -29,9 +29,7 @@ const LotRegisterPopUp = () => {
     CPF: '',
     percentage: 0,
   })
-  const [lotImages, setLotImages] = useState([
-    '/images/labels/without-image.png',
-  ])
+  const [lotImages, setLotImages] = useState([])
 
   const [lotData, setLotData] = useState(lotSelected !== null ? lotSelected : {
     name: '',
@@ -62,7 +60,13 @@ const LotRegisterPopUp = () => {
         id: selectedLotDivisionData?.id,
         divisionPartners:  selectedLotDivisionData?.divisionPartners,
     })
+    let loteimagesArray = []
+    lotSelected.loteImages?.forEach(image => {
+        loteimagesArray.push(image.imageUrl)
+    })
+    console.log(lotSelected.loteImages)
     setLotData(lotSelected);
+    setLotImages(loteimagesArray)
   }, [lotSelected]);
   const [divisionSearch, setDivisionSearch] = useState('')
 
@@ -77,6 +81,7 @@ const LotRegisterPopUp = () => {
   }, [divisionSearch, globalDivisionsData])
 
   const handleExitPopUp = () => {
+    setLotImages([])
     setLotSelected({
         name: '',
         description: '',
@@ -250,14 +255,13 @@ const LotRegisterPopUp = () => {
   const lotDivisionFiltered = useMemo (() => {
     return (
       lotDivision.divisionPartners?.filter(partner => 
-        partner.name.toLowerCase().includes(partnerSearchInput.toLowerCase())
+        partner.name?.toLowerCase().includes(partnerSearchInput.toLowerCase())
       ).filter(partnerToNotDisplay => lotSelected.lotePartners.every(partner => partnerToNotDisplay.CPF !== partner.CPF))
     )
   }, [lotDivision.divisionPartners, showDivisionOptions, partnerSearchInput,lotSelected.lotePartners])
   const handleSaveLotData = async () => {
     console.log(partnersUpdated)
     try{
-      if(lotData.name.length > 0 && lotData.location.length > 0 && lotData.metrics.length > 0 && ((lotData.basePrice.length > 0 && lotData.finalPrice.length > 0)|| lotData.hiddenPrice) && lotData.description.length > 0){
         let lotDataToAdd = JSON.stringify({
         name: lotData.name,
         location: lotData.location,
@@ -355,10 +359,8 @@ const LotRegisterPopUp = () => {
           .catch(err => console.log(err))
         })
         
-      }
     }catch(error){
       alert('Ocorreu um erro ao atualizar o lote, tente novamente!')
-      console.log(error)
     }
 
     }

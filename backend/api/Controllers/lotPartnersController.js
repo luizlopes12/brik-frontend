@@ -12,20 +12,13 @@ class lotPartnersController {
         //     percentage,
         //     idLote
         // }
-        let partnerAdded = await Partner.findOrCreate(
-            {
-                where: {
-                    
-                    CPF
-                },
-                defaults: {
+        
+        let partnerAdded = await Partner.create({
                     name,
                     CPF,
                     percentage,
                     idLote
-                }
-              }
-        )
+        })
 
         if(partnerAdded){
             let partnersList = await Partner.findAll({

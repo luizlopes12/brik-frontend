@@ -17,8 +17,8 @@ const DivisionRegisterPopUp = () => {
 
   const [divisionData, setDivisionData] = useState({
     logoUrl: 'https://i.imgur.com/zo56zlQ.png',
-    name: 'Nome do Loteamento',
-    location: 'Endereço do Loteamento',
+    name: '',
+    location: '',
     divisionPartners: [],
     bluePrint: '',
   })
@@ -27,8 +27,8 @@ const DivisionRegisterPopUp = () => {
     setDivisionData({})
     setDivisionData({
       logoUrl: 'https://i.imgur.com/zo56zlQ.png',
-      name: 'Nome do Loteamento',
-      location: 'Endereço do Loteamento',
+      name: '',
+      location: '',
       divisionPartners: [],
     })
   }
@@ -168,10 +168,10 @@ const DivisionRegisterPopUp = () => {
           </form>
           <ul className={style.popUpsInputs}>
             <li className={style.inputField}>
-              <input value={divisionData.name} name="name" onChange={(e) => handleDivisionData(e)} />
+              <input value={divisionData.name} name="name" placeholder='Nome do Loteamento' onChange={(e) => handleDivisionData(e)} />
             </li>
             <li className={style.inputField}>
-              <span><img src="/images/locationIcon.svg" /></span><input value={divisionData.location} name="location" onChange={(e) => handleDivisionData(e)} />
+              <span><img src="/images/locationIcon.svg" /></span><input value={divisionData.location} placeholder='Endereço do Loteamento' name="location" onChange={(e) => handleDivisionData(e)} />
             </li>
           </ul>
 

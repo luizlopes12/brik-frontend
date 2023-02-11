@@ -17,6 +17,7 @@ const LotRegisterPopUp = () => {
   const [ partnerSearchInput, setPartnerSearchInput ] = useState('')
   const partnersListRef = useRef()
   const [lotDataSaved , setLotDataSaved] = useState(false)
+  const [taxes , setTaxes] = useState({ taxPercentage: 0, taxPercentage24: 0 })
   const [newPartner, setNewPartner] = useState({
     name: '',
     CPF: '',
@@ -26,7 +27,7 @@ const LotRegisterPopUp = () => {
     '/images/labels/without-image.png',
   ])
   const [lotData, setLotData] = useState({
-    title: '',
+    name: '',
     description: '',
     location: '',
     metrics: '',
@@ -61,7 +62,7 @@ const LotRegisterPopUp = () => {
     setEditPartnerFromLot(null)
     setShowDivisionOptions(false)
     setLotData({
-      title: '',
+      name: '',
       description: '',
       location: '',
       metrics: '',
@@ -215,9 +216,8 @@ const LotRegisterPopUp = () => {
 
   const handleSaveLotData = async () => {
     try{
-      if(lotData.title.length > 0 && lotData.location.length > 0 && lotData.metrics.length > 0 && ((lotData.basePrice.length > 0 && lotData.price.length > 0)|| lotData.hiddenPrice) && lotData.description.length > 0){
         let lotDataToAdd = JSON.stringify({
-        name: lotData.title,
+        name: lotData.name,
         location: lotData.location,
         metrics: lotData.metrics,
         basePrice: lotData.basePrice,
@@ -238,22 +238,25 @@ const LotRegisterPopUp = () => {
           body: lotDataToAdd
         }).then(res => res.json())
         .then(async data => {
+          console.log(data)
           if(lotImages[0] === '/images/labels/without-image.png'){
             lotImages[0] = 'https://firebasestorage.googleapis.com/v0/b/brik-files.appspot.com/o/files%2Flotes%2Fwithout-image.png?alt=media&token=9f495f37-2003-4a9a-b733-71e5b603a2e4'
           }
-            lotImages.forEach( async image => {
-              let newImage = JSON.stringify({url: image})
-              await fetch(`http://localhost:8080/lots/${await data.newLot.id}/images/add`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: newImage
-              })
-              .catch(imageErr => console.log(imageErr))
+          lotImages.forEach( async image => {
+            let newImage = JSON.stringify({url: image})
+            await fetch(`http://localhost:8080/lots/${data.newLot?.id}/images/add`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: newImage
             })
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(imageErr => console.log(imageErr))
+          })
           lotData.partners.forEach( async partner => {
-          partner.idLote = await data.newLot.id
+          partner.idLote = data.newLot.id
           let newPartner = JSON.stringify(partner)
           await fetch(`http://localhost:8080/lots/${partner.idLote}/partners/add`, {
           method: 'POST',
@@ -262,18 +265,21 @@ const LotRegisterPopUp = () => {
           },
           body: newPartner
         })
+        .then(res => res.json())
+        .then(data => console.log(data))
           .catch(partnerErr => console.log(partnerErr))
         })
       })
       .catch(lotErr => console.log(lotErr))
         .finally(async () => {
+          
           setLotDataSaved(true)
             setTimeout(() => {
               setLotDataSaved(false)
             }, 3000)
             setShowDivisionOptions(false)
             setLotData({
-              title: '',
+              name: '',
               description: '',
               location: '',
               metrics: '',
@@ -281,8 +287,8 @@ const LotRegisterPopUp = () => {
               basePrice: '',
               hiddenPrice: false,
               maxPortionsQuantity: 0,
-              taxPercentage: '',
-              taxPercentage24: '',
+              taxPercentage: parseFloat(taxes.defaultTax),
+              taxPercentage24: parseFloat(taxes.after24Months),
               partners: [
               ],
             })
@@ -304,7 +310,6 @@ const LotRegisterPopUp = () => {
           .catch(err => console.log(err))
         })
         
-      }
     }catch(error){
       alert('Ocorreu um erro ao cadastrar o lote, tente novamente!')
       console.log(error)
@@ -318,6 +323,7 @@ const LotRegisterPopUp = () => {
     const getTaxes = async () =>{
       await fetch('http://localhost:8080/taxes/list').then(res => res.json())
       .then(data => {
+        setTaxes(data[0])
         setLotData((prev) => ({ ...prev, taxPercentage: parseFloat(data[0].defaultTax), taxPercentage24: parseFloat(data[0].after24Months)
         }))
       })
@@ -358,7 +364,7 @@ const LotRegisterPopUp = () => {
           </div>
           <div className={style.lotTexts}>
             <div className={style.lotTitle}>
-              <input placeholder='Nome do lote' type="text" value={lotData.title} onChange={handleLotData} name='title' />
+              <input placeholder='Nome do lote' type="text" value={lotData.name} onChange={handleLotData} name='name' />
             </div>
             <div className={style.lotDivision}>
               <div className={style.divisionSelected} onClick={handleShowDivisionOptions}>
@@ -608,7 +614,7 @@ const LotRegisterPopUp = () => {
             </div>
             <div className={style.saveLotData}>
 
-              <button onClick={handleSaveLotData} className={style.saveLotDataButton}> 
+              <button onClick={() => handleSaveLotData()} className={style.saveLotDataButton}> 
                 { lotDataSaved ? 'Salvo!' : 'Salvar' }
               </button>
             </div>

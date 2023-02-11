@@ -4,7 +4,7 @@ const Lot = require('../Models/Lot.js')
 class TaxController {
     static listAllTaxesValues = async (req, res) => {
         TaxValues.findAll({limit: 1})
-        .then(taxes => res.status(500).json(taxes))
+        .then(taxes => res.status(200).json(taxes))
         .catch(err => res.status(500).json(err))
     }
     static updateTaxValues = async (req, res) => {
