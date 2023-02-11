@@ -18,6 +18,6 @@ router
 .delete('/lots/images/delete/:id', lotImagesController.deleteImage)
 .post('/lots/:id/partners/add', lotPartnersController.addPartner)
 .patch('/lots/partners/edit/:id', lotPartnersController.updatePartner)
-.delete('/lots/partners/delete/:id', lotPartnersController.deletePartner)
+.delete('/lots/partners/delete/:idLote/:id', lotPartnersController.deletePartner)
 
 module.exports = router

@@ -5,16 +5,23 @@ import SearchInput from '../SearchInput'
 import { globalDivisionsDataContext } from '../../context/globalDivisionsDataContext'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { storage } from '../../configs/firebase'
+import { lotSelectedContext } from '../../context/selectedLotContext'
 
 
 const LotRegisterPopUp = () => {
+    
   const { popUps, setPopUps } = useContext(popUpsContext)
   const { globalDivisionsData, setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
+  const { lotSelected, setLotSelected } = useContext(lotSelectedContext)
   const [showDivisionOptions, setShowDivisionOptions] = useState(false)
   const [showPartnersOptions , setShowPartnersOptions] = useState(false)
   const [editPartnerFromLot, setEditPartnerFromLot] = useState(false)
   const [ showNewPartnerInputs, setShowNewPartnerInputs ] = useState(false)
   const [ partnerSearchInput, setPartnerSearchInput ] = useState('')
+  const [ deletedPartners , setDeletedPartners ] = useState([])
+  const [ newPartnersAdded , setNewPartnersAdded ] = useState([])
+  const [ partnersUpdated , setPartnersUpdated ] = useState([])
+
   const partnersListRef = useRef()
   const [lotDataSaved , setLotDataSaved] = useState(false)
   const [newPartner, setNewPartner] = useState({
@@ -25,29 +32,42 @@ const LotRegisterPopUp = () => {
   const [lotImages, setLotImages] = useState([
     '/images/labels/without-image.png',
   ])
-  const [lotData, setLotData] = useState({
-    title: '',
+
+  const [lotData, setLotData] = useState(lotSelected !== null ? lotSelected : {
+    name: '',
     description: '',
     location: '',
     metrics: '',
-    price: '',
+    finalPrice: '',
     basePrice: '',
     hiddenPrice: false,
     maxPortionsQuantity: 0,
     taxPercentage: '',
     taxPercentage24: '',
-    partners: [
-    ],
-  })
-  const [divisionSearch, setDivisionSearch] = useState('')
+    lotePartners: [],
+  });
+  
   const [lotDivision, setLotDivision] = useState({
     name: 'Selecione um Loteamento',
     logoUrl: 'https://i.imgur.com/YQOzMWA.png',
     id: 0,
-    partners: [],
+    divisionPartners: [],
   })
+  
+  useEffect(() => {
+    let selectedLotDivisionData = globalDivisionsData.find(division => division.id === lotSelected.idLoteamento)
+    setLotDivision({
+        name:  selectedLotDivisionData?.name,
+        logoUrl: selectedLotDivisionData?.logoUrl,
+        id: selectedLotDivisionData?.id,
+        divisionPartners:  selectedLotDivisionData?.divisionPartners,
+    })
+    setLotData(lotSelected);
+  }, [lotSelected]);
+  const [divisionSearch, setDivisionSearch] = useState('')
+
   const [selectValues, setSelectValues] = useState({
-    availability: 'avaible',
+    isAvaible: 'avaible',
   })
 
   const uploadImageFormRef = useRef()
@@ -55,23 +75,38 @@ const LotRegisterPopUp = () => {
   const globalDivisionsDataFiltered = useMemo(() => {
     return globalDivisionsData.filter(division => divisionSearch.length > 0 ? division.name.toLowerCase().includes(divisionSearch.toLowerCase()) : division)
   }, [divisionSearch, globalDivisionsData])
+
   const handleExitPopUp = () => {
+    setLotSelected({
+        name: '',
+        description: '',
+        location: '',
+        metrics: '',
+        finalPrice: '',
+        basePrice: '',
+        hiddenPrice: false,
+        maxPortionsQuantity: 0,
+        taxPercentage: '',
+        taxPercentage24: '',
+        lotePartners: [
+        ],
+      })
     setShowPartnersOptions(false)
-    setPopUps(popUps.lotRegister = false)
+    setPopUps(popUps.lotEdit = false)
     setEditPartnerFromLot(null)
     setShowDivisionOptions(false)
     setLotData({
-      title: '',
+      name: '',
       description: '',
       location: '',
       metrics: '',
-      price: '',
+      finalPrice: '',
       basePrice: '',
       hiddenPrice: false,
       maxPortionsQuantity: 0,
       taxPercentage: '',
       taxPercentage24: '',
-      partners: [
+      lotePartners: [
       ],
     })
     setLotImages([
@@ -81,12 +116,14 @@ const LotRegisterPopUp = () => {
     name: 'Selecione um Loteamento',
     logoUrl: 'https://i.imgur.com/YQOzMWA.png',
     id: 0,
-    partners: [],
+    divisionPartners: [],
   })
   setSelectValues({
-    availability: 'avaible',
+    isAvaible: 'avaible',
   })
   }
+
+  
   const handleUploadImage = (e) => {
     let image = e.target?.files[0]
     // reiceves reader.result and this need to be uploaded and updated on backend
@@ -137,9 +174,9 @@ const LotRegisterPopUp = () => {
       name: selectedDivision.name,
       logoUrl: selectedDivision.logoUrl,
       id: selectedDivision.id,
-      partners: selectedDivision.divisionPartners,
+      divisionPartners: selectedDivision.divisionPartners,
     })
-    setLotData(prev => ({ ...prev, partners: [] }))
+    setLotData(prev => ({ ...prev, lotePartners: [] }))
     setShowDivisionOptions(false)
   }
   const handleShowDivisionOptions = () => {
@@ -160,7 +197,8 @@ const LotRegisterPopUp = () => {
   const Availabilities = [{ name: 'Disponível', value: 'avaible' }, { name: 'Indisponível', value: 'unavaible' }, { name: 'Reservado', value: 'reserved' }]
 
   const handleDeletePartnerFromLot = (partnerToDelete) => {
-    setLotData(prev => ({...prev, partners: prev.partners.filter(partner => partner !== partnerToDelete)}))
+    setLotData(prev => ({...prev, lotePartners: prev.lotePartners.filter(partner => partner !== partnerToDelete)}))
+    setDeletedPartners(prev => [...prev, partnerToDelete])
     setTimeout(() => {
       setEditPartnerFromLot(null);
     }, 0);
@@ -171,24 +209,27 @@ const LotRegisterPopUp = () => {
   
   const handlePartnerData = (e, selected) => {
     setLotData(prev => {
-      let updatedPartners = [...prev.partners];
+      let updatedPartners = [...prev.lotePartners];
       let index = updatedPartners.indexOf(selected);
       if (index !== -1) {
         updatedPartners[index] = { ...selected, [e.target.name]: e.target.value };
+        setPartnersUpdated(prev => [...prev, { ...selected, [e.target.name]: e.target.value }])
       }
-      return { ...prev, partners: updatedPartners };
+      return { ...prev, lotePartners: updatedPartners };
     });
   }
   
   const handleAddPartner = (partnerData) => {
-    if (!lotData.partners.includes(partnerData)) {
-    setLotData(prev => ({ ...prev, partners: [...prev.partners, partnerData] }))
+    if (!lotData.lotePartners.includes(partnerData)) {
+    setLotData(prev => ({ ...prev, lotePartners: [...prev.lotePartners, partnerData] }))
+    setNewPartnersAdded(prev => [...prev, partnerData])
     }
   }
   const handleCreateNewPartner = () => {
     setShowNewPartnerInputs(prev => {
       if (prev & newPartner.name.length > 0 && newPartner.CPF.length > 0 && newPartner.percentage.length > 0) {
-        setLotData(prev => ({ ...prev, partners: [...prev.partners, newPartner] }))
+        setLotData(prev => ({ ...prev, lotePartners: [...prev.partners, newPartner] }))
+        setNewPartnersAdded(prev => [...prev, newPartner])
         setNewPartner({ name: '', CPF: '', percentage: '' })
       }
       return !prev
@@ -201,37 +242,38 @@ const LotRegisterPopUp = () => {
   }
   const handleNewPartnerData = (e) => {
     setNewPartner(prev => ({ ...prev, [e.target.name]: e.target.value }))
+
   }
   const handlePartnerSearch = (e) => {
     setPartnerSearchInput(e.target.value)
   }
   const lotDivisionFiltered = useMemo (() => {
     return (
-      lotDivision.partners?.filter(partner => 
+      lotDivision.divisionPartners?.filter(partner => 
         partner.name.toLowerCase().includes(partnerSearchInput.toLowerCase())
-      ).filter(partnerToNotDisplay => lotData.partners.every(partner => partnerToNotDisplay !== partner))
+      ).filter(partnerToNotDisplay => lotSelected.lotePartners.every(partner => partnerToNotDisplay.CPF !== partner.CPF))
     )
-  }, [lotDivision, showDivisionOptions, partnerSearchInput,lotData.partners])
-
+  }, [lotDivision.divisionPartners, showDivisionOptions, partnerSearchInput,lotSelected.lotePartners])
   const handleSaveLotData = async () => {
+    console.log(partnersUpdated)
     try{
-      if(lotData.title.length > 0 && lotData.location.length > 0 && lotData.metrics.length > 0 && ((lotData.basePrice.length > 0 && lotData.price.length > 0)|| lotData.hiddenPrice) && lotData.description.length > 0){
+      if(lotData.name.length > 0 && lotData.location.length > 0 && lotData.metrics.length > 0 && ((lotData.basePrice.length > 0 && lotData.finalPrice.length > 0)|| lotData.hiddenPrice) && lotData.description.length > 0){
         let lotDataToAdd = JSON.stringify({
-        name: lotData.title,
+        name: lotData.name,
         location: lotData.location,
         metrics: lotData.metrics,
         basePrice: lotData.basePrice,
-        finalPrice: lotData.price,
+        finalPrice: lotData.finalPrice,
         description: lotData.description,
-        isAvaible: selectValues.availability,
+        isAvaible: selectValues.isAvaible,
         idLoteamento: lotDivision.id,
         maxPortionsQuantity: lotData.maxPortionsQuantity,
         hiddenPrice: lotData.hiddenPrice,
         taxPercentage : lotData.taxPercentage,
         taxPercentage24 : lotData.taxPercentage24,
         })
-        await fetch('http://localhost:8080/lots/add', {
-          method: 'POST',
+        await fetch(`http://localhost:8080/lots/edit/${lotData.id}`, {
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -243,7 +285,7 @@ const LotRegisterPopUp = () => {
           }
             lotImages.forEach( async image => {
               let newImage = JSON.stringify({url: image})
-              await fetch(`http://localhost:8080/lots/${await data.newLot.id}/images/add`, {
+              await fetch(`http://localhost:8080/lots/${lotData.id}/images/add`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -252,61 +294,70 @@ const LotRegisterPopUp = () => {
               })
               .catch(imageErr => console.log(imageErr))
             })
-          lotData.partners.forEach( async partner => {
-          partner.idLote = await data.newLot.id
-          let newPartner = JSON.stringify(partner)
-          await fetch(`http://localhost:8080/lots/${partner.idLote}/partners/add`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: newPartner
-        })
-          .catch(partnerErr => console.log(partnerErr))
-        })
+            if(deletedPartners.length > 0){
+                deletedPartners.forEach( async partner => {
+                    let deletePartner = JSON.stringify(partner)
+                    await fetch(`http://localhost:8080/lots/partners/delete/${lotData.id}/${partner.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: deletePartner
+                  })
+                    .then(res => res.json())
+                    .then(data => console.log(data))
+                    .catch(partnerErr => console.log(partnerErr))
+                  })
+            }
+            if(newPartnersAdded.length > 0){
+              newPartnersAdded.forEach( async partner => {
+                let newPartner = JSON.stringify(partner)
+                await fetch(`http://localhost:8080/lots/${lotData.id}/partners/add`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: newPartner
+              })
+                .then(res => res.json())
+                .then(data => console.log(data))
+                .catch(partnerErr => console.log(partnerErr))
+              })
+            }
+            if(partnersUpdated.length > 0){
+                partnersUpdated.forEach( async partner => {
+                    let updatedPartner = JSON.stringify(partner)
+                    await fetch(`http://localhost:8080/lots/partners/edit/${partner.id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: updatedPartner
+                    })
+                    .then(res => res.json())
+                    .then(data => console.log(data))
+                    .catch(partnerErr => console.log(partnerErr))
+                })
+        }
       })
       .catch(lotErr => console.log(lotErr))
         .finally(async () => {
+          setDeletedPartners([])
+          setNewPartnersAdded([])
+          setPartnersUpdated([])
           setLotDataSaved(true)
             setTimeout(() => {
               setLotDataSaved(false)
             }, 3000)
-            setShowDivisionOptions(false)
-            setLotData({
-              title: '',
-              description: '',
-              location: '',
-              metrics: '',
-              price: '',
-              basePrice: '',
-              hiddenPrice: false,
-              maxPortionsQuantity: 0,
-              taxPercentage: '',
-              taxPercentage24: '',
-              partners: [
-              ],
-            })
-            setSelectValues({
-                availability: 'avaible',
-            })
-            setLotDivision({
-            name: 'Selecione um Loteamento',
-            logoUrl: 'https://i.imgur.com/YQOzMWA.png',
-            id: 0,
-            partners: [],
-          })
-          setLotImages([
-            '/images/labels/without-image.png',
-          ])
           await fetch('http://localhost:8080/divisions/list')
           .then(updatedResponse => updatedResponse.json())
-          .then(updatedData => setGlobalDivisionsData(updatedData), console.log('Lote cadastrado com sucesso!'))
+          .then(updatedData => setGlobalDivisionsData(updatedData), console.log('Lote atualizado com sucesso!'))
           .catch(err => console.log(err))
         })
         
       }
     }catch(error){
-      alert('Ocorreu um erro ao cadastrar o lote, tente novamente!')
+      alert('Ocorreu um erro ao atualizar o lote, tente novamente!')
       console.log(error)
     }
 
@@ -315,20 +366,9 @@ const LotRegisterPopUp = () => {
       if (!num) return '';
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     };
-    const getTaxes = async () =>{
-      await fetch('http://localhost:8080/taxes/list').then(res => res.json())
-      .then(data => {
-        setLotData((prev) => ({ ...prev, taxPercentage: parseFloat(data[0].defaultTax), taxPercentage24: parseFloat(data[0].after24Months)
-        }))
-      })
-  
-    }
-    useEffect(() => {
-      getTaxes()
-    },[popUps.lotRegister])
 
     return (
-      <div className={popUps.lotRegister ? style.popUpBackdrop : style.popUpDisabled}>
+      <div className={popUps.lotEdit ? style.popUpBackdrop : style.popUpDisabled}>
       <div className={style.popUpWrapper}>
         <button className={style.closeBtn} onClick={handleExitPopUp} name='lotRegister'><img src="/images/closeIcon.svg" alt="Sair" /></button>
         <div className={style.lotInfoWrapper}>
@@ -358,7 +398,7 @@ const LotRegisterPopUp = () => {
           </div>
           <div className={style.lotTexts}>
             <div className={style.lotTitle}>
-              <input placeholder='Nome do lote' type="text" value={lotData.title} onChange={handleLotData} name='title' />
+              <input placeholder='Nome do lote' type="text" value={lotData.name} onChange={handleLotData} name='name' />
             </div>
             <div className={style.lotDivision}>
               <div className={style.divisionSelected} onClick={handleShowDivisionOptions}>
@@ -405,7 +445,7 @@ const LotRegisterPopUp = () => {
                 {!lotData.hiddenPrice && (
                   <div className={style.priceInputs}>
                     <span>R$</span>
-                    <input type="text" placeholder="0" min="0" name="price" value={formatPrice(lotData.price)} onChange={(event) => {
+                    <input type="text" placeholder="0" min="0" name="finalPrice" value={formatPrice(lotData.finalPrice)} onChange={(event) => {
                       handleLotData({
                         target: {
                           name: event.target.name,
@@ -443,7 +483,7 @@ const LotRegisterPopUp = () => {
                 <h3>Quantidade máxima de parcelas</h3>
                 <div className={style.parcelQuantityInput}>
                   <button onClick={handleRemoveParcel}>-</button>
-                  <input type='number' placeholder='0' min='0' name='price' value={lotData.maxPortionsQuantity} onChange={handleLotData} />
+                  <input type='number' placeholder='0' min='0' name='finalPrice' value={lotData.maxPortionsQuantity} onChange={handleLotData} />
                   <button onClick={handleAddParcel}>+</button>
                 </div>
               </div>
@@ -470,7 +510,7 @@ const LotRegisterPopUp = () => {
                 <p className={style.statusInfo}>Esse lote está disponível para venda? </p>
               </div>
               <div className={style.lotStatusSelect}>
-                <select onChange={handleSelectFilters} value={selectValues.availability} name='availability' className={style.dropdownMenu}>
+                <select onChange={handleSelectFilters} value={selectValues.isAvaible} name='isAvaible' className={style.dropdownMenu}>
                   {Availabilities.map((item, index) => (
                     <option key={index} value={item.value}>{item.name}</option>
                   ))}
@@ -499,7 +539,7 @@ const LotRegisterPopUp = () => {
                   </li>
                   <div className={style.partnersListItemWrapper}>
 
-                  {lotData.partners.map((partner, index) => (
+                  {lotData.lotePartners.map((partner, index) => (
                     <li key={index} className={partner == editPartnerFromLot && !showNewPartnerInputs ? style.partnersListItemEdit : style.partnersListItem} onClick={() => handlePartnerActions(partner)}>
                       <input 
                       value={partner.name} 

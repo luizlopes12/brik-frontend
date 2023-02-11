@@ -6,6 +6,7 @@ import formatCurrency from '../../../helpers/formatCurrency'
 import { popUpsContext } from '../../../context/popUpsContext'
 import { selectedDivisionContext } from '../../../context/selectedDivisionContext'
 import { globalDivisionsDataContext } from '../../../context/globalDivisionsDataContext'
+import { lotSelectedContext } from '../../../context/selectedLotContext'
 
 export async function getStaticProps() {
     let firstDivisionsData;
@@ -22,10 +23,12 @@ const Availabilities = [{ name: 'Disponível', value: 'avaible' }, { name: 'Indi
 
 const Loteamentos = ({ firstDivisionsData }) => {
 
+
     /* Contexts */
     const { globalDivisionsData, setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
     const { popUps, setPopUps } = useContext(popUpsContext)
     const { divisionSelected, setDivisionSelected } = useContext(selectedDivisionContext)
+    const { lotSelected, setLotSelected } = useContext(lotSelectedContext)
     /* States */
     const [selectValues, setSelectValues] = useState({
         division: 'all',
@@ -71,6 +74,11 @@ const Loteamentos = ({ firstDivisionsData }) => {
             setShowOptions({ id: selectedLot.id, selected: true })
         }
     }
+    const handleLotEditPopUp = (selectedLot) => {
+        setLotSelected(selectedLot)
+        setPopUps((prevState) => ({ ...prevState, lotEdit: true }))
+    }
+
     /* Side effects */
 
     useEffect(() => {
@@ -147,8 +155,8 @@ const Loteamentos = ({ firstDivisionsData }) => {
                                     </div>
                                     <button className={style.lotOptionsBtn} onClick={() => handleLotOptions(lot)}>...</button>
                                     {(lot.id == showOptions.id && showOptions.selected) && (
-                                        <span className={style.lotOptions} >
-                                            <button>Editar</button>
+                                        <span className={style.lotOptions}>
+                                            <button onClick={(e) => {handleLotEditPopUp(lot)}}>Editar</button>
                                             <button>Visualizar</button>
                                         </span>
                                     )}

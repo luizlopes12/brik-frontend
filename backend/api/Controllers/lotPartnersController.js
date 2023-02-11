@@ -6,12 +6,26 @@ class lotPartnersController {
     static addPartner = async (req, res) =>{
         let { name, CPF, percentage } = req.body
         let { id: idLote } = req.params
-        let partnerAdded = await Partner.create({
-            name,
-            CPF,
-            percentage,
-            idLote
-        })
+        // {
+        //     name,
+        //     CPF,
+        //     percentage,
+        //     idLote
+        // }
+        let partnerAdded = await Partner.findOrCreate(
+            {
+                where: {
+                    
+                    CPF
+                },
+                defaults: {
+                    name,
+                    CPF,
+                    percentage,
+                    idLote
+                }
+              }
+        )
 
         if(partnerAdded){
             let partnersList = await Partner.findAll({
@@ -34,9 +48,9 @@ class lotPartnersController {
         {
             where: { id: idPartner}
         })
-
+        console.log({Partner: partnerUpdate})
         let partnerUpdated = await Partner.findByPk(idPartner);
-
+        
         if(partnerUpdate){
             res.status(200).json({message: "Sócio atualizado com sucesso.", data: partnerUpdated})
         }else{
@@ -44,8 +58,8 @@ class lotPartnersController {
         }
     }
     static deletePartner = async (req, res) =>{
-        let { id } = req.params
-        let partnerSelected = await Partner.destroy({where: { id }})
+        let { id, idLote } = req.params
+        let partnerSelected = await Partner.destroy({where: { id, idLote }})
         if(partnerSelected){
             res.status(200).json({message: 'Sócio excluído com sucesso.'})
         }else{

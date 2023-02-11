@@ -1,4 +1,4 @@
-import React, { lazy } from 'react'
+import React, { lazy, useState } from 'react'
 import '../styles/main.scss'
 import Head from 'next/head'
 import Sidebar from '../components/Sidebar'
@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import styles from './style.module.scss'
 import {UserProvider} from '../context/userContext'
 import LotRegisterPopUp from '../components/LotRegisterPopUp'
+import LotEditPopUp from '../components/LotEditPopUp'
 import DivisionRegisterPopUp from '../components/DivisionRegisterPopUp'
 import {PopUpsProvider} from '../context/popUpsContext'
 import TaxesEditPopUp from '../components/taxesEditPopUp'
@@ -30,6 +31,7 @@ function MyApp({ Component, pageProps }) {
         <link rel='icon' href='/images/favicons/pageIcon.png'/>
       </Head>
       <main className={styles.mainContainer}>
+      <LotEditPopUp/>
       <LotRegisterPopUp/>
       <TaxesEditPopUp/>
       <DivisionRegisterPopUp/>
