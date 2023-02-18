@@ -201,6 +201,12 @@ const LotRegisterPopUp = () => {
     setShowPartnersOptions(prev => !prev)
   }
   const handleNewPartnerData = (e) => {
+    if(e.target.name === 'CPF'){
+      e.target.value = e.target.value.replace(/\D/g, '')
+			e.target.value = e.target.value.replace(/(\d{3})(\d)/, '$1.$2') 
+			e.target.value = e.target.value.replace(/(\d{3})(\d)/, '$1.$2')
+			e.target.value = e.target.value.replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+    }
     setNewPartner(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
   const handlePartnerSearch = (e) => {

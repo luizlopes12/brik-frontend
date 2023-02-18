@@ -145,7 +145,7 @@ const Loteamentos = ({ firstDivisionsData }) => {
                                     </div>
                                     <div className={style.lotPrice}>
                                         { lot.hiddenPrice ? (
-                                            <p className={style.lotPriceHidden}>R$----</p>
+                                            <p className={style.lotPriceHidden}><span>{formatCurrency(lot.finalPrice)}</span><span>(Preço sob consulta)</span></p>
                                         ) : (
                                             <>
                                         <p>{formatCurrency(lot.finalPrice)}</p>

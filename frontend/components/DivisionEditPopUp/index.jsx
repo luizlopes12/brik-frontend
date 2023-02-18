@@ -12,6 +12,7 @@ const DivisionEditPopUp = () => {
   const uploadBlueprintForm = useRef()
   const { popUps, setPopUps } = useContext(popUpsContext)
   const { divisionSelected, setDivisionSelected } = useContext(selectedDivisionContext)
+  console.log(divisionSelected)
   const [dataSaved, setDataSaved] = useState(false)
   const [partnerPopUp, setPartnerPopUp] = useState(false)
   const [partnerData, setPartnerData] = useState({})
@@ -138,6 +139,7 @@ const DivisionEditPopUp = () => {
           .then(updatedResponse => updatedResponse.json())
           .then(updatedData => setGlobalDivisionsData(updatedData))
         setDivisionSelected(data.data[0])
+        console.log(data.data[0])
         setDataSaved(true)
         setTimeout(() => setDataSaved(false), 5000)
       }).catch(err => {
@@ -147,8 +149,10 @@ const DivisionEditPopUp = () => {
       })
   }
   const handleDownloadBlueprint = () => {
-      downloadBlueprintRef.download = divisionData.bluePrint;
-      downloadBlueprintRef.href = divisionData.bluePrint;
+      downloadBlueprintRef.download = divisionSelected.bluePrint;
+      downloadBlueprintRef.href = divisionSelected.bluePrint;
+      console.log(divisionData.bluePrint)
+      console.log(divisionSelected.bluePrint)
   }
 
   const handleAddPartner = async () => {
@@ -176,6 +180,12 @@ const DivisionEditPopUp = () => {
     }
   }
   const handlePartnerData = (e) => {
+    if(e.target.name === 'CPF'){
+      e.target.value = e.target.value.replace(/\D/g, '')
+			e.target.value = e.target.value.replace(/(\d{3})(\d)/, '$1.$2') 
+			e.target.value = e.target.value.replace(/(\d{3})(\d)/, '$1.$2')
+			e.target.value = e.target.value.replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+    }
     setPartnerData(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
   return (
@@ -241,8 +251,8 @@ const DivisionEditPopUp = () => {
           )}
         </div>
         <div className={style.bluePrint}>
-        <a className={style.downloadBlueprint} href={divisionData.bluePrint} download target='noreferrer' onClick={handleDownloadBlueprint} ><img src='/images/goToPage.svg'/>
-              Planta baixa
+        <a className={style.downloadBlueprint} href={divisionData.bluePrint} target='_blank' onClick={handleDownloadBlueprint} ><img src='/images/goToPage.svg'/>
+              Ver loteamento
           </a>
           <form ref={uploadBlueprintForm}>
           <a className={style.uploadBlueprint}><img src='/images/uploadIcon.svg'/>

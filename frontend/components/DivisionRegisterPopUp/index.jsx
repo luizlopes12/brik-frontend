@@ -178,7 +178,7 @@ const DivisionRegisterPopUp = () => {
         </div>
         <div className={style.bluePrint}>
           <a className={style.downloadBlueprint} href={divisionData.bluePrint} download target='noreferrer' onClick={handleDownloadBlueprint} ><img src='/images/goToPage.svg'/>
-              Planta baixa
+              Ver loteamento
           </a>
           <form ref={uploadBlueprintForm}>
           <a className={style.uploadBlueprint}><img src='/images/uploadIcon.svg'/>

@@ -89,13 +89,13 @@ class divisionsController {
     static editExistingDivision = async (req, res) =>{
         // Logo and blueprint will be a imgur url to the image
         let id = parseInt(req.params.id)
-        let { name, logo, location, blueprint, divisionPartners } = req.body
+        let { name, logo, location, bluePrint, divisionPartners } = req.body
 
         let updateDivision = await Division.update({
             name: name,
             logoUrl: logo,
             location: location,
-            bluePrint: blueprint,
+            bluePrint: bluePrint,
             divisionPartners: divisionPartners
         },
         {
