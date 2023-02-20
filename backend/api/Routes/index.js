@@ -5,6 +5,7 @@ const divisionRoutes = require('./divisionRoutes.js')
 const lotsRoutes = require('./lotRoutes.js')
 const bannerRoutes = require('./bannerRoutes.js')
 const taxRoutes = require('./taxRoutes.js')
+const saleRoutes = require('./saleRoutes.js')
 
 const routes = (app) =>{
     app.use(
@@ -12,7 +13,8 @@ const routes = (app) =>{
         divisionRoutes,
         lotsRoutes,
         bannerRoutes,
-        taxRoutes
+        taxRoutes,
+        saleRoutes
     )
 }
 

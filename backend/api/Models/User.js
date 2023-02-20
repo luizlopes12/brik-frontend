@@ -53,6 +53,14 @@ const User = db.connection.define('Users', {
     },
 })
 
+
+
 // User.sync({force: true})
+
+// User.create({
+//     name: 'Admin',
+//     email: 'a@ahotmail.com',
+//     password: '123456',
+// })
 
 module.exports = User
