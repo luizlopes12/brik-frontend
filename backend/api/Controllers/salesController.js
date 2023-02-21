@@ -1,9 +1,7 @@
 const Sale = require('../Models/Sale')
 const Lot = require('../Models/Lot')
 const User = require('../Models/User')
-const Division = require('../Models/Division')
 const Partner = require('../Models/Partner')
-const DivisionPartner = require('../Models/DivisionPartner')
 const credentials = require('../config/gerencianet')
 const Gerencianet = require('gn-api-sdk-node');
 const Parcel = require('../Models/Parcel')
@@ -20,27 +18,34 @@ class salesController {
     static async createParcels(quantity, saleData) {
         let salePriceWithTax;
         let parcelPrice;
-        if(quantity <= 12){
+        let anualValue;
+        if (quantity <= 12) {
             salePriceWithTax = (parseInt(saleData.salePrice) + ((saleData.salePrice * (saleData.fixedTaxPercetage / 100))))
             salePriceWithTax -= saleData.entryValue
             parcelPrice = Math.floor((salePriceWithTax / quantity) * 100)
+            anualValue = parseInt(parcelPrice) * quantity
         }
-        else{
-            // Adicionar lógica de corrigir com igpm a partir da 13° parcela
+        else {
+            quantity = 12
+            salePriceWithTax = (parseInt(saleData.salePrice) + ((saleData.salePrice * (saleData.fixedTaxPercetage / 100))))
+            salePriceWithTax -= saleData.entryValue
+            parcelPrice = Math.floor((salePriceWithTax / quantity) * 100)
+            anualValue = parseInt(parcelPrice) * quantity
         }
-        let saleDateYear = new Date(saleData.saleDate).getFullYear()
-        let saleDateMonth = new Date(saleData.saleDate).getMonth() + 1 < 10 ? ((new Date(saleData.saleDate).getMonth() + 1).toString().padStart(2,'0')):(new Date(saleData.saleDate).getMonth() + 1)
-        let saleDateDay = new Date(saleData.saleDate).getDate() + 1 < 10 ? ((new Date(saleData.saleDate).getDate() + 1).toString().padStart(2,'0')):(new Date(saleData.saleDate).getDate() + 1)
-        let saleDateFormatted = `${saleDateYear}-${saleDateMonth}-${saleDateDay}`
-        let options = {
-          client_id: credentials.client_id,
-          client_secret: credentials.client_secret,
-          sandbox: true,
-          pix_cert: credentials.pix_cert,
-        };
-        let gerencianet = new Gerencianet(options);
-        // Cria as 12 paecelas anuais, com o valor da parcela e a data de vencimento
-        // for(let i = 0; i < 12; i++){
+        try {
+            let saleDateYear = new Date(saleData.saleDate).getFullYear()
+            let saleDateMonth = new Date(saleData.saleDate).getMonth() + 1 < 10 ? ((new Date(saleData.saleDate).getMonth() + 1).toString().padStart(2, '0')) : (new Date(saleData.saleDate).getMonth() + 1)
+            let saleDateDay = new Date(saleData.saleDate).getDate() + 1 < 10 ? ((new Date(saleData.saleDate).getDate() + 1).toString().padStart(2, '0')) : (new Date(saleData.saleDate).getDate() + 1)
+            let saleDateFormatted = `${saleDateYear}-${saleDateMonth}-${saleDateDay}`
+            let options = {
+                client_id: credentials.client_id,
+                client_secret: credentials.client_secret,
+                sandbox: true,
+                pix_cert: credentials.pix_cert,
+            };
+            let gerencianet = new Gerencianet(options);
+            // Cria as 12 paecelas anuais, com o valor da parcela e a data de vencimento
+            // for(let i = 0; i < 12; i++){
             // saleDateMonth = parseInt(saleDateMonth) + 1
             // saleDateMonth = saleDateMonth < 10 ? ((saleDateMonth).toString().padStart(2,'0')):(saleDateMonth)
             // if(saleDateMonth > 12){
@@ -49,67 +54,73 @@ class salesController {
             // }
             // saleDateFormatted = `${saleDateYear}-${saleDateMonth}-${saleDateDay}`
             var body = {
-                payment: {
-                  banking_billet: {
-                    expire_at: saleDateFormatted, 
-                    customer: {
-                      name: saleData.users.name,
-                      email: saleData.users.email,
-                      cpf: saleData.users.CPF, 
-                      phone_number: saleData.users.phone
+                items: [
+                    {
+                        name: saleData.lotes.name,
+                        value: anualValue,
+                        amount: 1
                     }
-                  }
+                ],
+                customer: {
+                    name: saleData.users.name,
+                    email: saleData.users.email,
+                    cpf: saleData.users.CPF,
+                    phone_number: saleData.users.phone
                 },
-              
-                items: [{
-                  name: saleData.lotes.name + ' (parcela)',
-                  value: parcelPrice,
-                  amount: 1
-                }],
-                /* Parte onde são adicionados os juros */
-                // shippings: [{
-                //   name: 'Default Shipping Cost',
-                //   value: 100
-                // }]
-              }
-              try{
-                let parcelCreated = await gerencianet.createOneStepCharge([], body).then(chargeRes=>chargeRes)
-                if(parcelCreated){
-                    let addParcelToDatabase = await Parcel.create({
+                expire_at: saleDateFormatted,
+                configurations: {
+                    fine: 200,
+                    interest: 33
+                },
+                // message: "Este é um espaço de até 80 caracteres para informar algo a seu cliente",
+                repeats: quantity,
+                split_items: true
+            }
+
+            let parcelsCreated = await gerencianet.createCarnet({}, body).then(chargeRes => chargeRes)
+            if (parcelsCreated) {
+                const addParcelPromises = parcelsCreated.data.charges.map(async (parcelCreated) => {
+                    const addParcelToDatabase = await Parcel.create({
                         saleId: saleData.id,
-                        expireDate: parcelCreated.data.expire_at,
-                        value: parcelCreated.data.total,
-                        status: parcelCreated.data.status,
+                        expireDate: parcelCreated.expire_at,
+                        value: parcelCreated.value,
+                        status: parcelCreated.status,
                         mulct: 0,
-                        billetLink: parcelCreated.data.billet_link,
-                        billetPdf: parcelCreated.data.pdf.charge,
-                        chargeId: parcelCreated.data.charge_id
-                    })
-                    if(!addParcelToDatabase){
-                        return false
-                    }
-                    return true
+                        billetLink: parcelCreated.parcel_link,
+                        billetPdf: parcelCreated.pdf.charge,
+                        chargeId: parcelCreated.charge_id,
+                    });
+
+                    return addParcelToDatabase;
+                });
+                const addParcelResults = await Promise.all(addParcelPromises);
+                // Check if all the promises resolved successfully
+                const allPromisesResolved = addParcelResults.every((result) => result);
+                if (allPromisesResolved) {
+                    return true;
+                } else {
+                    return false;
                 }
-              }catch(err){
-                console.log(err)
-                return false
-              }
+            }
+        } catch (error) {
+            console.log(error)
+            return false
+        }
         // }
-        
-      }
-    
+    }
+
     static createSaleAndTheirAnualParcels = async (req, res) => {
         const {
-            saleDate, 
-            salePrice, 
-            commission, 
-            fixedTaxPercetage, 
-            variableTaxPercetage, 
-            contract, 
-            loteId, 
+            saleDate,
+            salePrice,
+            commission,
+            fixedTaxPercetage,
+            variableTaxPercetage,
+            contract,
+            loteId,
             buyerId,
             parcelsQuantity,
-            entryValue
+            entryValue,
         } = req.body
         // commission = desconto(em porcentagem)
         let createdSale = await Sale.create({
@@ -121,11 +132,12 @@ class salesController {
             contract,
             loteId,
             buyerId,
-            entryValue
+            entryValue,
+            parcelsQuantity
         })
-        if(!createdSale) {
-            res.status(400).json({message: "Erro ao criar venda"})
-        }else{
+        if (!createdSale) {
+            res.status(400).json({ message: "Erro ao criar venda" })
+        } else {
             await Sale.findByPk(createdSale.id, {
                 include: [
                     {
@@ -136,12 +148,12 @@ class salesController {
                             model: LotImage,
                             as: 'loteImages',
                             required: false
-                        },{
+                        }, {
                             model: Partner,
                             as: 'lotePartners',
                             required: false
                         }
-                    ]
+                        ]
                     },
                     {
                         model: User,
@@ -151,13 +163,13 @@ class salesController {
                 ]
             }).then(async sale => {
                 let saleParcels = await this.createParcels(parcelsQuantity, sale)
-                if(saleParcels){
+                if (saleParcels) {
                     let saleCreatedData = await Sale.findByPk(createdSale.id, {
                         include: [
                             {
                                 model: Parcel,
                                 as: 'parcelas',
-                                required: true,
+                                required: false,
                             },
                             {
                                 model: Lot,
@@ -167,14 +179,12 @@ class salesController {
                                     model: LotImage,
                                     as: 'loteImages',
                                     required: false
-                                },{
+                                }, {
                                     model: Partner,
                                     as: 'lotePartners',
                                     required: false
                                 }
-                            ]
-                                    
-        
+                                ]
                             },
                             {
                                 model: User,
@@ -183,22 +193,20 @@ class salesController {
                             }
                         ]
                     })
-                    if(saleCreatedData){
-                        res.status(200).json({message: "Venda criada com sucesso!", data: saleCreatedData})
-                    }else{
-                        res.status(400).json({message: "Erro ao criar venda"})
+                    if (saleCreatedData) {
+                        res.status(200).json({ message: "Venda criada com sucesso!", data: saleCreatedData })
+                    } else {
+                        res.status(400).json({ message: "Erro ao criar venda" })
                     }
-                }else{
-                    res.status(400).json({message: "Erro ao criar parcelas"})
+                } else {
+                    console.log(saleParcels)
+                    res.status(400).json({ message: "Erro ao criar parcelas" })
                 }
             }).catch(err => {
                 console.log(err)
-                res.status(500).json({message: "Erro no servidor"})
+                res.status(500).json({ message: "Erro no servidor" })
             })
         }
-        
-
-
     }
     static listAllSales = async (req, res) => {
 
@@ -217,12 +225,12 @@ class salesController {
                         model: LotImage,
                         as: 'loteImages',
                         required: false
-                    },{
+                    }, {
                         model: Partner,
                         as: 'lotePartners',
                         required: false
                     }
-                ]
+                    ]
                 },
                 {
                     model: User,
@@ -232,11 +240,51 @@ class salesController {
             ],
             order: [['createdAt', 'DESC']]
         })
-        if(!salesList){
-            res.status(500).json({message: 'Erro no servidor.'})
-        }else{
+        if (!salesList) {
+            res.status(500).json({ message: 'Erro no servidor.' })
+        } else {
             res.status(200).json(salesList)
         }
+    }
+    static listSaleById = async (req, res) => {
+        const { id } = req.params
+        let sale = await Sale.findByPk(id, {
+            include: [
+                {
+                    model: Parcel,
+                    as: 'parcelas',
+                    required: false,
+                },
+                {
+                    model: Lot,
+                    as: 'lotes',
+                    required: false,
+                    include: [{
+                        model: LotImage,
+                        as: 'loteImages',
+                        required: false
+                    }, {
+                        model: Partner,
+                        as: 'lotePartners',
+                        required: false
+                    }
+                    ]
+                },
+                {
+                    model: User,
+                    as: 'users',
+                    required: false,
+                }
+            ]
+        })
+        if (!sale) {
+            res.status(500).json({ message: 'Erro no servidor.' })
+        } else {
+            res.status(200).json(sale)
+        }
+    }
+
+    static testCron = async (req, res) => {
     }
 }
 

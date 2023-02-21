@@ -32,6 +32,11 @@ const Sale = db.connection.define('Vendas', {
         type: db.Sequelize.REAL,
         allowNull: false,
         defaultValue: 0
+    },
+    parcelsQuantity: {
+        type: db.Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1
     }
 });
 
