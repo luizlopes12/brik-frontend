@@ -1,12 +1,9 @@
 const cron = require('node-cron');
 const Sale = require('../Models/Sale')
-const Lot = require('../Models/Lot')
-const User = require('../Models/User')
-const Partner = require('../Models/Partner')
 const credentials = require('../config/gerencianet')
 const Gerencianet = require('gn-api-sdk-node');
 const Parcel = require('../Models/Parcel')
-const LotImage = require('../Models/LotImage')
+const Notification = require('../Models/Notification')
 const gerencianet = new Gerencianet(credentials);
 
 // Path: backend\api\crons\createNewParcels.js
@@ -16,33 +13,55 @@ const gerencianet = new Gerencianet(credentials);
     with the tax percentage of igpm and notify the admin
 */
 
-module.exports = cron.schedule('0 0 1 * *', async () => {
+module.exports = cron.schedule('* * * * *', async () => {
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
         const currentMonth = currentDate.getMonth() + 1;
         let lastParcel;
         // Find all sales that have a last parcel with a matching year and month
-        const salesToUpdate = await Sale.findAll({
-            where: { id: 129 },
-            include: [
-                {
-                    model: Parcel,
-                    as: 'parcelas',
-                    required: true,
-                }
-            ],
-        });
-        salesToUpdate.forEach(async (sale) => {
-            lastParcel = sale.parcelas.reduce((prev, current) => {
-                if (prev.expireDate > current.expireDate) {
-                    return prev;
-                }
-                return current;
+        try {
+            const salesToUpdate = await Sale.findAll({
+                include: [
+                    {
+                        model: Parcel,
+                        as: 'parcelas',
+                        required: true,
+                    }
+                ],
             });
-            let lastParcelDate = new Date(lastParcel.expireDate);
-            if(((lastParcelDate.getFullYear()) === currentYear) && ((lastParcelDate.getMonth() + 1) === currentMonth)){
-                // To do: create future parcels based on IGPM as tax percentage and notify the admin
-                
-            }
-        })
+            
+            salesToUpdate.forEach(async (sale) => {
+                lastParcel = sale.parcelas.reduce((prev, current) => {
+                    if (prev.expireDate > current.expireDate) {
+                        return prev;
+                    }
+                    return current;
+                });
+                let remainingParcels = sale.parcelsQuantity - sale.parcelas.length;
+                if(remainingParcels > 0 && remainingParcels <= 12){
+                    console.log('Total: ' + sale.parcelsQuantity)
+                    console.log('Faltam: ' + remainingParcels)
+                }else if(remainingParcels > 12){
+                    remainingParcels = 12;
+                    console.log('Total: ' + sale.parcelsQuantity)
+                    console.log('Faltam: ' + remainingParcels)
+                }
+                let lastParcelDate = new Date(lastParcel.expireDate);
+                if(((lastParcelDate.getFullYear()) === currentYear) && ((lastParcelDate.getMonth() + 1) === currentMonth)){
+                    // To do: create future parcels based on IGPM as tax percentage and notify the admin
+                    console.log(`Criando novas parcelas para o ano seguinte na venda com última parcela em: ${lastParcelDate}.`)
+                    let remainingParcels = sale.parcelsQuantity - sale.parcelas.length;
+                    if(remainingParcels > 0 && remainingParcels <= 12){
+                        console.log(remainingParcels)
+                    }else if(remainingParcels > 12){
+                        remainingParcels = 12;
+                        console.log(remainingParcels)
+                    }
+                }
+            })
+        } catch (error) {
+            console.log('Erro na CRON createNewParcels.js, erro: ' + error);
+        }
+
+
 });

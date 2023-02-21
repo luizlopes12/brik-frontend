@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 
 const jwtAuth = (req, res, next) =>{
     let token = req.headers['x-access-token']
+    console.log(token)
     let refreshToken = req.headers['x-access-token-refresh']
     jwt.verify(token, process.env.JWT_SECRET, (tokenError, tokenDecoded) =>{
         if(tokenError){

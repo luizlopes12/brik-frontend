@@ -1,6 +1,7 @@
 import React, { lazy, useState } from 'react'
 import '../styles/main.scss'
 import Head from 'next/head'
+import { io } from "socket.io-client";
 import Sidebar from '../components/Sidebar'
 import Navbar from '../components/Navbar'
 import { useRouter } from 'next/router'
@@ -18,7 +19,7 @@ import { GlobalDivisionsDataProvider } from '../context/globalDivisionsDataConte
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
-
+  var socket = io('http://localhost:8080')
   return (
     router.pathname.includes('/admin') ? (
       <GlobalDivisionsDataProvider>

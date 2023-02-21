@@ -16,21 +16,31 @@ regras:
 */
 class salesController {
     static async createParcels(quantity, saleData) {
-        let salePriceWithTax;
-        let parcelPrice;
+        let salePrice;
         let anualValue;
+        let entryValue;
+        let parcelPrice;
+        let anualTaxValue;
+        console.log('Total: ' + quantity)
         if (quantity <= 12) {
-            salePriceWithTax = (parseInt(saleData.salePrice) + ((saleData.salePrice * (saleData.fixedTaxPercetage / 100))))
-            salePriceWithTax -= saleData.entryValue
-            parcelPrice = Math.floor((salePriceWithTax / quantity) * 100)
-            anualValue = parseInt(parcelPrice) * quantity
+            salePrice = parseInt(saleData.salePrice*100)
+            entryValue = parseInt(saleData.entryValue*100)
+            anualTaxValue = salePrice * (saleData.fixedTaxPercetage / 100)
+            salePrice -= entryValue
+            parcelPrice = salePrice / quantity
+            anualValue = Math.round(parcelPrice * quantity)
         }
         else {
+            salePrice = parseInt(saleData.salePrice*100)
+            entryValue = parseInt(saleData.entryValue*100)
+            anualTaxValue = salePrice * (saleData.fixedTaxPercetage / 100)
+            salePrice -= entryValue
+            parcelPrice = salePrice / quantity
+            anualValue = Math.round(parcelPrice * 12)
             quantity = 12
-            salePriceWithTax = (parseInt(saleData.salePrice) + ((saleData.salePrice * (saleData.fixedTaxPercetage / 100))))
-            salePriceWithTax -= saleData.entryValue
-            parcelPrice = Math.floor((salePriceWithTax / quantity) * 100)
-            anualValue = parseInt(parcelPrice) * quantity
+            console.log("Anual: " + quantity)
+            console.log("Preço total: "+salePrice)
+            console.log("Preço anual: "+anualValue)
         }
         try {
             let saleDateYear = new Date(saleData.saleDate).getFullYear()
@@ -59,7 +69,13 @@ class salesController {
                         name: saleData.lotes.name,
                         value: anualValue,
                         amount: 1
+                    },
+                    {
+                        name: `Juros anuais(${saleData.fixedTaxPercetage}%)`,
+                        value: anualTaxValue,
+                        amount: 1
                     }
+
                 ],
                 customer: {
                     name: saleData.users.name,
@@ -68,13 +84,18 @@ class salesController {
                     phone_number: saleData.users.phone
                 },
                 expire_at: saleDateFormatted,
-                configurations: {
-                    fine: 200,
-                    interest: 33
-                },
-                // message: "Este é um espaço de até 80 caracteres para informar algo a seu cliente",
+                // Porcentagem de acrescimo apos o vencimento
+                // configurations: {
+                //     fine: 200,
+                //     interest: 33
+                // },
+                message: "Esta é uma parcela anual referente a compra do lote " + saleData.lotes.name,
                 repeats: quantity,
-                split_items: true
+                split_items: true,
+                metadata: {
+                    // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
+                    // notification_url: ''
+                }
             }
 
             let parcelsCreated = await gerencianet.createCarnet({}, body).then(chargeRes => chargeRes)
@@ -90,7 +111,6 @@ class salesController {
                         billetPdf: parcelCreated.pdf.charge,
                         chargeId: parcelCreated.charge_id,
                     });
-
                     return addParcelToDatabase;
                 });
                 const addParcelResults = await Promise.all(addParcelPromises);
