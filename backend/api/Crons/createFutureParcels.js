@@ -5,6 +5,14 @@ const Gerencianet = require('gn-api-sdk-node');
 const Parcel = require('../Models/Parcel')
 const Notification = require('../Models/Notification')
 const gerencianet = new Gerencianet(credentials);
+const fetch = require('node-fetch');
+const Lot = require('../Models/Lot')
+const LotImage = require('../Models/LotImage')
+const Partner = require('../Models/Partner')
+const User = require('../Models/User')
+
+
+
 
 // Path: backend\api\crons\createNewParcels.js
 // 0 0 1 * * - Run at 00:00:00 on day-of-month 1.
@@ -13,55 +21,162 @@ const gerencianet = new Gerencianet(credentials);
     with the tax percentage of igpm and notify the admin
 */
 
+
+
+
+
 module.exports = cron.schedule('* * * * *', async () => {
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-        const currentMonth = currentDate.getMonth() + 1;
-        let lastParcel;
-        // Find all sales that have a last parcel with a matching year and month
-        try {
-            const salesToUpdate = await Sale.findAll({
-                include: [
-                    {
-                        model: Parcel,
-                        as: 'parcelas',
-                        required: true,
+    let accumulatedIGPMValue = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.4175/dados?formato=json')
+        .then(response => response.json())
+        .then(data => {
+            let valueToReturn = data.slice(-12).reduce((acc, current) => {
+                const currentValue = parseFloat(current.valor);
+                return isNaN(currentValue) ? acc : acc + currentValue;
+            }, 0);
+            return valueToReturn
+        })
+        .catch(error => console.error(error));
+
+    console.log('Rodando CRON de criação de novas parcelas...')
+    const currentDate = new Date('2024-01-25T00:00:00.000Z');
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+    let lastParcel;
+    // Find all sales that have a last parcel with a matching year and month
+    try {
+        const salesToUpdate = await Sale.findAll({
+            include: [
+                {
+                    model: Parcel,
+                    as: 'parcelas',
+                    required: true,
+                },
+                {
+                    model: Lot,
+                    as: 'lotes',
+                    required: false,
+                    include: [{
+                        model: LotImage,
+                        as: 'loteImages',
+                        required: false
+                    }, {
+                        model: Partner,
+                        as: 'lotePartners',
+                        required: false
                     }
-                ],
+                    ]
+                },
+                {
+                    model: User,
+                    as: 'users',
+                    required: false,
+                }
+            ],
+        });
+        salesToUpdate.forEach(async (sale) => {
+            let salePrice = sale.salePrice;
+            let anualValue;
+            let anualTaxValue;
+            let parcelPrice;
+            let parcelsCreated = [];
+            lastParcel = sale.parcelas.reduce((prev, current) => {
+                if (prev.expireDate > current.expireDate) {
+                    return prev;
+                }
+                return current;
             });
-            
-            salesToUpdate.forEach(async (sale) => {
-                lastParcel = sale.parcelas.reduce((prev, current) => {
-                    if (prev.expireDate > current.expireDate) {
-                        return prev;
-                    }
-                    return current;
-                });
-                let remainingParcels = sale.parcelsQuantity - sale.parcelas.length;
-                if(remainingParcels > 0 && remainingParcels <= 12){
-                    console.log('Total: ' + sale.parcelsQuantity)
-                    console.log('Faltam: ' + remainingParcels)
-                }else if(remainingParcels > 12){
+            let lastParcelDate = new Date(lastParcel.expireDate);
+            let nextParcelDate = `${lastParcelDate.getFullYear()}-${(parseInt(lastParcelDate.getMonth()) + 2).toString().padStart(2, '0')}-${(parseInt(lastParcelDate.getDate()) + 1).toString().padStart(2, '0')}`;
+            console.log('Última parcela: ', nextParcelDate)
+            let remainingParcels = sale.parcelsQuantity - sale.parcelas.length;
+            if (
+                ((lastParcelDate.getFullYear()) === currentYear) &&
+                ((lastParcelDate.getMonth() + 1) === currentMonth) &&
+                (sale.parcelsQuantity > sale.parcelas.length) &&
+                (sale.parcelsQuantity > 12 && remainingParcels !== 0)
+            ) {
+                // To do: create future parcels based on IGPM as tax percentage and notify the admin
+                if (remainingParcels > 0 && remainingParcels <= 12) {
+                    remainingParcels = remainingParcels
+                } else if (remainingParcels > 12) {
                     remainingParcels = 12;
-                    console.log('Total: ' + sale.parcelsQuantity)
-                    console.log('Faltam: ' + remainingParcels)
                 }
-                let lastParcelDate = new Date(lastParcel.expireDate);
-                if(((lastParcelDate.getFullYear()) === currentYear) && ((lastParcelDate.getMonth() + 1) === currentMonth)){
-                    // To do: create future parcels based on IGPM as tax percentage and notify the admin
-                    console.log(`Criando novas parcelas para o ano seguinte na venda com última parcela em: ${lastParcelDate}.`)
-                    let remainingParcels = sale.parcelsQuantity - sale.parcelas.length;
-                    if(remainingParcels > 0 && remainingParcels <= 12){
-                        console.log(remainingParcels)
-                    }else if(remainingParcels > 12){
-                        remainingParcels = 12;
-                        console.log(remainingParcels)
+                salePrice = parseInt(sale.salePrice * 100)
+                anualTaxValue = parseFloat(salePrice) * parseFloat(accumulatedIGPMValue)
+                parcelPrice = parseFloat(salePrice) / parseFloat(sale.parcelsQuantity)
+                anualValue = Math.round(parcelPrice * remainingParcels)
+                var newAnualParcels = {
+                    items: [
+                        {
+                            name: sale.lotes.name,
+                            value: anualValue,
+                            amount: 1
+                        },
+                        {
+                            name: `Juros anuais(${accumulatedIGPMValue}%)`,
+                            value: anualTaxValue,
+                            amount: 1
+                        }
+
+                    ],
+                    customer: {
+                        name: sale.users.name,
+                        email: sale.users.email,
+                        cpf: sale.users.CPF,
+                        phone_number: sale.users.phone
+                    },
+                    expire_at: nextParcelDate,
+                    // Porcentagem de acrescimo apos o vencimento
+                    // configurations: {
+                    //     fine: 200,
+                    //     interest: 33
+                    // },
+                    message: "Esta é uma parcela anual referente a compra do lote " + sale.lotes.name,
+                    repeats: remainingParcels,
+                    split_items: true,
+                    metadata: {
+                        // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
+                        // notification_url: ''
                     }
                 }
-            })
-        } catch (error) {
-            console.log('Erro na CRON createNewParcels.js, erro: ' + error);
-        }
+                await gerencianet.createCarnet({}, newAnualParcels)
+                    .then(async chargeRes => {
+                        await chargeRes.data.charges.forEach(async charge => {
+                            parcelsCreated.push({
+                                saleId: sale.id,
+                                expireDate: charge.expire_at,
+                                value: charge.value,
+                                mulct: 0,
+                                status: charge.status,
+                                billetLink: charge.parcel_link,
+                                billetPdf: charge.pdf.charge,
+                                chargeId: charge.charge_id,
+                            })
+                        })
+                    })
+
+                    .catch(err => {
+                        console.log(err)
+                    })
+                    .finally(() => {
+                        parcelsCreated = parcelsCreated.reduce((acc, val) => acc.concat(val), [])
+                    })
+                    if(parcelsCreated.length > 0){
+                        await Parcel.bulkCreate(parcelsCreated)
+                        .then(async () => {
+                            /* Criar notificação de novas parcelas */
+                            console.log(`Criando novas parcelas, venda: ${sale.id}.`)
+                            await Notification.create({})
+                        })
+                }
+            }
+            else if (remainingParcels == 0 && lastParcel.status == 'up_to_date') {
+                console.log(`Não há parcelas a serem criadas, venda: ${sale.id} finalizada.`)
+            }
+        })
+    } catch (error) {
+        console.log('Erro na CRON createNewParcels.js, erro: ' + error);
+    }
 
 
 });

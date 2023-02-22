@@ -14,14 +14,27 @@ regras:
     Caso as parcelas sejam mais de 12, a partir da 13° parcela, o valor será o valor da parcela + valor acumulado do IGPM
     Ao listar as vendas, cada parcela deve ter o status verificado e atualizado
 */
+
 class salesController {
+    static verifyDiscount = (discount) =>{
+        if(discount > 0){
+            return({
+                discount: {
+                    type: 'percentage',
+                    value: discount
+                }
+            }
+            )
+        }
+    }
     static async createParcels(quantity, saleData) {
         let salePrice;
         let anualValue;
         let entryValue;
         let parcelPrice;
         let anualTaxValue;
-        console.log('Total: ' + quantity)
+        let parcelsCreated = [];
+        let discountPercentage = (saleData.discountPercentage * 100);
         if (quantity <= 12) {
             salePrice = parseInt(saleData.salePrice*100)
             entryValue = parseInt(saleData.entryValue*100)
@@ -38,15 +51,15 @@ class salesController {
             parcelPrice = salePrice / quantity
             anualValue = Math.round(parcelPrice * 12)
             quantity = 12
-            console.log("Anual: " + quantity)
-            console.log("Preço total: "+salePrice)
-            console.log("Preço anual: "+anualValue)
         }
         try {
             let saleDateYear = new Date(saleData.saleDate).getFullYear()
             let saleDateMonth = new Date(saleData.saleDate).getMonth() + 1 < 10 ? ((new Date(saleData.saleDate).getMonth() + 1).toString().padStart(2, '0')) : (new Date(saleData.saleDate).getMonth() + 1)
             let saleDateDay = new Date(saleData.saleDate).getDate() + 1 < 10 ? ((new Date(saleData.saleDate).getDate() + 1).toString().padStart(2, '0')) : (new Date(saleData.saleDate).getDate() + 1)
             let saleDateFormatted = `${saleDateYear}-${saleDateMonth}-${saleDateDay}`
+            if(entryValue > 0){
+                saleDateFormatted = `${saleDateYear}-${(parseInt(saleDateMonth)+1).toString().padStart(2, '0')}-${saleDateDay}`
+            }
             let options = {
                 client_id: credentials.client_id,
                 client_secret: credentials.client_secret,
@@ -54,65 +67,341 @@ class salesController {
                 pix_cert: credentials.pix_cert,
             };
             let gerencianet = new Gerencianet(options);
-            // Cria as 12 paecelas anuais, com o valor da parcela e a data de vencimento
-            // for(let i = 0; i < 12; i++){
-            // saleDateMonth = parseInt(saleDateMonth) + 1
-            // saleDateMonth = saleDateMonth < 10 ? ((saleDateMonth).toString().padStart(2,'0')):(saleDateMonth)
-            // if(saleDateMonth > 12){
-            //     saleDateMonth = '01'
-            //     saleDateYear = parseInt(saleDateYear) + 1
-            // }
-            // saleDateFormatted = `${saleDateYear}-${saleDateMonth}-${saleDateDay}`
-            var body = {
-                items: [
-                    {
-                        name: saleData.lotes.name,
-                        value: anualValue,
-                        amount: 1
+            /* Se o numero de parcelas == 1, criar apenas 1 boleto */
+            if (quantity == 1) {
+                console.log('Entrou no if quantity == 1')
+                let uniqueParcelBody = {}
+                if(discountPercentage > 0){
+                    uniqueParcelBody = {
+                        items: [
+                            {
+                                name: saleData.lotes.name,
+                                value: anualValue,
+                                amount: 1
+                            },
+                            {
+                                name: `Juros(${saleData.fixedTaxPercetage}%)`,
+                                value: anualTaxValue,
+                                amount: 1
+                            }
+                        ],
+                        payment: {
+                            banking_billet: {
+                                customer: {
+                                name: saleData.users.name,
+                                email: saleData.users.email,
+                                cpf: saleData.users.CPF,
+                                phone_number: saleData.users.phone
+                            },
+                        expire_at: saleDateFormatted,
+                        message: "Documento de pagamento à vista referente ao lote" + saleData.lotes.name,
+                        discount: {
+                            type: 'percentage',
+                            value: discountPercentage
+                        },
+                        // metadata: {
+                        //     // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
+                        //     // notification_url: ''
+                        // }
+                        },
                     },
-                    {
-                        name: `Juros anuais(${saleData.fixedTaxPercetage}%)`,
-                        value: anualTaxValue,
-                        amount: 1
+                        // Porcentagem de acrescimo apos o vencimento
+                        // configurations: {
+                        //     fine: 200,
+                        //     interest: 33
+                        // },
                     }
-
-                ],
-                customer: {
-                    name: saleData.users.name,
-                    email: saleData.users.email,
-                    cpf: saleData.users.CPF,
-                    phone_number: saleData.users.phone
-                },
-                expire_at: saleDateFormatted,
-                // Porcentagem de acrescimo apos o vencimento
-                // configurations: {
-                //     fine: 200,
-                //     interest: 33
-                // },
-                message: "Esta é uma parcela anual referente a compra do lote " + saleData.lotes.name,
-                repeats: quantity,
-                split_items: true,
-                metadata: {
-                    // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
-                    // notification_url: ''
+                }else{
+                    uniqueParcelBody = {
+                        items: [
+                            {
+                                name: saleData.lotes.name,
+                                value: anualValue,
+                                amount: 1
+                            },
+                            {
+                                name: `Juros(${saleData.fixedTaxPercetage}%)`,
+                                value: anualTaxValue,
+                                amount: 1
+                            }
+                        ],
+                        payment: {
+                            banking_billet: {
+                                customer: {
+                                name: saleData.users.name,
+                                email: saleData.users.email,
+                                cpf: saleData.users.CPF,
+                                phone_number: saleData.users.phone
+                            },
+                        expire_at: saleDateFormatted,
+                        message: "Documento de pagamento à vista referente ao lote" + saleData.lotes.name,
+                        // metadata: {
+                        //     // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
+                        //     // notification_url: ''
+                        // }
+                        },
+                    },
+                        // Porcentagem de acrescimo apos o vencimento
+                        // configurations: {
+                        //     fine: 200,
+                        //     interest: 33
+                        // },
+                        
+                        
+                    }
                 }
+
+                parcelsCreated.push(await gerencianet.createOneStepCharge({}, uniqueParcelBody).then(chargeRes => chargeRes.data))
+                parcelsCreated.flat()
+            }
+            /* Se o valor de entrada > 0, criar 1 boleto com o valor da entrada e as demais parcelas */
+            if (quantity > 1 && entryValue > 0) {
+                console.log('Entrou no if quantity > 1 && entryValue > 0')
+                let entryParcelBody;
+                let anualParcelsWithEntryBody;
+                if(discountPercentage > 0){
+                    console.log(entryValue)
+                    console.log(anualValue)
+                    entryParcelBody = {
+                        items: [
+                            {
+                                name: saleData.lotes.name,
+                                value: entryValue,
+                                amount: 1
+                            },
+                            {
+                                name: `Juros(${saleData.fixedTaxPercetage}%)`,
+                                value: anualTaxValue,
+                                amount: 1
+                            }
+                        ],
+                        payment: {
+                            banking_billet: {
+                                customer: {
+                                name: saleData.users.name,
+                                email: saleData.users.email,
+                                cpf: saleData.users.CPF,
+                                phone_number: saleData.users.phone
+                            },
+                        expire_at: saleDateFormatted,
+                        message: "Documento de pagamento à vista referente ao lote" + saleData.lotes.name,
+                        discount: {
+                            type: 'percentage',
+                            value: discountPercentage
+                        },
+                        // metadata: {
+                        //     // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
+                        //     // notification_url: ''
+                        // }
+                        },
+                    },
+                        // Porcentagem de acrescimo apos o vencimento
+                        // configurations: {
+                        //     fine: 200,
+                        //     interest: 33
+                        // },
+                    }
+                anualParcelsWithEntryBody = {
+                    items: [
+                        {
+                            name: saleData.lotes.name,
+                            value: anualValue,
+                            amount: 1
+                        },
+                        {
+                            name: `Juros anuais(${saleData.fixedTaxPercetage}%)`,
+                            value: anualTaxValue,
+                            amount: 1
+                        }
+                    ],
+                    customer: {
+                        name: saleData.users.name,
+                        email: saleData.users.email,
+                        cpf: saleData.users.CPF,
+                        phone_number: saleData.users.phone
+                    },
+                    expire_at: saleDateFormatted,
+                    // Porcentagem de acrescimo apos o vencimento
+                    // configurations: {
+                    //     fine: 200,
+                    //     interest: 33
+                    // },
+                    message: "Esta parcela é referente ao lote" + saleData.lotes.name,
+                    discount: {
+                        type: 'percentage',
+                        value: discountPercentage
+                    },
+                    repeats: quantity - 1,
+                    split_items: true,
+                    metadata: {
+                        // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
+                        // notification_url: ''
+                    }
+                }
+                }else{
+                    entryParcelBody = {
+                        items: [
+                            {
+                                name: saleData.lotes.name,
+                                value: entryValue,
+                                amount: 1
+                            }
+                        ],
+                        payment: {
+                            banking_billet: {
+                                customer: {
+                                name: saleData.users.name,
+                                email: saleData.users.email,
+                                cpf: saleData.users.CPF,
+                                phone_number: saleData.users.phone
+                            },
+                        expire_at: saleDateFormatted,
+                        message: "Documento de valor de entrada referente ao lote" + saleData.lotes.name,
+                        // metadata: {
+                        //     // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
+                        //     // notification_url: ''
+                        // }
+                        },
+                    },
+                        // Porcentagem de acrescimo apos o vencimento
+                        // configurations: {
+                        //     fine: 200,
+                        //     interest: 33
+                        // },
+                        
+                        
+                    }
+                    
+                anualParcelsWithEntryBody = {
+                    items: [
+                        {
+                            name: saleData.lotes.name,
+                            value: anualValue,
+                            amount: 1
+                        },
+                        {
+                            name: `Juros anuais(${saleData.fixedTaxPercetage}%)`,
+                            value: anualTaxValue,
+                            amount: 1
+                        }
+                    ],
+                    customer: {
+                        name: saleData.users.name,
+                        email: saleData.users.email,
+                        cpf: saleData.users.CPF,
+                        phone_number: saleData.users.phone
+                    },
+                    expire_at: saleDateFormatted,
+                    // Porcentagem de acrescimo apos o vencimento
+                    // configurations: {
+                    //     fine: 200,
+                    //     interest: 33
+                    // },
+                    message: "Esta parcela é referente ao lote" + saleData.lotes.name,
+                    repeats: quantity - 1,
+                    split_items: true,
+                    metadata: {
+                        // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
+                        // notification_url: ''
+                    }
+                }
+                }
+                await gerencianet.createOneStepCharge({}, entryParcelBody).then(chargeRes =>{
+                        parcelsCreated.push({
+                            saleId: saleData.id,
+                            expireDate:  chargeRes.data.expire_at ,
+                            value:  chargeRes.data.total,
+                            mulct: 0,
+                            status:  chargeRes.data.status,
+                            billetLink:  chargeRes.data.billet_link,
+                            billetPdf:  chargeRes.data.pdf.charge,
+                            chargeId:  chargeRes.data.charge_id,
+                    }
+                    )
+                })
+                .then(async () => {
+                    await gerencianet.createCarnet({}, anualParcelsWithEntryBody)
+                    .then(async chargeRes => {
+
+                        await chargeRes.data.charges.forEach(async charge => {
+                            
+                            parcelsCreated.push({
+                                saleId: saleData.id,
+                                expireDate:  charge.expire_at ,
+                                value:  charge.value,
+                                mulct: 0,
+                                status:  charge.status,
+                                billetLink:  charge.parcel_link,
+                                billetPdf:  charge.pdf.charge,
+                                chargeId:  charge.charge_id,
+                            })
+                        })
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                    .finally(() => {
+                        parcelsCreated = parcelsCreated.reduce((acc, val) => acc.concat(val), [])
+                    })
+                })
+                }
+            /* Se o valor de entrada == 0, criar apenas as parcelas anuais */
+            if(quantity > 1 && entryValue == 0){
+                console.log('Entrou no if quantity > 1 && entryValue == 0')
+                var anualParcelsWithNoEntryBody = {
+                    items: [
+                        {
+                            name: saleData.lotes.name,
+                            value: anualValue,
+                            amount: 1
+                        },
+                        {
+                            name: `Juros anuais(${saleData.fixedTaxPercetage}%)`,
+                            value: anualTaxValue,
+                            amount: 1
+                        }
+    
+                    ],
+                    customer: {
+                        name: saleData.users.name,
+                        email: saleData.users.email,
+                        cpf: saleData.users.CPF,
+                        phone_number: saleData.users.phone
+                    },
+                    expire_at: saleDateFormatted,
+                    // Porcentagem de acrescimo apos o vencimento
+                    // configurations: {
+                    //     fine: 200,
+                    //     interest: 33
+                    // },
+                    message: "Esta é uma parcela anual referente a compra do lote " + saleData.lotes.name,
+                    repeats: quantity,
+                    split_items: true,
+                    metadata: {
+                        // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
+                        // notification_url: ''
+                    }
+                }
+                await gerencianet.createCarnet({}, anualParcelsWithNoEntryBody).then(async chargeRes =>{
+                    await chargeRes.data.charges.forEach(async charge => {
+                        parcelsCreated.push({
+                            saleId: saleData.id,
+                            expireDate:  charge.expire_at ,
+                            value:  charge.value,
+                            mulct: 0,
+                            status:  charge.status,
+                            billetLink:  charge.parcel_link,
+                            billetPdf:  charge.pdf.charge,
+                            chargeId:  charge.charge_id,
+                        })
+                    })
+                }).finally(() => {
+                    parcelsCreated = parcelsCreated.reduce((acc, val) => acc.concat(val), [])
+                })
             }
 
-            let parcelsCreated = await gerencianet.createCarnet({}, body).then(chargeRes => chargeRes)
-            if (parcelsCreated) {
-                const addParcelPromises = parcelsCreated.data.charges.map(async (parcelCreated) => {
-                    const addParcelToDatabase = await Parcel.create({
-                        saleId: saleData.id,
-                        expireDate: parcelCreated.expire_at,
-                        value: parcelCreated.value,
-                        status: parcelCreated.status,
-                        mulct: 0,
-                        billetLink: parcelCreated.parcel_link,
-                        billetPdf: parcelCreated.pdf.charge,
-                        chargeId: parcelCreated.charge_id,
-                    });
-                    return addParcelToDatabase;
-                });
+            if (parcelsCreated.length > 0) {
+                const addParcelPromises = await Parcel.bulkCreate(parcelsCreated) ;
                 const addParcelResults = await Promise.all(addParcelPromises);
                 // Check if all the promises resolved successfully
                 const allPromisesResolved = addParcelResults.every((result) => result);
@@ -141,12 +430,14 @@ class salesController {
             buyerId,
             parcelsQuantity,
             entryValue,
+            discountPercentage
         } = req.body
         // commission = desconto(em porcentagem)
         let createdSale = await Sale.create({
             saleDate,
             salePrice,
             commission,
+            discountPercentage,
             fixedTaxPercetage,
             variableTaxPercetage,
             contract,

@@ -37,7 +37,12 @@ const Sale = db.connection.define('Vendas', {
         type: db.Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 1
-    }
+    },
+    discountPercentage: {
+        type: db.Sequelize.REAL,
+        allowNull: false,
+        defaultValue: 0
+    },
 });
 
 Sale.belongsTo(Lot, { as: 'lotes', foreignKey: 'loteId', hooks: true });
