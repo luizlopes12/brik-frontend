@@ -36,7 +36,9 @@ const Parcel = db.connection.define('Parcelas', {
 Sale.hasMany(Parcel, {as: 'parcelas', foreignKey: 'saleId'});
 Parcel.belongsTo(Sale, {as: 'vendas', foreignKey: 'saleId'});
 
-// Parcel.sync({ force: true }) 
+// Sale.sync({ force: true }).then(() => {
+//     Parcel.sync({ force: true }) 
+// })
 
 module.exports = Parcel
 

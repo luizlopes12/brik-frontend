@@ -29,7 +29,3 @@ module.exports = Division
 
 // Division.sync({force: true});
 
-// Division.create({
-//     name: 'Teste',
-//     location: 'AAAA',
-// })

@@ -25,7 +25,7 @@ const User = require('../Models/User')
 
 
 
-module.exports = cron.schedule('* * * * *', async () => {
+module.exports = cron.schedule('0 0 1 * *', async () => {
     let accumulatedIGPMValue = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.4175/dados?formato=json')
         .then(response => response.json())
         .then(data => {
@@ -37,8 +37,8 @@ module.exports = cron.schedule('* * * * *', async () => {
         })
         .catch(error => console.error(error));
 
-    console.log('Rodando CRON de criação de novas parcelas...')
-    const currentDate = new Date('2024-01-25T00:00:00.000Z');
+    console.log('\x1b[36m%s\x1b[0m','Rodando CRON de criação de novas parcelas...')
+    const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
     let lastParcel;
@@ -87,7 +87,6 @@ module.exports = cron.schedule('* * * * *', async () => {
             });
             let lastParcelDate = new Date(lastParcel.expireDate);
             let nextParcelDate = `${lastParcelDate.getFullYear()}-${(parseInt(lastParcelDate.getMonth()) + 2).toString().padStart(2, '0')}-${(parseInt(lastParcelDate.getDate()) + 1).toString().padStart(2, '0')}`;
-            console.log('Última parcela: ', nextParcelDate)
             let remainingParcels = sale.parcelsQuantity - sale.parcelas.length;
             if (
                 ((lastParcelDate.getFullYear()) === currentYear) &&
@@ -98,12 +97,13 @@ module.exports = cron.schedule('* * * * *', async () => {
                 // To do: create future parcels based on IGPM as tax percentage and notify the admin
                 if (remainingParcels > 0 && remainingParcels <= 12) {
                     remainingParcels = remainingParcels
+                    anualTaxValue = parseInt((parseInt(parseFloat(salePrice) * parseFloat(accumulatedIGPMValue)))/12*remainingParcels)
                 } else if (remainingParcels > 12) {
                     remainingParcels = 12;
+                    anualTaxValue = (parseInt(parseFloat(salePrice) * parseFloat(accumulatedIGPMValue)))
                 }
                 salePrice = parseInt(sale.salePrice * 100)
-                anualTaxValue = parseFloat(salePrice) * parseFloat(accumulatedIGPMValue)
-                parcelPrice = parseFloat(salePrice) / parseFloat(sale.parcelsQuantity)
+                parcelPrice = parseInt(parseFloat(salePrice) / parseFloat(sale.parcelsQuantity))
                 anualValue = Math.round(parcelPrice * remainingParcels)
                 var newAnualParcels = {
                     items: [
@@ -178,5 +178,5 @@ module.exports = cron.schedule('* * * * *', async () => {
         console.log('Erro na CRON createNewParcels.js, erro: ' + error);
     }
 
-
+    console.log('\x1b[36m%s\x1b[0m','CRON de criação de novas parcelas finalizada.')
 });

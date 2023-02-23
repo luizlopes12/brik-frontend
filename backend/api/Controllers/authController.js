@@ -5,7 +5,7 @@ require('dotenv').config()
 
 class authController {
     static userRegistration = async (req, res) => {
-        const { userName, email, phone, password } = req.body
+        const { userName, email, phone, password, CPF } = req.body
         // insert on db
         let verifyData = await User.findOne({
             where: {
@@ -18,6 +18,7 @@ class authController {
             let newUser = await User.create({
                 name: userName,
                 email: email,
+                CPF: CPF,
                 phone: phone,
                 password: encryptedPass,
                 admin: false

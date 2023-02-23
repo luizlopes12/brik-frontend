@@ -56,14 +56,6 @@ const User = db.connection.define('Users', {
 
 
 // User.sync({force: true})
-
-// User.create({
-//     name: 'Luiz Lopes',
-//     email: 'a@ahotmail.com',
-//     password: '123456',
-//     CPF: '11397313005',
-//     phone: '1234567891',
-//     admin: true,
-// })
+// User.findAll({}).then(user => console.log(user.CPF))
 
 module.exports = User

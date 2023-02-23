@@ -6,6 +6,8 @@ const credentials = require('../config/gerencianet')
 const Gerencianet = require('gn-api-sdk-node');
 const Parcel = require('../Models/Parcel')
 const LotImage = require('../Models/LotImage')
+const querystring = require('querystring');
+
 /*
 regras:
     As parcelas anuais são criadas no momento da venda, são 12 no total
@@ -16,7 +18,7 @@ regras:
 */
 
 class salesController {
-    static verifyDiscount = (discount) =>{
+    static verifyDiscount = async (discount) => {
         if(discount > 0){
             return({
                 discount: {
@@ -27,7 +29,7 @@ class salesController {
             )
         }
     }
-    static async createParcels(quantity, saleData) {
+    static createParcels = async (quantity, saleData) => {
         let salePrice;
         let anualValue;
         let entryValue;
@@ -99,12 +101,11 @@ class salesController {
                             type: 'percentage',
                             value: discountPercentage
                         },
-                        // metadata: {
-                        //     // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
-                        //     // notification_url: ''
-                        // }
-                        },
                     },
+                },
+                metadata: {
+                 notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
+                }
                         // Porcentagem de acrescimo apos o vencimento
                         // configurations: {
                         //     fine: 200,
@@ -135,12 +136,11 @@ class salesController {
                             },
                         expire_at: saleDateFormatted,
                         message: "Documento de pagamento à vista referente ao lote" + saleData.lotes.name,
-                        // metadata: {
-                        //     // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
-                        //     // notification_url: ''
-                        // }
-                        },
                     },
+                },
+                metadata: {
+                    notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
+                }
                         // Porcentagem de acrescimo apos o vencimento
                         // configurations: {
                         //     fine: 200,
@@ -151,7 +151,19 @@ class salesController {
                     }
                 }
 
-                parcelsCreated.push(await gerencianet.createOneStepCharge({}, uniqueParcelBody).then(chargeRes => chargeRes.data))
+                await gerencianet.createOneStepCharge({}, uniqueParcelBody).then(chargeRes => {
+                    parcelsCreated.push({
+                        saleId: saleData.id,
+                        expireDate:  chargeRes.data.expire_at ,
+                        value:  chargeRes.data.total,
+                        mulct: 0,
+                        status:  chargeRes.data.status,
+                        billetLink:  chargeRes.data.billet_link,
+                        billetPdf:  chargeRes.data.pdf.charge,
+                        chargeId:  chargeRes.data.charge_id,
+                }
+                )
+                }).catch(err => console.log(err))
                 parcelsCreated.flat()
             }
             /* Se o valor de entrada > 0, criar 1 boleto com o valor da entrada e as demais parcelas */
@@ -160,8 +172,6 @@ class salesController {
                 let entryParcelBody;
                 let anualParcelsWithEntryBody;
                 if(discountPercentage > 0){
-                    console.log(entryValue)
-                    console.log(anualValue)
                     entryParcelBody = {
                         items: [
                             {
@@ -189,18 +199,18 @@ class salesController {
                             type: 'percentage',
                             value: discountPercentage
                         },
-                        // metadata: {
-                        //     // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
-                        //     // notification_url: ''
-                        // }
-                        },
                     },
+                },
+                metadata: {
+                    notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
+                }
                         // Porcentagem de acrescimo apos o vencimento
                         // configurations: {
                         //     fine: 200,
                         //     interest: 33
                         // },
-                    }
+                        
+            }
                 anualParcelsWithEntryBody = {
                     items: [
                         {
@@ -234,8 +244,7 @@ class salesController {
                     repeats: quantity - 1,
                     split_items: true,
                     metadata: {
-                        // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
-                        // notification_url: ''
+                        notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
                     }
                 }
                 }else{
@@ -257,10 +266,9 @@ class salesController {
                             },
                         expire_at: saleDateFormatted,
                         message: "Documento de valor de entrada referente ao lote" + saleData.lotes.name,
-                        // metadata: {
-                        //     // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
-                        //     // notification_url: ''
-                        // }
+                        metadata: {
+                            notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
+                        }
                         },
                     },
                         // Porcentagem de acrescimo apos o vencimento
@@ -301,8 +309,7 @@ class salesController {
                     repeats: quantity - 1,
                     split_items: true,
                     metadata: {
-                        // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
-                        // notification_url: ''
+                        notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
                     }
                 }
                 }
@@ -378,8 +385,7 @@ class salesController {
                     repeats: quantity,
                     split_items: true,
                     metadata: {
-                        // Adicionar endpoint para o webhook onde vai atualizar o status da parcela
-                        // notification_url: ''
+                        notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
                     }
                 }
                 await gerencianet.createCarnet({}, anualParcelsWithNoEntryBody).then(async chargeRes =>{
@@ -417,7 +423,6 @@ class salesController {
         }
         // }
     }
-
     static createSaleAndTheirAnualParcels = async (req, res) => {
         const {
             saleDate,
@@ -446,6 +451,7 @@ class salesController {
             entryValue,
             parcelsQuantity
         })
+        
         if (!createdSale) {
             res.status(400).json({ message: "Erro ao criar venda" })
         } else {
@@ -510,7 +516,6 @@ class salesController {
                         res.status(400).json({ message: "Erro ao criar venda" })
                     }
                 } else {
-                    console.log(saleParcels)
                     res.status(400).json({ message: "Erro ao criar parcelas" })
                 }
             }).catch(err => {
@@ -596,6 +601,15 @@ class salesController {
     }
 
     static testCron = async (req, res) => {
+    }
+    static updateSaleStatus = async (req, res) => {
+        console.log('\x1b[36m%s\x1b[0m','Recebendo requisição de atualização de status de venda')
+        // Parse the form data
+        const parsedData = querystring.parse(req.params);
+        // Convert the parsed data to JSON format
+        const jsonData = JSON.stringify(parsedData);
+        console.log('JSON: ',jsonData)
+        res.end()
     }
 }
 
