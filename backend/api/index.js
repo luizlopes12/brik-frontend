@@ -18,6 +18,7 @@ io.on('connection', socket =>{
     // })
 })
 app.use(express.json())
+app.use(express.urlencoded())
 routes(app)
 
 app.get('/', (req, res) => res.json({message: 'inicio da API, para visualizar os endpoints, entre em: (https://documenter.getpostman.com/view/18863979/2s8Z75RpV2)'}))

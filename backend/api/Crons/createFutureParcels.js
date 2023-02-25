@@ -129,7 +129,7 @@ module.exports = cron.schedule('0 0 1 * *', async () => {
                     // Porcentagem de acrescimo apos o vencimento
                     // configurations: {
                     //     fine: 200,
-                    //     interest: 33
+                    //     interest: 100
                     // },
                     message: "Esta é uma parcela anual referente a compra do lote " + sale.lotes.name,
                     repeats: remainingParcels,

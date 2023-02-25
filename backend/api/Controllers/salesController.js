@@ -1,3 +1,4 @@
+require('dotenv').config()
 const Sale = require('../Models/Sale')
 const Lot = require('../Models/Lot')
 const User = require('../Models/User')
@@ -7,6 +8,7 @@ const Gerencianet = require('gn-api-sdk-node');
 const Parcel = require('../Models/Parcel')
 const LotImage = require('../Models/LotImage')
 const querystring = require('querystring');
+
 
 /*
 regras:
@@ -104,13 +106,13 @@ class salesController {
                     },
                 },
                 metadata: {
-                 notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
-                }
+                 notification_url: process.env.NGROK_URL + '/sales/status/update'
+                },
                         // Porcentagem de acrescimo apos o vencimento
-                        // configurations: {
-                        //     fine: 200,
-                        //     interest: 33
-                        // },
+                        configurations: {
+                            fine: 200,
+                            interest: 100
+                        },
                     }
                 }else{
                     uniqueParcelBody = {
@@ -139,13 +141,13 @@ class salesController {
                     },
                 },
                 metadata: {
-                    notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
-                }
+                    notification_url: process.env.NGROK_URL + '/sales/status/update'
+                },
                         // Porcentagem de acrescimo apos o vencimento
-                        // configurations: {
-                        //     fine: 200,
-                        //     interest: 33
-                        // },
+                        configurations: {
+                            fine: 200,
+                            interest: 100
+                        },
                         
                         
                     }
@@ -202,13 +204,13 @@ class salesController {
                     },
                 },
                 metadata: {
-                    notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
-                }
+                    notification_url: process.env.NGROK_URL + '/sales/status/update'
+                },
                         // Porcentagem de acrescimo apos o vencimento
-                        // configurations: {
-                        //     fine: 200,
-                        //     interest: 33
-                        // },
+                        configurations: {
+                            fine: 200,
+                            interest: 100
+                        },
                         
             }
                 anualParcelsWithEntryBody = {
@@ -232,10 +234,10 @@ class salesController {
                     },
                     expire_at: saleDateFormatted,
                     // Porcentagem de acrescimo apos o vencimento
-                    // configurations: {
-                    //     fine: 200,
-                    //     interest: 33
-                    // },
+                    configurations: {
+                        fine: 200,
+                        interest: 100
+                    },
                     message: "Esta parcela é referente ao lote" + saleData.lotes.name,
                     discount: {
                         type: 'percentage',
@@ -244,7 +246,7 @@ class salesController {
                     repeats: quantity - 1,
                     split_items: true,
                     metadata: {
-                        notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
+                        notification_url: process.env.NGROK_URL + '/sales/status/update'
                     }
                 }
                 }else{
@@ -267,15 +269,15 @@ class salesController {
                         expire_at: saleDateFormatted,
                         message: "Documento de valor de entrada referente ao lote" + saleData.lotes.name,
                         metadata: {
-                            notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
+                            notification_url: process.env.NGROK_URL + '/sales/status/update'
                         }
                         },
                     },
                         // Porcentagem de acrescimo apos o vencimento
-                        // configurations: {
-                        //     fine: 200,
-                        //     interest: 33
-                        // },
+                        configurations: {
+                            fine: 200,
+                            interest: 100
+                        },
                         
                         
                     }
@@ -301,15 +303,15 @@ class salesController {
                     },
                     expire_at: saleDateFormatted,
                     // Porcentagem de acrescimo apos o vencimento
-                    // configurations: {
-                    //     fine: 200,
-                    //     interest: 33
-                    // },
+                    configurations: {
+                        fine: 200,
+                        interest: 100
+                    },
                     message: "Esta parcela é referente ao lote" + saleData.lotes.name,
                     repeats: quantity - 1,
                     split_items: true,
                     metadata: {
-                        notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
+                        notification_url: process.env.NGROK_URL + '/sales/status/update'
                     }
                 }
                 }
@@ -377,15 +379,15 @@ class salesController {
                     },
                     expire_at: saleDateFormatted,
                     // Porcentagem de acrescimo apos o vencimento
-                    // configurations: {
-                    //     fine: 200,
-                    //     interest: 33
-                    // },
+                    configurations: {
+                        fine: 200,
+                        interest: 100
+                    },
                     message: "Esta é uma parcela anual referente a compra do lote " + saleData.lotes.name,
                     repeats: quantity,
                     split_items: true,
                     metadata: {
-                        notification_url: 'https://52a9-191-37-150-22.sa.ngrok.io/sales/status/update'
+                        notification_url: process.env.NGROK_URL + '/sales/status/update'
                     }
                 }
                 await gerencianet.createCarnet({}, anualParcelsWithNoEntryBody).then(async chargeRes =>{
@@ -600,16 +602,10 @@ class salesController {
         }
     }
 
-    static testCron = async (req, res) => {
-    }
     static updateSaleStatus = async (req, res) => {
         console.log('\x1b[36m%s\x1b[0m','Recebendo requisição de atualização de status de venda')
-        // Parse the form data
-        const parsedData = querystring.parse(req.params);
-        // Convert the parsed data to JSON format
-        const jsonData = JSON.stringify(parsedData);
-        console.log('JSON: ',jsonData)
-        res.end()
+        console.log(req.body);
+        res.status(200).end()
     }
 }
 
