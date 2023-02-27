@@ -1,5 +1,4 @@
 require('dotenv').config()
-const databaseInit = require('./config/databaseInit.js')
 const express = require('express')
 const cors = require('cors')
 const PORT = process.env.PORT || 3000
@@ -29,4 +28,4 @@ server.listen(PORT, () =>{
 
 // console.log(io)
 
-module.exports = io
+module.exports = app

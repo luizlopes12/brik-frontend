@@ -10,8 +10,9 @@ const Lot = require('../Models/Lot')
 const LotImage = require('../Models/LotImage')
 const Partner = require('../Models/Partner')
 const User = require('../Models/User')
-const io = require('../index.js')
-console.log(io)
+const app = require('../index.js')
+const io = require('socket.io')(app)
+
 
 
 // Path: backend\api\crons\createNewParcels.js
@@ -25,7 +26,7 @@ console.log(io)
 
 
 
-module.exports = cron.schedule('* * * * *', async () => {
+module.exports = cron.schedule('0 0 1 * *', async () => {
     let accumulatedIGPMValue = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.4175/dados?formato=json')
         .then(response => response.json())
         .then(data => {
@@ -173,19 +174,19 @@ module.exports = cron.schedule('* * * * *', async () => {
                                 actionLink: 'Link para a alteração dos juros das parcelas',
                                 opened: false
                             }).then(async () => {
-                                // io.sockets.emit('notification', {
-                                //     notificationUserId: sale.userId,
-                                //     title: `Novas parcelas anuais criadas`,
-                                //     description: `Foram criadas novas parcelas anuais para a venda do lote ${sale.lotes.name}.`,
-                                //     actionLink: 'Link para a alteração dos juros das parcelas',
-                                //     opened: false
-                                // });
+                                io.sockets.emit('notification', {
+                                    notificationUserId: sale.userId,
+                                    title: `Novas parcelas anuais criadas`,
+                                    description: `Foram criadas novas parcelas anuais para a venda do lote ${sale.lotes.name}.`,
+                                    actionLink: 'Link para a alteração dos juros das parcelas',
+                                    opened: false
+                                });
                             })
                         })
                 }
             }
-            else if (remainingParcels == 0 && lastParcel.status == 'paid') {
-                const allPaid = await sale.parcelas.every(parcel => parcel.status === 'paid')
+            else if (remainingParcels == 0 && lastParcel.status == 'paid' && sale.status !== 'paid') {
+            const allPaid = await sale.parcelas.every(parcel => parcel.status === 'paid')
             if(allPaid){
                 await Sale.update({
                     status: 'paid'
@@ -201,13 +202,13 @@ module.exports = cron.schedule('* * * * *', async () => {
                         actionLink: 'Link para a alteração dos juros das parcelas',
                         opened: false
                     })
-                    // io.sockets.emit('notification', {
-                    //     notificationUserId: sale.userId,
-                    //     title: `Pagamento do lote ${sale.lotes.name} finalizado.`,
-                    //     description: `O pagamento das parcelas do lote ${sale.lotes.name} foi finalizado.`,
-                    //     actionLink: 'Link para visualizar as parcelas do lote',
-                    //     opened: false
-                    // });
+                    io.sockets.emit('notification', {
+                        notificationUserId: sale.userId,
+                        title: `Pagamento do lote ${sale.lotes.name} finalizado.`,
+                        description: `O pagamento das parcelas do lote ${sale.lotes.name} foi finalizado.`,
+                        actionLink: 'Link para visualizar as parcelas do lote',
+                        opened: false
+                    });
                 })
             }
                 console.log(`Não há parcelas a serem criadas, venda: ${sale.id} finalizada.`)
