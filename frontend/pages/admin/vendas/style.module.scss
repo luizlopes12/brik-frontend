@@ -1,4 +1,5 @@
 @import '../../../styles/mixins.scss';
+@import '../../../styles/colors.scss';
 
 .soldsContainer{
     display: flex;
@@ -10,5 +11,32 @@
     display: flex;
     min-width: 100%;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.subHeading{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    span{
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+    .headerBtns{
+        display: flex;
+        gap: .5rem;
+        .changePeriod {
+            @include actionButton($text-black, $gray_color-3);
+            box-shadow: 0 0 8px 1px transparentize($bg_dark-color, .85);
+            min-width: 100px;
+            justify-content: flex-end
+        }
+        .generateReport{
+            @include actionButton($text-black, $green_color-2);
+        }
+    }
+
 }

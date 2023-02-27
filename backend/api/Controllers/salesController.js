@@ -530,6 +530,7 @@ class salesController {
                     model: User,
                     as: 'users',
                     required: false,
+                    fields: ['id', 'name', 'email']
                 }
             ],
             order: [['createdAt', 'DESC']]
