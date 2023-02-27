@@ -8,6 +8,11 @@ const Sale = db.connection.define('Vendas', {
         type: db.Sequelize.DATE,
         allowNull: false
     },
+    status: {
+        type: db.Sequelize.STRING,
+        defaultValue: 'waiting contract',
+        allowNull: false
+    },
     salePrice: {
         type: db.Sequelize.REAL,
         allowNull: false

@@ -14,6 +14,11 @@ const Notification = db.connection.define('Notifications', {
         type: db.Sequelize.STRING,
         required: false
     },
+    opened: {
+        type: db.Sequelize.BOOLEAN,
+        required: true,
+        defaultValue: false
+    }
 })
 
 User.hasMany(Notification, { as: 'usuarios', foreignKey: 'notificationUserId', onDelete: 'cascade', hooks: true });

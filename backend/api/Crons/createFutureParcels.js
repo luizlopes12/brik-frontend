@@ -10,8 +10,8 @@ const Lot = require('../Models/Lot')
 const LotImage = require('../Models/LotImage')
 const Partner = require('../Models/Partner')
 const User = require('../Models/User')
-
-
+const io = require('../index.js')
+console.log(io)
 
 
 // Path: backend\api\crons\createNewParcels.js
@@ -25,7 +25,7 @@ const User = require('../Models/User')
 
 
 
-module.exports = cron.schedule('0 0 1 * *', async () => {
+module.exports = cron.schedule('* * * * *', async () => {
     let accumulatedIGPMValue = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.4175/dados?formato=json')
         .then(response => response.json())
         .then(data => {
@@ -38,7 +38,7 @@ module.exports = cron.schedule('0 0 1 * *', async () => {
         .catch(error => console.error(error));
 
     console.log('\x1b[36m%s\x1b[0m','Rodando CRON de criação de novas parcelas...')
-    const currentDate = new Date();
+    const currentDate = new Date('2024-02-25');
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
     let lastParcel;
@@ -166,11 +166,50 @@ module.exports = cron.schedule('0 0 1 * *', async () => {
                         .then(async () => {
                             /* Criar notificação de novas parcelas */
                             console.log(`Criando novas parcelas, venda: ${sale.id}.`)
-                            await Notification.create({})
+                            Notification.create({
+                                notificationUserId: sale.userId,
+                                title: `Novas parcelas anuais criadas`,
+                                description: `Foram criadas novas parcelas anuais para a venda do lote ${sale.lotes.name}.`,
+                                actionLink: 'Link para a alteração dos juros das parcelas',
+                                opened: false
+                            }).then(async () => {
+                                // io.sockets.emit('notification', {
+                                //     notificationUserId: sale.userId,
+                                //     title: `Novas parcelas anuais criadas`,
+                                //     description: `Foram criadas novas parcelas anuais para a venda do lote ${sale.lotes.name}.`,
+                                //     actionLink: 'Link para a alteração dos juros das parcelas',
+                                //     opened: false
+                                // });
+                            })
                         })
                 }
             }
-            else if (remainingParcels == 0 && lastParcel.status == 'up_to_date') {
+            else if (remainingParcels == 0 && lastParcel.status == 'paid') {
+                const allPaid = await sale.parcelas.every(parcel => parcel.status === 'paid')
+            if(allPaid){
+                await Sale.update({
+                    status: 'paid'
+                }, {
+                    where: {
+                        id: sale.id
+                    }
+                }).then(async () => {
+                    Notification.create({
+                        notificationUserId: sale.userId,
+                        title: `Novas parcelas anuais criadas`,
+                        description: `Foram criadas novas parcelas anuais para a venda do lote ${sale.lotes.name}.`,
+                        actionLink: 'Link para a alteração dos juros das parcelas',
+                        opened: false
+                    })
+                    // io.sockets.emit('notification', {
+                    //     notificationUserId: sale.userId,
+                    //     title: `Pagamento do lote ${sale.lotes.name} finalizado.`,
+                    //     description: `O pagamento das parcelas do lote ${sale.lotes.name} foi finalizado.`,
+                    //     actionLink: 'Link para visualizar as parcelas do lote',
+                    //     opened: false
+                    // });
+                })
+            }
                 console.log(`Não há parcelas a serem criadas, venda: ${sale.id} finalizada.`)
             }
         })
