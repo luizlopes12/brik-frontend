@@ -17,6 +17,7 @@ export async function getStaticProps() {
 const periods = [{value: 30, label: '1 mês'},{value: 15, label: '15 dias'},{value: 0, label: 'Todo o período'}]
 const Vendas = ({salesData}) => {
   const [ periodOption, setPeriodOption ] = useState(periods[0])
+  const [ sales, setSales ] = useState(salesData)
   const handleGenerateReport = () => {
     alert('Gerar relatório')
   }
@@ -38,7 +39,9 @@ const Vendas = ({salesData}) => {
           </div>
           {/* Adicionar gráfico de vendas */}
     </div>
-    
+    <section className={style.salesList}>
+      
+    </section>
     </div>
   )
 }

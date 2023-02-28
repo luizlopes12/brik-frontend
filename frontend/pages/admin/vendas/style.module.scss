@@ -29,8 +29,8 @@
         display: flex;
         gap: .5rem;
         .changePeriod {
-            @include actionButton($text-black, $gray_color-3);
-            box-shadow: 0 0 8px 1px transparentize($bg_dark-color, .85);
+            @include actionButton($text-black, $bg_white-color);
+            box-shadow: 0 0 8px 1px transparentize($bg_dark-color, .9);
             min-width: 100px;
             justify-content: flex-end
         }
