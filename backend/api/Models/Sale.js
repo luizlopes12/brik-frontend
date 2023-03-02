@@ -10,7 +10,7 @@ const Sale = db.connection.define('Vendas', {
     },
     status: {
         type: db.Sequelize.STRING,
-        defaultValue: 'waiting contract',
+        defaultValue: 'Aguardando',
         allowNull: false
     },
     salePrice: {

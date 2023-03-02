@@ -189,7 +189,7 @@ module.exports = cron.schedule('0 0 1 * *', async () => {
             const allPaid = await sale.parcelas.every(parcel => parcel.status === 'paid')
             if(allPaid){
                 await Sale.update({
-                    status: 'paid'
+                    status: 'Pago'
                 }, {
                     where: {
                         id: sale.id

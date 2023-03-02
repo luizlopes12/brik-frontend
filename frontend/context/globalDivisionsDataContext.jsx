@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 
-const globalDivisionsDataContext = createContext({})
+const globalDivisionsDataContext = createContext()
 const GlobalDivisionsDataProvider = ({children}) =>{
     
   const [globalDivisionsData, setGlobalDivisionsData] = useState([]) 

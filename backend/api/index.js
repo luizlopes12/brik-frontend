@@ -6,10 +6,14 @@ const routes = require('./Routes/index.js')
 const parcelsCron = require('./Crons/createFutureParcels.js')
 const app = express()
 const server = require('http').createServer(app)
-const io = require('socket.io')(server)
+const io = require('socket.io')(server,{
+    cors: {
+      origin: '*'
+    }
+  })
 app.use(cors({
     origin: '*'
-}))
+  }))
 io.on('connection', socket =>{ 
     console.log('Socket conectado: '+ socket.id)
     socket.on('disconnect', () =>{

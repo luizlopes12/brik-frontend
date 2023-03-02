@@ -15,14 +15,17 @@ const TaxValues = require('../models/TaxValues');
 // Anotar em qual sequencia e quais tabelas devem ser criadas
 // Banner, Division, DivisionPartner, Lot, LotImage, Notification, Parcel, Partner, Sale, User, TaxValues
 const createDatabaseTables = async () => {
-    const models = [Banner, Division, DivisionPartner, Lot, LotImage, Notification, Parcel, Partner, Sale, User, TaxValues];
-    try {
-        await models.forEach(model => model.sync({})).then(() => {
-            return true;
-        })
-    } catch (error) {
-        throw error;
-    }
+    await Banner.sync({});
+    await Division.sync({});
+    await DivisionPartner.sync({});
+    await Lot.sync({});
+    await LotImage.sync({});
+    await Notification.sync({});
+    await Parcel.sync({});
+    await Partner.sync({});
+    await Sale.sync({});
+    await User.sync({});
+    await TaxValues.sync({});
 }
 
 

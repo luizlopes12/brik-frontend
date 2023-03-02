@@ -504,7 +504,7 @@ const LotRegisterPopUp = () => {
               </div>
               <div className={style.partners}>
                 <ul ref={partnersListRef} className={style.partnersList}>
-                  <li className={style.partnersListHeader}>
+                  <li  className={style.partnersListHeader}>
                     <span>Nome</span>
                     <span>CPF</span>
                     <span>%</span>

@@ -8,6 +8,8 @@ const Gerencianet = require('gn-api-sdk-node');
 const Parcel = require('../Models/Parcel')
 const LotImage = require('../Models/LotImage')
 const querystring = require('querystring');
+const Division = require('../Models/Division')
+const DivisionPartner = require('../Models/DivisionPartner')
 
 
 /*
@@ -38,7 +40,8 @@ class salesController {
             )
         }
     }
-    static createParcels = async (quantity, saleData) => {
+    static createParcels = async (quantity, saleData, salePriceFromRequest) => {
+        saleData.salePrice = salePriceFromRequest
         let salePrice;
         let anualValue;
         let entryValue;
@@ -403,6 +406,7 @@ class salesController {
         const {
             saleDate,
             salePrice,
+            status,
             commission,
             fixedTaxPercetage,
             variableTaxPercetage,
@@ -411,13 +415,14 @@ class salesController {
             buyerId,
             parcelsQuantity,
             entryValue,
-            discountPercentage
+            discountPercentage,
         } = req.body
         // commission = desconto(em porcentagem)
         let createdSale = await Sale.create({
             saleDate,
-            salePrice,
+            salePrice: ((salePrice + parseFloat(salePrice)*parseFloat(fixedTaxPercetage/100))*100),
             commission,
+            status,
             discountPercentage,
             fixedTaxPercetage,
             variableTaxPercetage,
@@ -440,15 +445,17 @@ class salesController {
                         model: Lot,
                         as: 'lotes',
                         required: false,
-                        include: [{
-                            model: LotImage,
-                            as: 'loteImages',
-                            required: false
-                        }, {
-                            model: Partner,
-                            as: 'lotePartners',
-                            required: false
-                        }
+                        include: [
+                            {
+                                model: LotImage,
+                                as: 'loteImages',
+                                required: false,
+                            },
+                            {
+                                model: Partner,
+                                as: 'lotePartners',
+                                required: false
+                            }
                         ]
                     },
                     {
@@ -458,28 +465,25 @@ class salesController {
                     }
                 ]
             }).then(async sale => {
-                let saleParcels = await this.createParcels(parcelsQuantity, sale)
+                let saleParcels = await this.createParcels(parcelsQuantity, sale, salePrice)
                 if (saleParcels) {
                     let saleCreatedData = await Sale.findByPk(createdSale.id, {
                         include: [
                             {
-                                model: Parcel,
-                                as: 'parcelas',
-                                required: false,
-                            },
-                            {
                                 model: Lot,
                                 as: 'lotes',
                                 required: false,
-                                include: [{
-                                    model: LotImage,
-                                    as: 'loteImages',
-                                    required: false
-                                }, {
-                                    model: Partner,
-                                    as: 'lotePartners',
-                                    required: false
-                                }
+                                include: [
+                                    {
+                                        model: LotImage,
+                                        as: 'loteImages',
+                                        required: false,
+                                    },
+                                    {
+                                        model: Partner,
+                                        as: 'lotePartners',
+                                        required: false
+                                    }
                                 ]
                             },
                             {
@@ -523,7 +527,7 @@ class salesController {
                         model: Partner,
                         as: 'lotePartners',
                         required: false
-                    }
+                    },
                     ]
                 },
                 {
