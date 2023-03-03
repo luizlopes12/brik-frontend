@@ -1,4 +1,4 @@
-import React,{ useState, useContext } from 'react'
+import React,{ useState, useContext, useMemo, useRef } from 'react'
 import style from './style.module.scss'
 import HeadingText from '../../../components/HeadingText'
 import { globalDivisionsDataContext } from '../../../context/globalDivisionsDataContext.jsx'
@@ -23,14 +23,25 @@ const Vendas = ({salesData, globalDivisionsDataFetched}) => {
   const [ divisions, setDivisions ] = useState(globalDivisionsData.length > 0 ? globalDivisionsData : globalDivisionsDataFetched)
   const [ periodOption, setPeriodOption ] = useState(periods[0])
   const [ sales, setSales ] = useState(salesData)
+  const showSaleParcelsRef = useRef()
+  const saleParcelsContainerRef = useRef()
   const handleGenerateReport = () => {
     alert('Gerar relatório')
   }
+  const salesFiltered = useMemo(() => {
+    if(periodOption.value === 0) return sales;
+    const today = new Date();
+    let daysAgo = periodOption.value;
+    const dateRange = new Date();
+    dateRange.setDate(today.getDate() - daysAgo);
+    const filteredSales = sales.filter(sale => new Date(sale.saleDate) >= dateRange);
+    return filteredSales;
+  }, [periodOption, sales]);
+
   const handleChangePeriod = (e) => {
     const option = periods.findIndex(period => period.value === Number(e.target.value))
     setPeriodOption(periods[option+1>2?0:option+1])
   }
-  console.log(sales)
   sales.map(sale => {
       let valuePaid = sale.parcelas.reduce((parcelPrev, parcelNext) => {
         let prev = parcelPrev.value ? parcelPrev.value : 0
@@ -46,6 +57,16 @@ const Vendas = ({salesData, globalDivisionsDataFetched}) => {
     }, 0)
     sale.partnersValue = (valuePaid * percentage)
   })
+  const handleShowSaleParcels = (e) => {
+    showSaleParcelsRef.current.classList.toggle(style.active)
+    const saleId = saleParcelsContainerRef.current.getAttribute('data-key')
+    if (e.target.value === saleId) {
+      saleParcelsContainerRef.current.classList.add(style.active)
+    } else {
+      saleParcelsContainerRef.current.classList.remove(style.active)
+    }
+  }
+  console.log(sales[0].parcelas[0])
   return (
     <div className={style.soldsContainer}>
     <div className={style.heading}>
@@ -71,7 +92,7 @@ const Vendas = ({salesData, globalDivisionsDataFetched}) => {
             <span>Preço de venda</span>
           </div>
         </li>
-        {sales.map(sale => (
+        {salesFiltered.map(sale => (
           <li key={sale.id} className={style.saleItem}>
             <div className={style.salesListItem}>
               <span>{sale.lotes.name}</span>
@@ -82,7 +103,53 @@ const Vendas = ({salesData, globalDivisionsDataFetched}) => {
               <span>{sale.partnersValue.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
               <span>{((sale.commission/100)*(sale.salePrice/100)).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
               <span>{(sale.salePrice/100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
+              <button className={style.showSaleParcels} ref={showSaleParcelsRef} onClick={handleShowSaleParcels} data-id={sale.id}>
+  <img src="/images/arrowDownIcon.svg"/>
+</button>
             </div>
+
+
+<div className={style.saleParcelsHidden} data-key={sale.id} ref={saleParcelsContainerRef}>
+
+  <ul className={style.saleParcelsList}>
+  <li className={style.parcelsListHeading}>
+            <span>Vencimento</span>
+            <span>Data de criação</span>
+            <span>Status</span>
+            <span>Link</span>
+            <span>PDF</span>
+            <span>Valor</span>
+          </li>
+           {
+            sale.parcelas.map(parcel => (
+              <li key={parcel.id} className={style.saleParcelItem}>
+              <span>
+              {
+              (new Date(parcel.expireDate).getDay() + 1).toString().padStart(2,'0')+ '/' +
+              (new Date(parcel.expireDate).getMonth() + 1 ).toString().padStart(2,'0') + '/' +
+              (new Date(parcel.expireDate).getFullYear()).toString() 
+              }
+              </span>
+              <span>
+              {
+              (new Date(parcel.createdAt).getDay() + 1).toString().padStart(2,'0')+ '/' +
+              (new Date(parcel.createdAt).getMonth() + 1 ).toString().padStart(2,'0') + '/' +
+              (new Date(parcel.createdAt).getFullYear()).toString() 
+              }
+              </span>
+              <span>{parcel.status}</span>
+              <span></span>
+              <span></span>
+              <span>{(parcel.value/100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
+
+
+              </li>
+            ))
+           }   
+
+    
+  </ul>
+</div>
           </li>
         ))}
       </ul>

@@ -47,7 +47,7 @@
         display: flex;
         flex-direction: column;
         li{
-        > div, .salesListHeading{
+         .salesListHeading, .salesListItem{ 
             color: transparentize($text-white, .4);
             background: $bg-dark-color;
             display: grid;
@@ -63,6 +63,7 @@
             }
         }
         .salesListItem{
+    position: relative;
             color: $text-dark-blue;
             background: $gray_color-6;
             padding: 1.2rem 1rem ;
@@ -77,6 +78,14 @@
         //     background: lighten($bg-dark-color,50%);
         //     }
         }
+    }
+    .parcelsListHeading, .saleParcelItem{ 
+        color: transparentize($text-white, .4);
+        background: $bg-dark-color;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: 1fr;
+        padding: 1rem;
     }
 }
 
@@ -98,4 +107,34 @@
         background: $status_paying;
     }
     
+}
+
+.showSaleParcels{
+    transform: rotate(180deg);
+    position: absolute;
+    right: 2rem;
+    top: 1.3rem;
+    &:hover{
+        cursor: pointer;
+    }
+    &.active{
+        transform: rotate(0deg);
+    }
+}
+.saleParcelsHidden {
+    // padding: 0 !important;
+    // height: 0;
+    // overflow: hidden;
+    transition: all .3s ease-in-out;
+    &.active{
+        padding: 1rem !important;
+        height: max-content;
+        overflow: visible;
+    }
+    .parcelsListHeading{
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: 1fr;
+    }
 }
