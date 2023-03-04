@@ -5,7 +5,6 @@
     display: flex;
     flex-direction: column;
     margin-top: 2rem;
-    gap: 2rem;
 }
 .heading{
     display: flex;
@@ -117,11 +116,23 @@
     &:hover{
         cursor: pointer;
     }
-    &.active{
+    &[data-visibility='true']{
         transform: rotate(0deg);
     }
 }
-.saleParcelsHidden {
+.saleParcelsContainer {
+    &[data-visibility='false']{
+        visibility: hidden;
+        height: 0px;
+        opacity: 0;
+    transition: all .3s ease-in-out;
+    }    
+    &[data-visibility='true']{
+        height: max-content;
+        opacity: 1;
+        visibility: visible;
+    transition: all .3s ease-in-out;
+    }
     // padding: 0 !important;
     // height: 0;
     // overflow: hidden;
@@ -138,3 +149,27 @@
         grid-template-rows: 1fr;
     }
 }
+.saleParcelItem > span{
+    display: flex;
+    align-items: center;
+}
+
+.parcelLink{
+    @include actionButton($text-black, $bg_white-color);    
+    max-width: max-content;
+}
+.parcelPdf{
+    @include actionButton($text-black, $green_color-3);    
+    max-width: max-content;
+}
+.saleLotName{
+    font-weight: bold;
+}
+
+.salesTableTitle{
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: $text-black;
+    margin-bottom: 1rem;
+}
+

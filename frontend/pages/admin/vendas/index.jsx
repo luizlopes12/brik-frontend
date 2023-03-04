@@ -2,7 +2,10 @@ import React,{ useState, useContext, useMemo, useRef } from 'react'
 import style from './style.module.scss'
 import HeadingText from '../../../components/HeadingText'
 import { globalDivisionsDataContext } from '../../../context/globalDivisionsDataContext.jsx'
-import formatCurrency from '../../../helpers/formatCurrency'
+import SalesChart from '../../../components/SalesChart';
+
+
+
 
 export async function getStaticProps() {
   let salesData = [];
@@ -22,9 +25,15 @@ const Vendas = ({salesData, globalDivisionsDataFetched}) => {
   const { globalDivisionsData, setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
   const [ divisions, setDivisions ] = useState(globalDivisionsData.length > 0 ? globalDivisionsData : globalDivisionsDataFetched)
   const [ periodOption, setPeriodOption ] = useState(periods[0])
+  const [ showSaleParcels, setShowSaleParcels ] = useState({
+    id: null,
+    visible: false
+  })
+
+  
+
   const [ sales, setSales ] = useState(salesData)
-  const showSaleParcelsRef = useRef()
-  const saleParcelsContainerRef = useRef()
+  const btnShowParcelsRef = useRef()
   const handleGenerateReport = () => {
     alert('Gerar relatório')
   }
@@ -57,16 +66,24 @@ const Vendas = ({salesData, globalDivisionsDataFetched}) => {
     }, 0)
     sale.partnersValue = (valuePaid * percentage)
   })
-  const handleShowSaleParcels = (e) => {
-    showSaleParcelsRef.current.classList.toggle(style.active)
-    const saleId = saleParcelsContainerRef.current.getAttribute('data-key')
-    if (e.target.value === saleId) {
-      saleParcelsContainerRef.current.classList.add(style.active)
-    } else {
-      saleParcelsContainerRef.current.classList.remove(style.active)
-    }
+  const handleShowSaleParcels = (saleId) => {
+    setShowSaleParcels((prev) => {
+      prev.id == saleId ? prev.visible = !prev.visible : prev.visible = !prev.visible
+      return {
+        id: saleId,
+        visible: prev.visible
+      }
+    })
   }
-  console.log(sales[0].parcelas[0])
+  const dateFormat = (parcelDate) =>{
+    var date = new Date(parcelDate),
+        day  = (date.getDate()+1).toString(),
+        dayF = (day.length == 1) ? '0'+ day : day,
+        month  = (date.getMonth()+1).toString(), //+1 pois no getMonth Janeiro começa com zero.
+        monthF = (month.length == 1) ? '0'+month : month,
+        yearF = date.getFullYear();
+      return dayF+"/"+monthF+"/"+yearF;
+  }
   return (
     <div className={style.soldsContainer}>
     <div className={style.heading}>
@@ -79,8 +96,10 @@ const Vendas = ({salesData, globalDivisionsDataFetched}) => {
             </div>
           </div>
           {/* Adicionar gráfico de vendas */}
+          <SalesChart sales={sales} salesFiltered={salesFiltered} periodOption={periodOption} />
     </div>
     <section className={style.salesListContainer}>
+    <h2 className={style.salesTableTitle}>Histórico de vendas</h2>
       <ul className={style.salesList}>
         <li>
           <div className={style.salesListHeading}>
@@ -95,7 +114,7 @@ const Vendas = ({salesData, globalDivisionsDataFetched}) => {
         {salesFiltered.map(sale => (
           <li key={sale.id} className={style.saleItem}>
             <div className={style.salesListItem}>
-              <span>{sale.lotes.name}</span>
+              <span className={style.saleLotName}>{sale.lotes.name}</span>
               <span>{
                   divisions.map(division => division.lotes.find(lote => lote.id == sale.lotes.id) && division.name)
               }</span>
@@ -103,13 +122,13 @@ const Vendas = ({salesData, globalDivisionsDataFetched}) => {
               <span>{sale.partnersValue.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
               <span>{((sale.commission/100)*(sale.salePrice/100)).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
               <span>{(sale.salePrice/100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
-              <button className={style.showSaleParcels} ref={showSaleParcelsRef} onClick={handleShowSaleParcels} data-id={sale.id}>
+              <button className={style.showSaleParcels} data-visibility={showSaleParcels.id == sale.id && showSaleParcels.visible ? 'true' : 'false'}  onClick={() => handleShowSaleParcels(sale.id)} ref={btnShowParcelsRef}>
   <img src="/images/arrowDownIcon.svg"/>
 </button>
             </div>
 
 
-<div className={style.saleParcelsHidden} data-key={sale.id} ref={saleParcelsContainerRef}>
+<div className={style.saleParcelsContainer} data-visibility={showSaleParcels.id == sale.id && showSaleParcels.visible ? 'true' : 'false'} >
 
   <ul className={style.saleParcelsList}>
   <li className={style.parcelsListHeading}>
@@ -125,21 +144,29 @@ const Vendas = ({salesData, globalDivisionsDataFetched}) => {
               <li key={parcel.id} className={style.saleParcelItem}>
               <span>
               {
-              (new Date(parcel.expireDate).getDay() + 1).toString().padStart(2,'0')+ '/' +
-              (new Date(parcel.expireDate).getMonth() + 1 ).toString().padStart(2,'0') + '/' +
-              (new Date(parcel.expireDate).getFullYear()).toString() 
+              dateFormat(parcel.expireDate)
               }
               </span>
               <span>
               {
-              (new Date(parcel.createdAt).getDay() + 1).toString().padStart(2,'0')+ '/' +
-              (new Date(parcel.createdAt).getMonth() + 1 ).toString().padStart(2,'0') + '/' +
-              (new Date(parcel.createdAt).getFullYear()).toString() 
+              dateFormat(parcel.createdAt)
               }
               </span>
-              <span>{parcel.status}</span>
-              <span></span>
-              <span></span>
+              <span>
+                {
+                  parcel.status == 'expired' ? 'Em atraso' :(
+                    parcel.status == 'paid' ? 'Pago' : 'Pendente'
+                  )
+
+                }
+                
+                </span>
+              <span>
+                <a className={style.parcelLink} href={parcel.billetLink}><img src='/images/goToPage.svg'/>Abrir</a>
+              </span>
+              <span>
+                <a className={style.parcelPdf} href={parcel.billetPdf}><img src='/images/reportIcon.svg'/>Abrir</a>
+              </span>
               <span>{(parcel.value/100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
 
 
