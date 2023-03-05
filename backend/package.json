@@ -16,7 +16,6 @@
     "nodemon": "^2.0.20"
   },
   "scripts": {
-    "build": "next build",
     "dev": "nodemon api/index.js",
     "start": "node api/index.js"
   }
