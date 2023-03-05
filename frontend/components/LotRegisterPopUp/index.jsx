@@ -236,7 +236,7 @@ const LotRegisterPopUp = () => {
         taxPercentage : lotData.taxPercentage,
         taxPercentage24 : lotData.taxPercentage24,
         })
-        await fetch('http://localhost:8080/lots/add', {
+        await fetch('https://brik-backend.herokuapp.com/lots/add', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -250,7 +250,7 @@ const LotRegisterPopUp = () => {
           }
           lotImages.forEach( async image => {
             let newImage = JSON.stringify({url: image})
-            await fetch(`http://localhost:8080/lots/${data.newLot?.id}/images/add`, {
+            await fetch(`https://brik-backend.herokuapp.com/lots/${data.newLot?.id}/images/add`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -264,7 +264,7 @@ const LotRegisterPopUp = () => {
           lotData.partners.forEach( async partner => {
           partner.idLote = data.newLot.id
           let newPartner = JSON.stringify(partner)
-          await fetch(`http://localhost:8080/lots/${partner.idLote}/partners/add`, {
+          await fetch(`https://brik-backend.herokuapp.com/lots/${partner.idLote}/partners/add`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -310,7 +310,7 @@ const LotRegisterPopUp = () => {
           setLotImages([
             '/images/labels/without-image.png',
           ])
-          await fetch('http://localhost:8080/divisions/list')
+          await fetch('https://brik-backend.herokuapp.com/divisions/list')
           .then(updatedResponse => updatedResponse.json())
           .then(updatedData => setGlobalDivisionsData(updatedData), console.log('Lote cadastrado com sucesso!'))
           .catch(err => console.log(err))
@@ -327,7 +327,7 @@ const LotRegisterPopUp = () => {
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     };
     const getTaxes = async () =>{
-      await fetch('http://localhost:8080/taxes/list').then(res => res.json())
+      await fetch('https://brik-backend.herokuapp.com/taxes/list').then(res => res.json())
       .then(data => {
         setTaxes(data[0])
         setLotData((prev) => ({ ...prev, taxPercentage: parseFloat(data[0].defaultTax), taxPercentage24: parseFloat(data[0].after24Months)

@@ -276,7 +276,7 @@ const LotRegisterPopUp = () => {
         taxPercentage : lotData.taxPercentage,
         taxPercentage24 : lotData.taxPercentage24,
         })
-        await fetch(`http://localhost:8080/lots/edit/${lotData.id}`, {
+        await fetch(`https://brik-backend.herokuapp.com/lots/edit/${lotData.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -289,7 +289,7 @@ const LotRegisterPopUp = () => {
           }
             lotImages.forEach( async image => {
               let newImage = JSON.stringify({url: image})
-              await fetch(`http://localhost:8080/lots/${lotData.id}/images/add`, {
+              await fetch(`https://brik-backend.herokuapp.com/lots/${lotData.id}/images/add`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -301,7 +301,7 @@ const LotRegisterPopUp = () => {
             if(deletedPartners.length > 0){
                 deletedPartners.forEach( async partner => {
                     let deletePartner = JSON.stringify(partner)
-                    await fetch(`http://localhost:8080/lots/partners/delete/${lotData.id}/${partner.id}`, {
+                    await fetch(`https://brik-backend.herokuapp.com/lots/partners/delete/${lotData.id}/${partner.id}`, {
                     method: 'DELETE',
                     headers: {
                       'Content-Type': 'application/json',
@@ -316,7 +316,7 @@ const LotRegisterPopUp = () => {
             if(newPartnersAdded.length > 0){
               newPartnersAdded.forEach( async partner => {
                 let newPartner = JSON.stringify(partner)
-                await fetch(`http://localhost:8080/lots/${lotData.id}/partners/add`, {
+                await fetch(`https://brik-backend.herokuapp.com/lots/${lotData.id}/partners/add`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -331,7 +331,7 @@ const LotRegisterPopUp = () => {
             if(partnersUpdated.length > 0){
                 partnersUpdated.forEach( async partner => {
                     let updatedPartner = JSON.stringify(partner)
-                    await fetch(`http://localhost:8080/lots/partners/edit/${partner.id}`, {
+                    await fetch(`https://brik-backend.herokuapp.com/lots/partners/edit/${partner.id}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -353,7 +353,7 @@ const LotRegisterPopUp = () => {
             setTimeout(() => {
               setLotDataSaved(false)
             }, 3000)
-          await fetch('http://localhost:8080/divisions/list')
+          await fetch('https://brik-backend.herokuapp.com/divisions/list')
           .then(updatedResponse => updatedResponse.json())
           .then(updatedData => setGlobalDivisionsData(updatedData), console.log('Lote atualizado com sucesso!'))
           .catch(err => console.log(err))

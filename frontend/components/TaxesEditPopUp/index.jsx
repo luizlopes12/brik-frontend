@@ -21,7 +21,7 @@ const TaxesEditPopUp = () => {
       currentIGPM: currentIGPM.slice(-1)[0],
       currentIPCA: currentIPCA.slice(-1)[0]
     });
-    await fetch('http://localhost:8080/taxes/list').then(res => res.json())
+    await fetch('https://brik-backend.herokuapp.com/taxes/list').then(res => res.json())
     .then(data => {
       setTaxes({ defaultTax: parseFloat(data[0].defaultTax), after24Months: parseFloat(data[0].after24Months) })
     })
@@ -32,7 +32,7 @@ const TaxesEditPopUp = () => {
     setTaxes({ ...taxes, [e.target.name]: e.target.value })
   }
   const handleSaveNewTax = async () => {
-    await fetch('http://localhost:8080/taxes/edit',{
+    await fetch('https://brik-backend.herokuapp.com/taxes/edit',{
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

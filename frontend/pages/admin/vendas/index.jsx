@@ -11,8 +11,8 @@ export async function getStaticProps() {
   let salesData = [];
   let globalDivisionsDataFetched = [];
   try {
-    salesData = await fetch('http://localhost:8080/sales/list').then(res => res.json())
-    globalDivisionsDataFetched = await fetch('http://localhost:8080/divisions/list').then(res => res.json())
+    salesData = await fetch('https://brik-backend.herokuapp.com/sales/list').then(res => res.json())
+    globalDivisionsDataFetched = await fetch('https://brik-backend.herokuapp.com/divisions/list').then(res => res.json())
   } catch (error) {
     salesData = []
   }
