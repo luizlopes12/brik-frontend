@@ -7,7 +7,7 @@ import SalesChart from '../../../components/SalesChart';
 
 
 
-export async function getStaticPaths() {
+export async function getStaticProps() {
   let salesData = [];
   let globalDivisionsDataFetched = [];
   try {
