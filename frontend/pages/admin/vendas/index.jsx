@@ -7,7 +7,7 @@ import SalesChart from '../../../components/SalesChart';
 
 
 
-export async function getStaticProps() {
+export async function getStaticPaths() {
   let salesData = [];
   let globalDivisionsDataFetched = [];
   try {
@@ -17,7 +17,8 @@ export async function getStaticProps() {
     salesData = []
   }
   return {
-      props: { salesData, globalDivisionsDataFetched }
+      props: { salesData, globalDivisionsDataFetched },
+      revalidate: 1
   }
 }
 const periods = [{value: 30, label: '1 mês'},{value: 15, label: '15 dias'},{value: 0, label: 'Todo o período'}]
