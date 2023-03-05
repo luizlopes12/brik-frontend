@@ -4,25 +4,26 @@ import HeadingText from '../../../components/HeadingText'
 import { globalDivisionsDataContext } from '../../../context/globalDivisionsDataContext.jsx'
 import SalesChart from '../../../components/SalesChart';
 
-
-
-
-export async function getStaticProps() {
-  let salesData = [];
-  let globalDivisionsDataFetched = [];
-  try {
-    salesData = await fetch('https://brik-backend.herokuapp.com/sales/list').then(res => res.json())
-    globalDivisionsDataFetched = await fetch('https://brik-backend.herokuapp.com/divisions/list').then(res => res.json())
-  } catch (error) {
-    salesData = []
-  }
-  return {
-      props: { salesData, globalDivisionsDataFetched },
-      revalidate: 1
-  }
-}
 const periods = [{value: 30, label: '1 mês'},{value: 15, label: '15 dias'},{value: 0, label: 'Todo o período'}]
-const Vendas = ({salesData, globalDivisionsDataFetched}) => {
+const Vendas = ({}) => {
+  const [salesData, setSalesData] = useState([])
+  const [globalDivisionsDataFetched, setGlobalDivisionsDataFetched] = useState([])
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetch('https://brik-backend.herokuapp.com/sales/list')
+        .then(res => res.json())
+        .then(data => setSalesData(data))
+        .catch(error => console.log(error))
+    }, 10000)
+
+    fetch('https://brik-backend.herokuapp.com/divisions/list').then(res => res.json()).catch(error => console.log(error))
+    .finally((data) => {
+      setGlobalDivisionsDataFetched(data)
+    })
+
+    return () => clearInterval(intervalId)
+  }, [])
+
   const { globalDivisionsData, setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
   const [ divisions, setDivisions ] = useState(globalDivisionsData.length > 0 ? globalDivisionsData : globalDivisionsDataFetched)
   const [ periodOption, setPeriodOption ] = useState(periods[0])
