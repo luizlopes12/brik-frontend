@@ -13,7 +13,6 @@ const Vendas = ({}) => {
         .then(res => res.json())
         .then(data => setSalesData(data))
         .catch(error => console.log(error))
-
     fetch('https://brik-backend.herokuapp.com/divisions/list').then(res => res.json()).catch(error => console.log(error))
     .finally((data) => {
       setGlobalDivisionsDataFetched(data)
