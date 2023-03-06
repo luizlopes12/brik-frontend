@@ -18,7 +18,6 @@ const Vendas = ({}) => {
       setGlobalDivisionsDataFetched(data)
     })
 
-    return () => clearInterval(intervalId)
   }, [])
 
   const { globalDivisionsData, setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
