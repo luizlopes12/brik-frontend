@@ -10,3 +10,10 @@
 .content{
     padding-right: 3rem;
 }
+
+@media(max-width: 1080px){
+    .content{
+        padding-right: 0;
+        padding: .5rem;
+    }
+}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{ useRef } from 'react'
 import style from './style.module.scss'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -64,8 +64,17 @@ const LogoutIconSvg = () => (
 
 const Sidebar = () => {
   const router = useRouter()
+  const navContainerRef = useRef()
+  const handleShowMenu = () => {
+    navContainerRef.current.classList.toggle(style.active)
+  }
   return (
-    <section className={style.navContainer}>
+    <section className={style.navContainer} ref={navContainerRef}>
+      <div className={style.hamburguerMenu} onClick={handleShowMenu}>
+        <div className={style.line1}></div>
+        <div className={style.line2}></div>
+        <div className={style.line3}></div>
+      </div>
       <div className={style.brandLogoWrapper}>
         <Link href='/'>
           <img src='/images/brandLogo.svg' className={style.brandLogo} />

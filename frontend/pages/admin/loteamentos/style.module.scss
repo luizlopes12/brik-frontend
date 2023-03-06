@@ -295,3 +295,23 @@
     }
 }
 
+
+
+@media(max-width: 1080px){
+    .heading{
+        flex-direction: column;
+        gap: .5rem;
+        align-items: center;
+        }
+        .lotFilters{
+            flex-direction: column;
+            align-items: center;
+        }
+        .topActions{
+            align-items: center;
+            justify-content: center;
+        }
+        .listsContainer{
+            flex-direction: column;
+        }
+}
