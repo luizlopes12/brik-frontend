@@ -64,6 +64,7 @@
 
 @media(max-width: 1080px){
    .navContainer{
+      z-index: 999;
       position: absolute;
       transform: translateX(-100%);
       transition: all .3s ease-in-out;
