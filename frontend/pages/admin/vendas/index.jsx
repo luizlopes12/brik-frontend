@@ -9,12 +9,10 @@ const Vendas = ({}) => {
   const [salesData, setSalesData] = useState([])
   const [globalDivisionsDataFetched, setGlobalDivisionsDataFetched] = useState([])
   useEffect(() => {
-    const intervalId = setInterval(() => {
       fetch('https://brik-backend.herokuapp.com/sales/list')
         .then(res => res.json())
         .then(data => setSalesData(data))
         .catch(error => console.log(error))
-    }, 10000)
 
     fetch('https://brik-backend.herokuapp.com/divisions/list').then(res => res.json()).catch(error => console.log(error))
     .finally((data) => {
