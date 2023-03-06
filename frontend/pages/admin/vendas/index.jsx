@@ -1,4 +1,4 @@
-import React,{ useState, useContext, useMemo, useRef } from 'react'
+import React,{ useState, useContext, useMemo, useRef,useEffect } from 'react'
 import style from './style.module.scss'
 import HeadingText from '../../../components/HeadingText'
 import { globalDivisionsDataContext } from '../../../context/globalDivisionsDataContext.jsx'
