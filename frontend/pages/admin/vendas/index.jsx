@@ -37,7 +37,7 @@ const Vendas = ({}) => {
   const [ sales, setSales ] = useState(salesData)
   const btnShowParcelsRef = useRef()
   const handleGenerateReport = () => {
-    alert('Gerar relatório')
+    console.log('Gerar relatório')
   }
   const salesFiltered = useMemo(() => {
     if(periodOption.value === 0) return sales;
