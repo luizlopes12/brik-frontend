@@ -8,18 +8,18 @@ const periods = [{value: 30, label: '1 mês'},{value: 15, label: '15 dias'},{val
 const Vendas = ({}) => {
   const [salesData, setSalesData] = useState([])
   const [globalDivisionsDataFetched, setGlobalDivisionsDataFetched] = useState([])
-  useEffect(() => {
-      fetch('https://brik-backend.herokuapp.com/sales/list')
+  useEffect( () => {
+       fetch('https://brik-backend.herokuapp.com/sales/list')
         .then(res => res.json())
         .then(data => setSalesData(data))
         .catch(error => console.log(error))
-    fetch('https://brik-backend.herokuapp.com/divisions/list').then(res => res.json()).catch(error => console.log(error))
+        
+     fetch('https://brik-backend.herokuapp.com/divisions/list').then(res => res.json()).catch(error => console.log(error))
     .finally((data) => {
       setGlobalDivisionsDataFetched(data)
     })
 
   }, [])
-
   const { globalDivisionsData, setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
   const [ divisions, setDivisions ] = useState(globalDivisionsData.length > 0 ? globalDivisionsData : globalDivisionsDataFetched)
   const [ periodOption, setPeriodOption ] = useState(periods[0])
@@ -30,7 +30,8 @@ const Vendas = ({}) => {
 
   
 
-  const [ sales, setSales ] = useState(salesData)
+  const sales = useMemo(() => salesData, [salesData])
+  console.log(sales)
   const btnShowParcelsRef = useRef()
   const handleGenerateReport = () => {
     console.log('Gerar relatório')
