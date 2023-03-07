@@ -90,13 +90,13 @@
          }
       }
       .hamburguerMenu{
-         transform: translate(35px, 0);
+         transform: translate(35px, 1rem);
       }
          &.active{
             transform: translateX(0);
             .hamburguerMenu{
                
-               transform: translate(-15px, 0);;
+               transform: translate(-15px, 1rem);;
             }
          }
    }
