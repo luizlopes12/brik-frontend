@@ -6,6 +6,7 @@
 
 .contentContainer{
     flex-grow: 1;
+    padding-left: 16vw;
 }
 .content{
     padding-right: 3rem;
@@ -15,5 +16,8 @@
     .content{
         padding-right: 0;
         padding: .5rem;
+    }
+    .contentContainer{
+        padding-left: 0;
     }
 }
