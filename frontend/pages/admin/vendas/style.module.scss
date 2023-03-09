@@ -173,3 +173,13 @@
     margin-bottom: 1rem;
 }
 
+.salesTableHeading{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .newSaleBtn{
+    @include actionButton($text-black, $green_color-2);
+}
+
+}
+    

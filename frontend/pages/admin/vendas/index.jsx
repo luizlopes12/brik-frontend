@@ -83,6 +83,9 @@ const Vendas = ({}) => {
         yearF = date.getFullYear();
       return dayF+"/"+monthF+"/"+yearF;
   }
+  const handleRegisterSale = () => {
+    console.log('Cadastrar venda')
+  }
   return (
     <div className={style.soldsContainer}>
     <div className={style.heading}>
@@ -98,7 +101,10 @@ const Vendas = ({}) => {
           <SalesChart sales={sales} salesFiltered={salesFiltered} periodOption={periodOption} />
     </div>
     <section className={style.salesListContainer}>
-    <h2 className={style.salesTableTitle}>Histórico de vendas</h2>
+      <div className={style.salesTableHeading}>
+        <h2 className={style.salesTableTitle}>Histórico de vendas</h2>
+        <button onClick={handleRegisterSale} className={style.newSaleBtn}>Cadastrar Venda<img src='/images/saleIcon.svg' /></button>
+      </div>
       <ul className={style.salesList}>
         <li>
           <div className={style.salesListHeading}>
