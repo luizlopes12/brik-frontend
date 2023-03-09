@@ -177,6 +177,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 1rem;
+    h2{
+        margin: 0
+    }
     .newSaleBtn{
     @include actionButton($text-black, $green_color-2);
 }
