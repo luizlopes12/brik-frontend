@@ -127,7 +127,7 @@ const DivisionEditPopUp = () => {
       location: divisionData.location,
       bluePrint: divisionData.bluePrint,
     })
-    await fetch(`https://brik-backend.herokuapp.com/divisions/edit/${divisionData.id}`, {
+    await fetch(`${process.env.BACKEND_URL}/divisions/edit/${divisionData.id}`, {
       method: 'PATCH',
       headers: {
         'Content-type': 'application/json',
@@ -135,7 +135,7 @@ const DivisionEditPopUp = () => {
       body: divisionDataToRequest
     }).then(res => res.json())
       .then(async data => {
-        await fetch('https://brik-backend.herokuapp.com/divisions/list')
+        await fetch(`${process.env.BACKEND_URL}/divisions/list`)
           .then(updatedResponse => updatedResponse.json())
           .then(updatedData => setGlobalDivisionsData(updatedData))
         setDivisionSelected(data.data[0])
@@ -161,7 +161,7 @@ const DivisionEditPopUp = () => {
   const handleAddPartnertoDivision = async () => {
     if (partnerValues.name?.length > 0 && partnerValues.CPF?.length >= 11 && partnerValues?.percentage > 0) {
       setPartnerPopUp(false)
-      await fetch(`https://brik-backend.herokuapp.com/divisions/${divisionData.id}/partners/add`, {
+      await fetch(`${process.env.BACKEND_URL}/divisions/${divisionData.id}/partners/add`, {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',

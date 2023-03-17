@@ -14,14 +14,22 @@ const TaxesEditPopUp = () => {
   });
   const fetchData = async () => {
     const currentIGPM = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.4175/dados?formato=json')
-      .then(res => res.json());
+      .then(res => res.json())
+      .catch(err => {
+        console.log(err)
+        return []
+      });
     const currentIPCA = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.10843/dados?formato=json')
-      .then(res => res.json());
+      .then(res => res.json())
+      .catch(err => {
+        console.log(err)
+        return []
+      });
     setCurrentMarketData({
       currentIGPM: currentIGPM.slice(-1)[0],
       currentIPCA: currentIPCA.slice(-1)[0]
     });
-    await fetch('https://brik-backend.herokuapp.com/taxes/list').then(res => res.json())
+    await fetch(`${process.env.BACKEND_URL}/taxes/list`).then(res => res.json())
     .then(data => {
       setTaxes({ defaultTax: parseFloat(data[0].defaultTax), after24Months: parseFloat(data[0].after24Months) })
     })
@@ -32,7 +40,7 @@ const TaxesEditPopUp = () => {
     setTaxes({ ...taxes, [e.target.name]: e.target.value })
   }
   const handleSaveNewTax = async () => {
-    await fetch('https://brik-backend.herokuapp.com/taxes/edit',{
+    await fetch(`${process.env.BACKEND_URL}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -61,7 +69,7 @@ const TaxesEditPopUp = () => {
         </div>
         <ul className={style.taxContent}>
           <li className={style.taxItem}>
-            <span>IGP-M <sup> ({currentMarketData.currentIGPM.data})</sup></span>
+            <span>IGP-M <sup> ({currentMarketData && currentMarketData.currentIGPM.data})</sup></span>
             <span className={style.taxItemLine}></span>
             <span>{currentMarketData.currentIGPM.valor?.toString().replace(".", ",")}%</span>
           </li>

@@ -19,7 +19,7 @@ import { GlobalDivisionsDataProvider } from '../context/globalDivisionsDataConte
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
-  // var socket = io('https://brik-backend.herokuapp.com')
+  // var socket = io('${process.env.BACKEND_URL}')
   return (
     router.pathname.includes('/admin') ? (
       <GlobalDivisionsDataProvider>

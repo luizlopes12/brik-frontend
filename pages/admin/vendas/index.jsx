@@ -5,21 +5,33 @@ import { globalDivisionsDataContext } from '../../../context/globalDivisionsData
 import SalesChart from '../../../components/SalesChart';
 
 const periods = [{value: 30, label: '1 mês'},{value: 15, label: '15 dias'},{value: 0, label: 'Todo o período'}]
-const Vendas = ({}) => {
-  const [salesData, setSalesData] = useState([])
-  const [globalDivisionsDataFetched, setGlobalDivisionsDataFetched] = useState([])
-  useEffect( () => {
-       fetch('https://brik-backend.herokuapp.com/sales/list')
-        .then(res => res.json())
-        .then(data => setSalesData(data))
-        .catch(error => console.log(error))
-        
-     fetch('https://brik-backend.herokuapp.com/divisions/list').then(res => res.json()).catch(error => console.log(error))
-    .finally((data) => {
-      setGlobalDivisionsDataFetched(data)
-    })
+export async function getServerSideProps() {
+  try {
+    const salesRes = await fetch(`${process.env.BACKEND_URL}/sales/list`);
+    const salesData = await salesRes.json();
 
-  }, [])
+    const divisionsRes = await fetch(`${process.env.BACKEND_URL}/divisions/list`);
+    const globalDivisionsDataFetched = await divisionsRes.json();
+
+    return {
+      props: {
+        salesData,
+        globalDivisionsDataFetched,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      props: {
+        salesData: [],
+        globalDivisionsDataFetched: [],
+      },
+    };
+  }
+}
+
+const Vendas = ({ salesData, globalDivisionsDataFetched }) => {
+  
   const { globalDivisionsData, setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
   const [ divisions, setDivisions ] = useState(globalDivisionsData.length > 0 ? globalDivisionsData : globalDivisionsDataFetched)
   const [ periodOption, setPeriodOption ] = useState(periods[0])
@@ -28,10 +40,7 @@ const Vendas = ({}) => {
     visible: false
   })
 
-  
-
   const sales = useMemo(() => salesData, [salesData])
-  console.log(sales)
   const btnShowParcelsRef = useRef()
   const handleGenerateReport = () => {
     console.log('Gerar relatório')
@@ -98,7 +107,7 @@ const Vendas = ({}) => {
             </div>
           </div>
           {/* Adicionar gráfico de vendas */}
-          <SalesChart sales={sales} salesFiltered={salesFiltered} periodOption={periodOption} />
+          <SalesChart sales={salesFiltered} periodOption={periodOption} />
     </div>
     <section className={style.salesListContainer}>
       <div className={style.salesTableHeading}>
@@ -116,12 +125,12 @@ const Vendas = ({}) => {
             <span>Preço de venda</span>
           </div>
         </li>
-        {salesFiltered.map(sale => (
+        {salesFiltered && salesFiltered.map(sale => (
           <li key={sale.id} className={style.saleItem}>
             <div className={style.salesListItem}>
               <span className={style.saleLotName}>{sale.lotes.name}</span>
               <span>{
-                  divisions.map(division => division.lotes.find(lote => lote.id == sale.lotes.id) && division.name)
+                  divisions && divisions.map(division => division.lotes.find(lote => lote.id == sale.lotes.id) && division.name)
               }</span>
               <span><div className={style.statusBall} data-status={sale.status}></div>{sale.status}</span>
               <span>{sale.partnersValue.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
@@ -162,15 +171,14 @@ const Vendas = ({}) => {
                   parcel.status == 'expired' ? 'Em atraso' :(
                     parcel.status == 'paid' ? 'Pago' : 'Pendente'
                   )
-
                 }
                 
                 </span>
               <span>
-                <a className={style.parcelLink} href={parcel.billetLink}><img src='/images/goToPage.svg'/>Abrir</a>
+                <a className={style.parcelLink} href={parcel.billetLink} target='_blank'><img src='/images/goToPage.svg'/>Abrir</a>
               </span>
               <span>
-                <a className={style.parcelPdf} href={parcel.billetPdf}><img src='/images/reportIcon.svg'/>Abrir</a>
+                <a className={style.parcelPdf} href={parcel.billetPdf} target='_blank'><img src='/images/reportIcon.svg'/>Abrir</a>
               </span>
               <span>{(parcel.value/100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
 

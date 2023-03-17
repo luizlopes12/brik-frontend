@@ -128,7 +128,7 @@ const DivisionRegisterPopUp = () => {
       location: divisionData.location,
       bluePrint: divisionData.bluePrint
     })
-    await fetch(`https://brik-backend.herokuapp.com/divisions/add`,{
+    await fetch(`${process.env.BACKEND_URL}/divisions/add`,{
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
@@ -136,7 +136,7 @@ const DivisionRegisterPopUp = () => {
       body: divisionDataToRequest
     }).then(res => res.json())
     .then(async data => {
-      await fetch('https://brik-backend.herokuapp.com/divisions/list')
+      await fetch(`${process.env.BACKEND_URL}/divisions/list`)
       .then(updatedResponse => updatedResponse.json())
       .then(updatedData => setGlobalDivisionsData(updatedData))
       setDivisionData(data.data)

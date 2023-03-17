@@ -11,7 +11,7 @@ import { lotSelectedContext } from '../../../context/selectedLotContext'
 export async function getStaticProps() {
     let firstDivisionsData;
     try {
-        firstDivisionsData = await fetch('https://brik-backend.herokuapp.com/divisions/list').then(res => res.json())
+        firstDivisionsData = await fetch(`${process.env.BACKEND_URL}/divisions/list`).then(res => res.json())
     } catch (error) {
         firstDivisionsData = []
     }
