@@ -76,14 +76,14 @@ const Sidebar = () => {
         <div className={style.line3}></div>
       </div>
       <div className={style.brandLogoWrapper}>
-          <Link href='/'>
+        <Link href='/'>
           <img src='/images/brandLogo.svg' className={style.brandLogo} />
           </Link>
       </div>
       <nav className={style.nav}>
         <ul>
           <li className={router.pathname == '/admin' ? style.active : null}>
-            <Link href='/admin'  prefetch={true}>
+            <Link href='/admin'>
             <OverviewIconSvg/>
             <span className={style.navText}>
             Overview
@@ -91,7 +91,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li className={router.pathname == '/admin/loteamentos' ? style.active : null}>
-            <Link href='/admin/loteamentos' prefetch={true}>
+            <Link href='/admin/loteamentos'>
             <LoteamentosIconSvg/>
             <span className={style.navText}>
             Loteamentos
@@ -99,7 +99,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li className={router.pathname == '/admin/vendas' ? style.active : null}>
-            <Link href='/admin/vendas'  prefetch={true}>
+            <Link href='/admin/vendas'>
             <VendasIconSvg/>
             <span className={style.navText}>
             Vendas
@@ -107,7 +107,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li className={router.pathname == '/admin/banners' ? style.active : null}>
-              <Link href='/admin/banners'  prefetch={true}>
+              <Link href='/admin/banners'>
               <BannersIconSvg/>
               <span className={style.navText}>
               Banners
@@ -117,7 +117,7 @@ const Sidebar = () => {
         </ul>
         <ul>
           <li className={router.pathname == '/admin/configs' ? style.active : null}>
-            <Link href='/admin/configs'  prefetch={true}>
+            <Link href='/admin/configs'>
             <ConfigIconSvg/>
             <span className={style.navText}>
               Configurações
@@ -126,7 +126,7 @@ const Sidebar = () => {
           </li>
           {/* To do: redirect to the initial page and clear user data from global state */}
           <li className={router.pathname == '/admin/logout' ? style.active : null}>
-            <Link href=''  prefetch={true}>
+            <Link href=''>
             <LogoutIconSvg/>
             Log out
             </Link>
