@@ -4,6 +4,9 @@ import HeadingText from '../../../components/HeadingText'
 import { globalDivisionsDataContext } from '../../../context/globalDivisionsDataContext.jsx'
 import SalesChart from '../../../components/SalesChart';
 import { popUpsContext } from '../../../context/popUpsContext.jsx'
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+
 
 const periods = [{value: 30, label: '1 mês'},{value: 15, label: '15 dias'},{value: 0, label: '1 Ano'}]
 export async function getServerSideProps() {
@@ -51,9 +54,14 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
   const sales = useMemo(() => salesData, [salesData])
   const btnShowParcelsRef = useRef()
   const currentChartRef = useRef()
-  const handleGenerateReport = async () => {
-    alert('Gerando relatório...')
+  const handleGenerateReport = () => {
+    // Create a new PDF document
+    const pdf = new jsPDF();
+  
+    // Save and download the blank PDF
+    pdf.save("relatório_de_vendas.pdf");
   };
+
   const salesFiltered = useMemo(() => {
     if(periodOption.value === 0) return sales;
     const today = new Date();
