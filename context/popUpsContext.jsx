@@ -9,6 +9,7 @@ const PopUpsProvider = ({children}) =>{
     taxesEdit: false,
     divisionRegister: false,
     divisionEdit: false,
+    registerSale: false,
   }) 
 
     return <popUpsContext.Provider value={{popUps, setPopUps}}>{children}</popUpsContext.Provider>

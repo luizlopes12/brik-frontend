@@ -9,6 +9,7 @@ import styles from './style.module.scss'
 import {UserProvider} from '../context/userContext'
 import LotRegisterPopUp from '../components/LotRegisterPopUp'
 import LotEditPopUp from '../components/LotEditPopUp'
+import RegisterSalePopUp from '../components/RegisterSalePopUp'
 import DivisionRegisterPopUp from '../components/DivisionRegisterPopUp'
 import {PopUpsProvider} from '../context/popUpsContext'
 import TaxesEditPopUp from '../components/TaxesEditPopUp' 
@@ -32,6 +33,7 @@ function MyApp({ Component, pageProps }) {
         <link rel='icon' href='/images/favicons/pageIcon.png'/>
       </Head>
       <main className={styles.mainContainer}>
+      <RegisterSalePopUp/>
       <LotEditPopUp/>
       <LotRegisterPopUp/>
       <TaxesEditPopUp/>

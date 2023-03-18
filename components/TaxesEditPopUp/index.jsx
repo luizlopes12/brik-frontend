@@ -25,9 +25,22 @@ const TaxesEditPopUp = () => {
         console.log(err)
         return []
       });
+      let accumulatedIGPM = currentIGPM.slice(-12).reduce((acc, curr) => {
+        return (parseFloat(acc) + parseFloat(curr.valor)).toFixed(2);
+      }, 0)
+      let accumulatedIPCA = currentIPCA.slice(-12).reduce((acc, curr) => {
+        return (parseFloat(acc) + parseFloat(curr.valor)).toFixed(2);
+      }, 0)
+
     setCurrentMarketData({
-      currentIGPM: currentIGPM.slice(-1)[0],
-      currentIPCA: currentIPCA.slice(-1)[0]
+      currentIGPM: {
+        data: currentIGPM.slice(-12)[0].data,
+        valor: accumulatedIGPM	
+      },
+      currentIPCA: {
+        data: currentIPCA.slice(-12)[0].data,
+        valor: accumulatedIPCA
+      }
     });
     await fetch(`${process.env.BACKEND_URL}/taxes/list`).then(res => res.json())
     .then(data => {
@@ -69,12 +82,12 @@ const TaxesEditPopUp = () => {
         </div>
         <ul className={style.taxContent}>
           <li className={style.taxItem}>
-            <span>IGP-M <sup> ({currentMarketData && currentMarketData.currentIGPM.data})</sup></span>
+            <span>IGP-M <sup> (acumulado)</sup></span>
             <span className={style.taxItemLine}></span>
             <span>{currentMarketData.currentIGPM.valor?.toString().replace(".", ",")}%</span>
           </li>
           <li className={style.taxItem}>
-            <span>IPCA <sup> ({currentMarketData.currentIPCA.data})</sup></span>
+            <span>IPCA <sup> (acumulado)</sup></span>
             <span className={style.taxItemLine}></span>
             <span>{currentMarketData.currentIPCA.valor?.toString().replace(".", ",")}%</span>
           </li>

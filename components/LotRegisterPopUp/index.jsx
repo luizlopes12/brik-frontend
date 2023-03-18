@@ -5,6 +5,7 @@ import SearchInput from '../SearchInput'
 import { globalDivisionsDataContext } from '../../context/globalDivisionsDataContext'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { storage } from '../../configs/firebase'
+import DivisionSelector from '../DivisionSelector'
 
 
 const LotRegisterPopUp = () => {
@@ -372,24 +373,15 @@ const LotRegisterPopUp = () => {
             <div className={style.lotTitle}>
               <input placeholder='Nome do lote' type="text" value={lotData.name} onChange={handleLotData} name='name' />
             </div>
-            <div className={style.lotDivision}>
-              <div className={style.divisionSelected} onClick={handleShowDivisionOptions}>
-                <img src={lotDivision.logoUrl} />
-                <span>{lotDivision.name}</span>
-              </div>
-              {showDivisionOptions && (
-                <ul className={style.divisionOptionsSelector}>
-                  <SearchInput placeholder='Pesquisar' className={style.divisionSearchInput} value={divisionSearch} onChange={handleSearchDivision} />
-                  {globalDivisionsDataFiltered.map((division, index) => (
-                    <li key={index} className={style.divisionOption} onClick={() => handleSelectDivisionToLot(division)}>
-                      <img src={division.logoUrl} />
-                      <span>{division.name.length > 18 ? division.name.substring(18, '...') : division.name}</span>
-                    </li>
-                  ))}
-
-                </ul>
-              )}
-            </div>
+            <DivisionSelector
+              lotDivision={lotDivision}
+              handleShowDivisionOptions={handleShowDivisionOptions}
+              showDivisionOptions={showDivisionOptions}
+              divisionSearch={divisionSearch}
+              handleSearchDivision={handleSearchDivision}
+              globalDivisionsDataFiltered={globalDivisionsDataFiltered}
+              handleSelectDivisionToLot={handleSelectDivisionToLot}
+            />
 
             <div className={style.lotDescription}>
               <textarea placeholder='Descrição do lote' value={lotData.description} onChange={handleLotData} name='description' />

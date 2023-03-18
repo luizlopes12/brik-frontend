@@ -21,7 +21,6 @@ const LotRegisterPopUp = () => {
   const [ deletedPartners , setDeletedPartners ] = useState([])
   const [ newPartnersAdded , setNewPartnersAdded ] = useState([])
   const [ partnersUpdated , setPartnersUpdated ] = useState([])
-
   const partnersListRef = useRef()
   const [lotDataSaved , setLotDataSaved] = useState(false)
   const [newPartner, setNewPartner] = useState({

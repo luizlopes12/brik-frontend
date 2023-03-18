@@ -8,7 +8,7 @@ import { selectedDivisionContext } from '../../../context/selectedDivisionContex
 import { globalDivisionsDataContext } from '../../../context/globalDivisionsDataContext'
 import { lotSelectedContext } from '../../../context/selectedLotContext'
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
     let firstDivisionsData;
     try {
         firstDivisionsData = await fetch(`${process.env.BACKEND_URL}/divisions/list`).then(res => res.json())
@@ -50,7 +50,7 @@ const Loteamentos = ({ firstDivisionsData }) => {
         return (
             lotsData
                 .filter(lotByDivision => lotByDivision.idLoteamento == (selectValues.division != 'all' ? selectValues.division : lotByDivision.idLoteamento))
-                .filter(lotByAvaibility => lotByAvaibility.isAvaible == selectValues.availability)
+                .filter(lotByAvaibility => lotByAvaibility.isAvaible == selectValues.availability && lotByAvaibility.isSolded == false)
                 .filter(lotByName => lotsSearch.length > 0 ? lotByName.name.toLowerCase().includes(lotsSearch.toLowerCase()) : lotByName)
                 .sort((a, b) => new Date(b.updatedAt) -  new Date(a.updatedAt))
         )

@@ -3,13 +3,16 @@ import style from './style.module.scss'
 import HeadingText from '../../../components/HeadingText'
 import { globalDivisionsDataContext } from '../../../context/globalDivisionsDataContext.jsx'
 import SalesChart from '../../../components/SalesChart';
+import { popUpsContext } from '../../../context/popUpsContext.jsx'
 
-const periods = [{value: 30, label: '1 mês'},{value: 15, label: '15 dias'},{value: 0, label: 'Todo o período'}]
+const periods = [{value: 30, label: '1 mês'},{value: 15, label: '15 dias'},{value: 0, label: '1 Ano'}]
 export async function getServerSideProps() {
   try {
+    const divisionsData = await fetch(`${process.env.BACKEND_URL}/divisions/list`).then(res => res.json())
     const salesRes = await fetch(`${process.env.BACKEND_URL}/sales/list`);
     const salesData = await salesRes.json();
-
+    const summaryRes = await fetch(`${process.env.BACKEND_URL}/sales/resume`);
+    const salesSummary = await summaryRes.json();
     const divisionsRes = await fetch(`${process.env.BACKEND_URL}/divisions/list`);
     const globalDivisionsDataFetched = await divisionsRes.json();
 
@@ -17,24 +20,29 @@ export async function getServerSideProps() {
       props: {
         salesData,
         globalDivisionsDataFetched,
+        salesSummary,
+        divisionsData
       },
     };
   } catch (error) {
     console.log(error);
     return {
       props: {
+        salesSummary: [],
         salesData: [],
         globalDivisionsDataFetched: [],
+        divisionsData: []
       },
     };
   }
 }
 
-const Vendas = ({ salesData, globalDivisionsDataFetched }) => {
-  
+const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisionsData }) => {
+  const { popUps, setPopUps } = useContext(popUpsContext)
   const { globalDivisionsData, setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
+  setGlobalDivisionsData(divisionsData)
   const [ divisions, setDivisions ] = useState(globalDivisionsData.length > 0 ? globalDivisionsData : globalDivisionsDataFetched)
-  const [ periodOption, setPeriodOption ] = useState(periods[0])
+  const [ periodOption, setPeriodOption ] = useState(periods[2])
   const [ showSaleParcels, setShowSaleParcels ] = useState({
     id: null,
     visible: false
@@ -42,9 +50,10 @@ const Vendas = ({ salesData, globalDivisionsDataFetched }) => {
 
   const sales = useMemo(() => salesData, [salesData])
   const btnShowParcelsRef = useRef()
-  const handleGenerateReport = () => {
-    console.log('Gerar relatório')
-  }
+  const currentChartRef = useRef()
+  const handleGenerateReport = async () => {
+    alert('Gerando relatório...')
+  };
   const salesFiltered = useMemo(() => {
     if(periodOption.value === 0) return sales;
     const today = new Date();
@@ -54,7 +63,6 @@ const Vendas = ({ salesData, globalDivisionsDataFetched }) => {
     const filteredSales = sales.filter(sale => new Date(sale.saleDate) >= dateRange);
     return filteredSales;
   }, [periodOption, sales]);
-
   const handleChangePeriod = (e) => {
     const option = periods.findIndex(period => period.value === Number(e.target.value))
     setPeriodOption(periods[option+1>2?0:option+1])
@@ -72,7 +80,8 @@ const Vendas = ({ salesData, globalDivisionsDataFetched }) => {
         percentage = (prev + next) / 100
         return percentage
     }, 0)
-    sale.partnersValue = (valuePaid * percentage)
+    let partnersValueHelper = ((valuePaid * percentage)/sale.parcelas.filter(parcel => parcel.status == 'paid').length)
+    sale.partnersValue = partnersValueHelper
   })
   const handleShowSaleParcels = (saleId) => {
     setShowSaleParcels((prev) => {
@@ -83,6 +92,14 @@ const Vendas = ({ salesData, globalDivisionsDataFetched }) => {
       }
     })
   }
+  const salesSummaryToShow = useMemo(() => {
+    if(periodOption.value == 0) {
+      return salesSummary.monthlySummary.slice(-12)
+    }else{
+      return salesSummary.dailySummary.slice(-periodOption.value)
+    }
+  }, [salesSummary, periodOption])
+
   const dateFormat = (parcelDate) =>{
     var date = new Date(parcelDate),
         day  = (date.getDate()+1).toString(),
@@ -94,7 +111,9 @@ const Vendas = ({ salesData, globalDivisionsDataFetched }) => {
   }
   const handleRegisterSale = () => {
     console.log('Cadastrar venda')
+    setPopUps((prevState) => ({ ...prevState, registerSale: true }))
   }
+
   return (
     <div className={style.soldsContainer}>
     <div className={style.heading}>
@@ -107,7 +126,7 @@ const Vendas = ({ salesData, globalDivisionsDataFetched }) => {
             </div>
           </div>
           {/* Adicionar gráfico de vendas */}
-          <SalesChart sales={salesFiltered} periodOption={periodOption} />
+          <SalesChart periodOption={periodOption} chartData={salesSummaryToShow} componentRef={currentChartRef}/>
     </div>
     <section className={style.salesListContainer}>
       <div className={style.salesTableHeading}>
@@ -120,7 +139,7 @@ const Vendas = ({ salesData, globalDivisionsDataFetched }) => {
             <span>Lote</span>
             <span>Loteamento</span>
             <span>Status</span>
-            <span>Rateio</span>
+            <span>Rateio(total)</span>
             <span>Comissão</span>
             <span>Preço de venda</span>
           </div>
