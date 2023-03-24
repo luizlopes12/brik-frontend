@@ -6,6 +6,7 @@ import SalesChart from '../../../components/SalesChart';
 import { popUpsContext } from '../../../context/popUpsContext.jsx'
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import * as XLSX from 'xlsx';
 
 
 const periods = [{value: 30, label: '1 mês'},{value: 15, label: '15 dias'},{value: 0, label: '1 Ano'}]
@@ -54,13 +55,7 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
   const sales = useMemo(() => salesData, [salesData])
   const btnShowParcelsRef = useRef()
   const currentChartRef = useRef()
-  const handleGenerateReport = () => {
-    // Create a new PDF document
-    const pdf = new jsPDF();
-  
-    // Save and download the blank PDF
-    pdf.save("relatório_de_vendas.pdf");
-  };
+
 
   const salesFiltered = useMemo(() => {
     if(periodOption.value === 0) return sales;
@@ -121,7 +116,36 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
     console.log('Cadastrar venda')
     setPopUps((prevState) => ({ ...prevState, registerSale: true }))
   }
+  const handleGenerateExcelReport = () => {
+    const data = [
+      { name: 'John', age: 28, city: 'New York' },
+      { name: 'Jane', age: 32, city: 'San Francisco' },
+      { name: 'Mike', age: 25, city: 'Los Angeles' },
+    ];
+  
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+  
+      // Generate the Excel file and save it as a Blob
+      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([wbout], { type: 'application/octet-stream' });
+  
+      // Create a link to download the file and trigger the download
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'relatorio_excel.xlsx';
+      link.click();
 
+    }
+    const handleGenerateReport = () => {
+      // Create a new PDF document
+      const pdf = new jsPDF();
+    
+      // Save and download the blank PDF
+      pdf.save("relatorio_pdf.pdf");
+    };
+    
   return (
     <div className={style.soldsContainer}>
     <div className={style.heading}>
@@ -130,7 +154,8 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
             <span>Estatísticas e métricas</span>
             <div className={style.headerBtns}>
               <button onClick={(e)=>handleChangePeriod(e)} className={style.changePeriod} value={periodOption.value}>{periodOption.label} <img src='/images/calendarIcon.svg' /></button>
-              <button onClick={handleGenerateReport} className={style.generateReport}>Gerar relatório <img src='/images/reportIcon.svg' /></button>
+              <button onClick={handleGenerateReport} className={style.generateReport}>Gerar PDF <img src='/images/reportIcon.svg' /></button>
+              <button onClick={handleGenerateExcelReport} className={style.generateReport}>Gerar Excel <img src='/images/fileIcon.svg' /></button>
             </div>
           </div>
           {/* Adicionar gráfico de vendas */}
