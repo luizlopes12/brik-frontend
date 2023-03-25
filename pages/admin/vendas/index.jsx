@@ -116,17 +116,36 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
     console.log('Cadastrar venda')
     setPopUps((prevState) => ({ ...prevState, registerSale: true }))
   }
+  console.log('sales', sales)
   const handleGenerateExcelReport = () => {
-    const data = [
-      { name: 'John', age: 28, city: 'New York' },
-      { name: 'Jane', age: 32, city: 'San Francisco' },
-      { name: 'Mike', age: 25, city: 'Los Angeles' },
-    ];
+    const data = sales.map(sale => {
+      return {
+        "Cliente": sale.users.name, 
+        "CPF/CNPJ": sale.users.CPF, 
+        "Email": sale.users.email, 
+        "Lote": sale.lotes.name, 
+        "Preço inicial": (sale.salePrice/100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
+        "Valor entrada": (sale.entryValue/100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
+        "Valor pago": (sale.parcelas.reduce((acc, curr) => {
+          let value;
+          if (curr.status === 'paid' || curr.status === 'up_to_date') {
+            value = acc + curr.value;
+          } else {
+            value = acc;
+          }
+          return value
+        }, 0)/100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
+        "Data da venda": dateFormat(sale.saleDate),
+        
+      
+      }
+    })
   
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-  
+      XLSX.utils.book_append_sheet(wb, ws, 'Relatório de vendas');
+      XLSX.utils.book_append_sheet(wb, ws, 'Relatório de rateio');
+
       // Generate the Excel file and save it as a Blob
       const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
       const blob = new Blob([wbout], { type: 'application/octet-stream' });
