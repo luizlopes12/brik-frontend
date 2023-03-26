@@ -97,9 +97,9 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
   }
   const salesSummaryToShow = useMemo(() => {
     if(periodOption.value == 0) {
-      return salesSummary.monthlySummary.slice(-12)
+      return salesSummary.monthlySummary?.slice(-12)
     }else{
-      return salesSummary.dailySummary.slice(-periodOption.value)
+      return salesSummary.dailySummary?.slice(-periodOption.value)
     }
   }, [salesSummary, periodOption])
 
