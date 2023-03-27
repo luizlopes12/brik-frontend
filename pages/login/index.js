@@ -33,17 +33,22 @@ const LoginPage = () => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            "access-control-allow-headers":"Origin,X-Requested-With,Content-Type,Accept,content-type,application/json"
         },
         body: JSON.stringify({
             email,
             password,
         }),
     })
-    .then((res) => res.json())
-    .finally((data) => {
-        console.log(data);
+    .then((res) => {
+        if(res.status === 200){
+            console.log('Autenticado')
+        }
+        else{
+            console.log('Não autenticado')
+        }
     })
-    .catch((err) => console.log(err))
+    
   };
 
   const handleResetPassword = () => {
