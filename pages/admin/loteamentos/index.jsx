@@ -8,10 +8,12 @@ import { selectedDivisionContext } from '../../../context/selectedDivisionContex
 import { globalDivisionsDataContext } from '../../../context/globalDivisionsDataContext'
 import { lotSelectedContext } from '../../../context/selectedLotContext'
 import nextCookies from "next-cookies";
+import { toast } from 'react-toastify';
 
 export async function getServerSideProps(context) {
       const cookies = nextCookies(context);
-  const { token, refreshToken } = cookies;
+    const { token, refreshToken } = cookies?cookies:{};
+
   if (!token && !refreshToken) {
     return {
       redirect: {

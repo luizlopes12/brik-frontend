@@ -17,6 +17,8 @@ import DivisionEditPopUp from '../components/DivisionEditPopUp'
 import { LotSelectedProvider } from '../context/selectedLotContext'
 import { DivisionSelectedProvider } from '../context/selectedDivisionContext'
 import { GlobalDivisionsDataProvider } from '../context/globalDivisionsDataContext'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
@@ -33,6 +35,7 @@ function MyApp({ Component, pageProps }) {
         <link rel='icon' href='/images/favicons/pageIcon.png'/>
       </Head>
       <main className={styles.mainContainer}>
+      <ToastContainer />
       <RegisterSalePopUp/>
       <LotEditPopUp/>
       <LotRegisterPopUp/>

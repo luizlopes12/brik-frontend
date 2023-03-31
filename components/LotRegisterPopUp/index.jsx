@@ -6,6 +6,7 @@ import { globalDivisionsDataContext } from '../../context/globalDivisionsDataCon
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { storage } from '../../configs/firebase'
 import DivisionSelector from '../DivisionSelector'
+import { toast } from 'react-toastify'
 
 
 const LotRegisterPopUp = () => {
@@ -222,7 +223,11 @@ const LotRegisterPopUp = () => {
   }, [lotDivision, showDivisionOptions, partnerSearchInput,lotData.partners])
 
   const handleSaveLotData = async () => {
-    try{
+    console.log('AA')
+    if (lotData.price > 0) {
+      console.log('VVVV')
+    
+      try{
         let lotDataToAdd = JSON.stringify({
         name: lotData.name,
         location: lotData.location,
@@ -281,6 +286,7 @@ const LotRegisterPopUp = () => {
         .finally(async () => {
           
           setLotDataSaved(true)
+          toast.success('Lote cadastrado com sucesso!');
             setTimeout(() => {
               setLotDataSaved(false)
             }, 3000)
@@ -321,7 +327,7 @@ const LotRegisterPopUp = () => {
       alert('Ocorreu um erro ao cadastrar o lote, tente novamente!')
       console.log(error)
     }
-
+  }
     }
     const formatPrice = (num) => {
       if (!num) return '';

@@ -1,8 +1,30 @@
 import React,{useContext} from 'react'
 import style from './style.module.scss'
 import {userContext} from '../../context/userContext'
+import Cookie from "js-cookie";
+import nextCookies from "next-cookies";
 
+export async function getServerSideProps(context) {
+  const cookies = nextCookies(context);
+  const { token, refreshToken } = cookies;
+  if (!token && !refreshToken) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {
+      token,
+      refreshToken
+    },
+  };
+}
 const Navbar = () => {
+  const nameOnCookie = Cookie.get('name');
+  const name = decodeURIComponent(nameOnCookie)?.split(' ')[0] || '';
   Date.prototype.toShortFormat = function () {
     const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril",
       "Maio", "Junho", "Julho", "Agosto",
@@ -13,12 +35,11 @@ const Navbar = () => {
     return `${day} de ${monthName}`;
   }
   const actualDate = new Date().toShortFormat()
-  const { userData } = useContext(userContext)
   return (
     <nav className={style.notificationBar}>
       <div className={style.userData}>
         <img src="/images/labels/profile.png" alt="Imagem de perfil" />
-        <span>Olá, {userData.userName}</span>
+        <span>Olá, {name}</span>
       </div>
       <div className={style.date}>
         <span>{actualDate}</span>

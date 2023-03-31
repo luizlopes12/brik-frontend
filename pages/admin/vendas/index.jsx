@@ -15,7 +15,8 @@ const periods = [{value: 30, label: '1 mês'},{value: 15, label: '15 dias'},{val
 
 export async function getServerSideProps(context) {
   const cookies = nextCookies(context);
-  const { token, refreshToken } = cookies;
+    const { token, refreshToken } = cookies;
+
   if (!token && !refreshToken) {
     return {
       redirect: {

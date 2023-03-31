@@ -5,7 +5,8 @@ import nextCookies from "next-cookies";
 
 export async function getServerSideProps(context) {
   const cookies = nextCookies(context);
-  const { token, refreshToken } = cookies;
+    const { token, refreshToken } = cookies?cookies:{};
+
   if (!token && !refreshToken) {
     return {
       redirect: {

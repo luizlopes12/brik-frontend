@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import {
   Container,
   Box,
@@ -16,13 +16,14 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import style from './style.module.scss'
 import { useRouter } from "next/router";
 import Cookie from "js-cookie";
-
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import nextCookies from "next-cookies";
 
 
 export async function getServerSideProps(context) {
   const cookies = nextCookies(context);
-  const { token, refreshToken } = cookies;
+    const { token, refreshToken } = cookies?cookies:{};
+
   if (token || refreshToken) {
     return {
       redirect: {
@@ -45,6 +46,7 @@ const LoginPage = () => {
   const [loginAlert, setLoginAlert] = useState(false);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
 
   const handleForgotPassword = () => {
     setView("forgot");
@@ -77,16 +79,17 @@ const LoginPage = () => {
     })
     .then((data) => {
       if (data && data.token && data.refreshToken) {
-        // Store the tokens in cookies
-        Cookie.set("token", data.token, { expires: 1 }); // Set the token to expire in 1 day
-        Cookie.set("refreshToken", data.refreshToken, { expires: 7 }); // Set the refresh token to expire in 7 days
+        Cookie.set("name", data.name)
+        Cookie.set("email", data.email)
+        Cookie.set("phone", data.phone)
+        Cookie.set("token", data.token, { expires: 1 })
+        Cookie.set("refreshToken", data.refreshToken, { expires: 1 })
+        if(rememberMe){
+          Cookie.set("refreshToken", data.refreshToken, { expires: 7 })
+        }
         router.push("/admin");
       }
     })
-    .finally(() => {
-      setLoading(false);
-    });
-    
   }
 
   const handleResetPassword = () => {
@@ -103,11 +106,12 @@ const LoginPage = () => {
           justifyContent: "center",
         }}
       >
-        <Typography variant="h4">
+        <Typography className={style.brandLogo} variant="h4" onClick={() => router.push("/")}>
           <img src="/images/brandLogo.png" alt="Logo" width="160" />
         </Typography>
         {view === "login" ? (
           <>
+
             <TextField
               margin="normal"
               fullWidth
@@ -187,10 +191,14 @@ const LoginPage = () => {
               
             </Button>
           <p className={style.alertMessage}>{loginAlert && loginAlert}</p>
+          <Button color="success" className={style.backToHome} size="small" onClick={() => router.push("/")}>
+              <ArrowBackIosNewIcon fontSize="small" />
+              Voltar
+            </Button>
           </>
         ) : (
           <>
-            <Typography variant="h6">
+            <Typography variant="h7">
               Digite seu email para receber um link de verificação
             </Typography>
             <TextField
@@ -215,7 +223,8 @@ const LoginPage = () => {
             >
               Enviar
             </Button>
-            <Button color="success" sx={{ marginTop: 5 }} onClick={handleBackToLogin}>
+            <Button color="success" className={style.backToHome} size="large" sx={{ marginTop: 5 }} onClick={handleBackToLogin}>
+              <ArrowBackIosNewIcon fontSize="small" />
               Voltar
             </Button>
           </>

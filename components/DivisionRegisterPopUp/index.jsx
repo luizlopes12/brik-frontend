@@ -5,6 +5,7 @@ import {selectedDivisionContext} from '../../context/selectedDivisionContext'
 import {globalDivisionsDataContext} from '../../context/globalDivisionsDataContext'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { storage } from '../../configs/firebase'
+import { toast } from 'react-toastify'
 
 const DivisionRegisterPopUp = () => {
   const { setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
@@ -139,7 +140,8 @@ const DivisionRegisterPopUp = () => {
       await fetch(`${process.env.BACKEND_URL}/divisions/list`)
       .then(updatedResponse => updatedResponse.json())
       .then(updatedData => setGlobalDivisionsData(updatedData))
-      setDivisionData(data.data)
+      setDivisionData(data.data)          
+      toast.success('Loteamento cadastrado com sucesso!');
       setDataSaved(true)
       setTimeout(() => setDataSaved(false),5000)
     }).catch(err => {
