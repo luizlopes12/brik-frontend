@@ -2,7 +2,7 @@ import React,{ useRef } from 'react'
 import style from './style.module.scss'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-
+import Cookie from 'js-cookie'
 /* SVG icons on code to can edit color with css */
 
 const OverviewIconSvg = () => (
@@ -68,6 +68,11 @@ const Sidebar = () => {
   const handleShowMenu = () => {
     navContainerRef.current.classList.toggle(style.active)
   }
+  const handleUserLogout = () => {
+    Cookie.remove("token");
+    Cookie.remove("refreshToken");
+    router.push('/')
+  }
   return (
     <section className={style.navContainer} ref={navContainerRef}>
       <div className={style.hamburguerMenu} onClick={handleShowMenu}>
@@ -126,7 +131,7 @@ const Sidebar = () => {
           </li>
           {/* To do: redirect to the initial page and clear user data from global state */}
           <li className={router.pathname == '/admin/logout' ? style.active : null}>
-            <Link href=''>
+            <Link href='' onClick={handleUserLogout}>
             <LogoutIconSvg/>
             Log out
             </Link>

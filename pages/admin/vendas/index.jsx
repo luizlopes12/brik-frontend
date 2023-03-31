@@ -7,10 +7,24 @@ import { popUpsContext } from '../../../context/popUpsContext.jsx'
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import * as XLSX from 'xlsx';
+import nextCookies from "next-cookies";
 
 
 const periods = [{value: 30, label: '1 mês'},{value: 15, label: '15 dias'},{value: 0, label: '1 Ano'}]
-export async function getServerSideProps() {
+
+
+export async function getServerSideProps(context) {
+  const cookies = nextCookies(context);
+  const { token, refreshToken } = cookies;
+  if (!token && !refreshToken) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
   try {
     const divisionsData = await fetch(`${process.env.BACKEND_URL}/divisions/list`).then(res => res.json())
     const salesRes = await fetch(`${process.env.BACKEND_URL}/sales/list`);
@@ -25,7 +39,9 @@ export async function getServerSideProps() {
         salesData,
         globalDivisionsDataFetched,
         salesSummary,
-        divisionsData
+        divisionsData,
+        token,
+        refreshToken,
       },
     };
   } catch (error) {

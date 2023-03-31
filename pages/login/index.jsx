@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Box,
@@ -9,9 +9,32 @@ import {
   Button,
   IconButton,
   InputAdornment,
+  CircularProgress 
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import style from './style.module.scss'
+import { useRouter } from "next/router";
+import Cookie from "js-cookie";
+
+import nextCookies from "next-cookies";
+
+
+export async function getServerSideProps(context) {
+  const cookies = nextCookies(context);
+  const { token, refreshToken } = cookies;
+  if (token || refreshToken) {
+    return {
+      redirect: {
+        destination: "/admin",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+}
 
 const LoginPage = () => {
   const [view, setView] = useState("login");
@@ -19,6 +42,9 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [loginAlert, setLoginAlert] = useState(false);
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleForgotPassword = () => {
     setView("forgot");
@@ -29,32 +55,43 @@ const LoginPage = () => {
   };
 
   const handleLogin = async () => {
+    setLoading(true);
     await fetch(`${process.env.BACKEND_URL}/login`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "access-control-allow-headers":"Origin,X-Requested-With,Content-Type,Accept,content-type,application/json"
-        },
-        body: JSON.stringify({
-            email,
-            password,
-        }),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "access-control-allow-headers": "Origin,X-Requested-With,Content-Type,Accept,content-type,application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
     })
     .then((res) => {
-        if(res.status === 200){
-            console.log('Autenticado')
-        }
-        else{
-            console.log('Não autenticado')
-        }
+      if (res.status === 200) {
+        return res.json();
+      } else {
+        setLoginAlert("Email ou senha incorretos");
+      }
+      setLoading(false);
     })
+    .then((data) => {
+      if (data && data.token && data.refreshToken) {
+        // Store the tokens in cookies
+        Cookie.set("token", data.token, { expires: 1 }); // Set the token to expire in 1 day
+        Cookie.set("refreshToken", data.refreshToken, { expires: 7 }); // Set the refresh token to expire in 7 days
+        router.push("/admin");
+      }
+    })
+    .finally(() => {
+      setLoading(false);
+    });
     
-  };
+  }
 
   const handleResetPassword = () => {
     // Perform reset password action here
   };
-
   return (
     <Container maxWidth="xs">
       <Box
@@ -139,15 +176,17 @@ const LoginPage = () => {
               </Button>
             </Box>
             <Button
-                size="large"
+              size="large"
               color="success"
               type="submit"
               fullWidth
               variant="contained"
               onClick={handleLogin}
             >
-              <b>Entrar</b>
+              {loading ? <CircularProgress color="inherit" size={28} /> : <b>Entrar</b>}
+              
             </Button>
+          <p className={style.alertMessage}>{loginAlert && loginAlert}</p>
           </>
         ) : (
           <>

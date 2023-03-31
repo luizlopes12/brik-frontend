@@ -7,8 +7,19 @@ import { popUpsContext } from '../../../context/popUpsContext'
 import { selectedDivisionContext } from '../../../context/selectedDivisionContext'
 import { globalDivisionsDataContext } from '../../../context/globalDivisionsDataContext'
 import { lotSelectedContext } from '../../../context/selectedLotContext'
+import nextCookies from "next-cookies";
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+      const cookies = nextCookies(context);
+  const { token, refreshToken } = cookies;
+  if (!token && !refreshToken) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
     let firstDivisionsData;
     try {
         firstDivisionsData = await fetch(`${process.env.BACKEND_URL}/divisions/list`).then(res => res.json())
@@ -16,7 +27,8 @@ export async function getServerSideProps() {
         firstDivisionsData = []
     }
     return {
-        props: { firstDivisionsData }
+        props: { firstDivisionsData, token,
+            refreshToken, }
     }
 }
 const Availabilities = [{ name: 'Disponível', value: 'avaible' }, { name: 'Indisponível', value: 'unavaible' }, { name: 'Reservado', value: 'reserved' }]
