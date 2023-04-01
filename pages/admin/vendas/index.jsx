@@ -101,7 +101,7 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
         return percentage
     }, 0)
     let partnersValueHelper = ((valuePaid * percentage)/sale.parcelas.filter(parcel => parcel.status == 'paid').length)
-    sale.partnersValue = partnersValueHelper
+    sale.partnersValue = (partnersValueHelper > 0 ? partnersValueHelper : 0)
   })
   const handleShowSaleParcels = (saleId) => {
     setShowSaleParcels((prev) => {

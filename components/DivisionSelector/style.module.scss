@@ -216,6 +216,7 @@
     overflow-x: hidden;
     padding: 1rem 1rem 1.5rem;
     border-radius: 5px;
+    z-index: 1;
     &::-webkit-scrollbar{
         width: 8px;
         background: transparentize($gray_color-4, 0.8);

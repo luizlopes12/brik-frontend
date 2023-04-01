@@ -3,7 +3,7 @@
 
 
 .popUpBackdrop{
-    position: absolute;
+    position: fixed;
     min-width: 100%;
     min-height: 100%;
     background: transparentize($bg_dark-color, 0.6);

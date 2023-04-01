@@ -6,6 +6,7 @@ import { globalDivisionsDataContext } from '../../context/globalDivisionsDataCon
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { storage } from '../../configs/firebase'
 import { lotSelectedContext } from '../../context/selectedLotContext'
+import { toast } from 'react-toastify'
 
 
 const LotRegisterPopUp = () => {
@@ -348,6 +349,7 @@ const LotRegisterPopUp = () => {
           setDeletedPartners([])
           setNewPartnersAdded([])
           setPartnersUpdated([])
+          toast.success('Lote atualizado com sucesso!')
           setLotDataSaved(true)
             setTimeout(() => {
               setLotDataSaved(false)
