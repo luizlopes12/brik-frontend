@@ -39,7 +39,7 @@ const Navbar = () => {
     <nav className={style.notificationBar}>
       <div className={style.userData}>
         <img src="/images/labels/profile.png" alt="Imagem de perfil" />
-        <span>Olá, { name ? name : ''}</span>
+        <span>Olá, { name != undefined ? name : ''}</span>
       </div>
       <div className={style.date}>
         <span>{actualDate}</span>
