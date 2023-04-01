@@ -88,21 +88,25 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
     setPeriodOption(periods[option+1>2?0:option+1])
   }
   sales.map(sale => {
-      let valuePaid = sale.parcelas.reduce((parcelPrev, parcelNext) => {
-        let prev = parcelPrev.value ? parcelPrev.value : 0
-        let next = parcelNext.value ? parcelNext.value : 0
-        return prev + next
-      })
-      let percentage = sale.lotes.lotePartners.reduce((partnerPrev, partnerNext ) => {
-        let percentage = 0
-        let prev = partnerPrev.percentage ? partnerPrev.percentage : 0
-        let next = partnerNext.percentage ? partnerNext.percentage : 0
-        percentage = (prev + next) / 100
-        return percentage
-    }, 0)
-    let partnersValueHelper = ((valuePaid * percentage)/sale.parcelas.filter(parcel => parcel.status == 'paid').length)
-    sale.partnersValue = (partnersValueHelper > 0 ? partnersValueHelper : 0)
-  })
+    let valuePaid = sale.parcelas.reduce((parcelPrev, parcelNext) => {
+      let prev = parcelPrev.value ? parcelPrev.value : 0;
+      let next = parcelNext.value ? parcelNext.value : 0;
+      return prev + next;
+    });
+  
+    let percentage = sale.lotes.lotePartners.reduce((partnerPrev, partnerNext) => {
+      let percentage = 0;
+      let prev = partnerPrev.percentage ? partnerPrev.percentage : 0;
+      let next = partnerNext.percentage ? partnerNext.percentage : 0;
+      percentage = (prev + next) / 100;
+      return percentage;
+    }, 0);
+  
+    let paidParcelsCount = sale.parcelas.filter(parcel => parcel.status == 'paid').length;
+    let partnersValueHelper = paidParcelsCount > 0 ? (valuePaid * percentage) / paidParcelsCount : 0;
+    sale.partnersValue = partnersValueHelper > 0 ? partnersValueHelper : 0;
+  });
+  
   const handleShowSaleParcels = (saleId) => {
     setShowSaleParcels((prev) => {
       prev.id == saleId ? prev.visible = !prev.visible : prev.visible = !prev.visible
@@ -135,14 +139,16 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
   }
   console.log('sales', sales)
   const handleGenerateExcelReport = () => {
-    const data = sales.map(sale => {
+    const dataToSales = sales.map(sale => {
+    console.log(sale)
       return {
         "Cliente": sale.users.name, 
         "CPF/CNPJ": sale.users.CPF, 
         "Email": sale.users.email, 
         "Lote": sale.lotes.name, 
         "Preço inicial": (sale.salePrice/100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
-        "Valor entrada": (sale.entryValue/100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
+        "Desconto": `${sale.discountPercentage}%`,
+        "Valor entrada": (sale.entryValue - (sale.entryValue * (sale.discountPercentage/100))).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
         "Valor pago": (sale.parcelas.reduce((acc, curr) => {
           let value;
           if (curr.status === 'paid' || curr.status === 'up_to_date') {
@@ -153,21 +159,37 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
           return value
         }, 0)/100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
         "Data da venda": dateFormat(sale.saleDate),
-        
-      
+        "Preço final": ((sale.salePrice - (sale.salePrice * sale.discountPercentage/100))/100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
       }
-    })
-  
-      const ws = XLSX.utils.json_to_sheet(data);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Relatório de vendas');
-      XLSX.utils.book_append_sheet(wb, ws, 'Relatório de rateio');
 
-      // Generate the Excel file and save it as a Blob
+    })
+         
+      const salesReport = XLSX.utils.json_to_sheet(dataToSales);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, salesReport, 'Relatório de vendas');
+
+      salesReport['!cols'] = Array(Object.keys(dataToSales[0]).length).fill({ wpx: 100 });
+      
+      // Define the header style
+      const headerStyle = {
+        fill: {
+          fgColor: { rgb: '7FFE00' },
+        },
+        font: {
+          bold: true,
+        },
+        alignment: {
+          horizontal: 'center',
+        },
+      };
+      for (let i = 0; i < Object.keys(dataToSales[0]).length; i++) {
+        const cellRef = XLSX.utils.encode_cell({ c: i, r: 0 });
+        if (!salesReport[cellRef]) salesReport[cellRef] = {};
+        salesReport[cellRef].s = headerStyle;
+      }
+    
       const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
       const blob = new Blob([wbout], { type: 'application/octet-stream' });
-  
-      // Create a link to download the file and trigger the download
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
       link.download = 'relatorio_excel.xlsx';
