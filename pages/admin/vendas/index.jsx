@@ -216,7 +216,6 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
               <button onClick={handleGenerateExcelReport} className={style.generateReport}>Gerar Excel <img src='/images/fileIcon.svg' /></button>
             </div>
           </div>
-          {/* Adicionar gráfico de vendas */}
           <SalesChart periodOption={periodOption} chartData={salesSummaryToShow} componentRef={currentChartRef}/>
     </div>
     <section className={style.salesListContainer}>
