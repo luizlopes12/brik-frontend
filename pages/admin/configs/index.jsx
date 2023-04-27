@@ -110,7 +110,7 @@ const Configs = ({users}) => {
   return (
     <div className={style.configsContainer}>
     <div className={style.heading}>
-          <HeadingText>Configurações</HeadingText>
+          <HeadingText>Permissões</HeadingText>
     </div>
     <div className={style.userSelectContainer}>
       <Autocomplete

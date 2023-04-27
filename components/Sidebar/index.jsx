@@ -125,7 +125,7 @@ const Sidebar = () => {
             <Link href='/admin/configs'>
             <ConfigIconSvg/>
             <span className={style.navText}>
-              Configurações
+            Permissões
             </span>
             </Link>
           </li>

@@ -1,0 +1,37 @@
+@import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
+
+
+.bannerContainer{
+    transition: all .3s ease-in-out;
+}
+
+.bannerControls{
+    display: flex;
+    justify-content:center;
+    width: 100%;
+    margin: auto;
+}
+
+.bannerDots{
+    display: flex;
+    gap: .5rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.bannerDot{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: $gray_color-2;
+    opacity: 1;
+    transition: all .3s ease-in-out;
+    &:hover{
+        cursor: pointer;
+        opacity: 1;
+    }
+    &.active{
+        background: $text-dark-blue;
+    }
+}

@@ -10,5 +10,26 @@
     display: flex;
     min-width: 100%;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.subheading{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    span{
+        color: $gray_color-7;
+    }
+    .visualizeBanners{
+        @include actionButton($text-black, $green_color-2);
+    }
+}
+
+.bannersEdit{
+    width: 100%;
+    background: $text-dark-blue;
+    padding: .5rem;
+    border-radius: 12px;
 }

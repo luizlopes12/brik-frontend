@@ -1,0 +1,82 @@
+
+@import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
+
+
+
+.slider{
+    position: relative;
+    width: 100%;
+    max-width: 1060px;
+    overflow-x: scroll;
+    padding-bottom: 3rem;
+    &::-webkit-scrollbar{
+        height: 5px;
+        background: transparentize($bg_white-color, 0.48);
+        border-radius: 5px;
+    }
+    &::-webkit-scrollbar-thumb{
+        background: $green_color-2;
+        border-radius: 5px;
+    }
+    padding-bottom: 3rem;
+}
+.sliderImages{
+    display: flex;
+    gap: .5rem;
+    width: max-content;
+    
+    .imageNumber{
+        position: absolute;
+        bottom: -35px;
+        left: 20px;
+        background: $green_color-2;
+        color: $text-dark-blue;
+        padding: .5rem 1rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        opacity: 0;
+    }
+    img{
+        width: 300px;
+        border-radius: 15px;
+        &:hover{
+            cursor: pointer;
+        }
+        &.active{
+            border: 2px solid $green_color-2;
+        ~.imageNumber{
+            opacity: 1;
+
+        }
+        }
+    }
+}
+
+.bannerEditControls{
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    position: fixed;
+    bottom: 2.5rem;
+    right: 4rem;
+}
+
+.sliderPrev{
+    transform: rotate(90deg);
+    background: transparentize($bg_white-color, 0.48);
+    padding: 6px;
+    cursor: pointer;
+}
+
+.sliderNext{
+    transform: rotate(-90deg);
+    background: transparentize($bg_white-color, 0.48);
+    padding: 6px;
+    cursor: pointer;
+
+}
+
+.imageContainer{
+    position: relative;
+}
