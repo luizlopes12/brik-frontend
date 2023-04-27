@@ -70,6 +70,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            label{
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: $text-black;
+            }
             span{
                 font-size: 1.2rem;
                 font-weight: 600;
@@ -96,4 +101,48 @@
 
 .divisionSelected{
     width: 100%;
+}
+
+
+.lotSelection{
+    display: flex;
+}
+
+.lotDataWrapper {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    
+    gap: 1rem;
+    .dataType{
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: $text-black;
+    }
+}
+
+.parcelsInput{
+    border-bottom: 2px solid $gray_color-2;
+    width: 50px;
+    text-align: end;
+}
+
+.parcelsAlert{
+    font-size: .8rem;
+    font-weight: 500;
+    color: $alert_font-color;
+    margin-left: .5rem;
+}
+
+.entryInputContainer{
+    border-bottom: 2px solid $gray_color-2;
+    width: max-content;
+    .entryInput{
+        width: 100px;
+        text-align: end;
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        }
+    }
 }

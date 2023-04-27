@@ -134,6 +134,7 @@ const Loteamentos = ({ firstDivisionsData }) => {
                 <ul className={style.lotsList}>
                     {dataFiltered.length > 0 ?
                         dataFiltered.map((lot) => (
+                            lot.isSolded == false &&
                             <li className={style.lotsListItem} key={lot.id}>
                                 <div className={style.lotImage}>
                                     <img src={lot.loteImages[0]?.imageUrl} alt="Imagem do lote" />

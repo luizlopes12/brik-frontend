@@ -291,7 +291,6 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
               </span>
               <span>{(parcel.value/100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
 
-
               </li>
             ))
            }   
