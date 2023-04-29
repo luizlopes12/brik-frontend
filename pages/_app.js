@@ -19,6 +19,7 @@ import { DivisionSelectedProvider } from '../context/selectedDivisionContext'
 import { GlobalDivisionsDataProvider } from '../context/globalDivisionsDataContext'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import UserNavBar from '../components/UserNavBar'
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
@@ -68,6 +69,7 @@ function MyApp({ Component, pageProps }) {
         <meta property="og:url" content="https://brikempreendimentos.com/"/>
         <meta property="og:type" content="website"/>
       </Head>
+
       <Component {...pageProps} />
       </>
     )

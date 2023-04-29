@@ -12,7 +12,7 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
     const startIndex = (currentPage - 1) * lotsDataPerPage;
     const endIndex = startIndex + lotsDataPerPage;
     return lotsData.slice(startIndex, endIndex).map((item) => (
-        <Link href={`/lotes/${item.id}`}>
+        <Link href={`/lote/${item.id}`}>
             <li key={item.id}>
                 <div className={style.lotImage}>
                 <img src={
@@ -38,19 +38,23 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
   }, [currentPage, lotsData, lotsDataPerPage]);
 
   const handlePageChange = (pageNumber) => {
+    window.scrollTo(0, 200);
     const totalPages = Math.ceil(lotsData.length / lotsDataPerPage);
     if (pageNumber < 1 || pageNumber > totalPages) {
       return;
     }
     setCurrentPage(pageNumber);
+    window.scrollTo(0, 200);
   };
 
   const goToFirstPage = () => {
     setCurrentPage(1);
+    window.scrollTo(0, 200);
   };
 
   const goToLastPage = () => {
     setCurrentPage(Math.ceil(lotsData.length / lotsDataPerPage));
+    window.scrollTo(0, 200);
   };
   const handleGroupView = () => {
     setIsGroupView(!isGroupView);
@@ -86,10 +90,15 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
         de
       </span>
       <button onClick={goToLastPage} className={style.totalPages}> {totalPages}</button>
-      <button onClick={() => handlePageChange(currentPage + 1)} disabled={isLastPage} className={style.controlNext}>
-        Seguinte
-        <img src={arrowIcon} alt="Seguinte" />
-      </button>
+      {
+        currentPage != totalPages && (
+            <button onClick={() => handlePageChange(currentPage + 1)} disabled={isLastPage} className={style.controlNext}>
+            Seguinte
+            <img src={arrowIcon} alt="Seguinte" />
+          </button>
+        )
+      }
+
       </div>
             
             </>

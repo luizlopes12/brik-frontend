@@ -23,7 +23,7 @@ export async function getServerSideProps() {
 export default function Home({bannerImagesData, lotsData}) {
   return (
     <>
-       <UserNavBar imageSrc={'/images/brandLogo.svg'} 
+      <UserNavBar imageSrc={'/images/brandLogo.svg'} 
        treeIcon={'/images/treeIcon.svg'}
        homeIcon={'/images/homeIcon.svg'}
        userImage={'/images/labels/profile.png'}

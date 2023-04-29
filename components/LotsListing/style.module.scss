@@ -1,6 +1,8 @@
 @import '../../styles/colors.scss';
 @import '../../styles/mixins.scss';
 
+
+
 .lotListingContainer{
     width: 100%;
     max-width: 1180px;
@@ -155,6 +157,9 @@
             transform: rotate(180deg);
             height: 20px;
         }
+        &:hover{
+            cursor: pointer;
+        }
     }
     .controlNext{
         display: flex;
@@ -165,6 +170,9 @@
         font-weight: 500;
         img{
             height: 20px;
+        }
+        &:hover{
+            cursor: pointer;
         }
     }
     .currentPage{
@@ -254,6 +262,6 @@
 
 @media(max-width: 375px){
     .lotListingContainer{
-        margin-top: 5rem;
+        margin-top: 4rem;
     }
 }

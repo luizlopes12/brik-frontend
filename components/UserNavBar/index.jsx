@@ -3,6 +3,7 @@ import style from './style.module.scss'
 import Link from 'next/link'
 
 
+
 const UserNavBar = ({ imageSrc, treeIcon, homeIcon, userImage }) => {
     const [isActive, setIsActive] = useState({
         urban: true,
@@ -32,7 +33,9 @@ const UserNavBar = ({ imageSrc, treeIcon, homeIcon, userImage }) => {
     <header className={style.headerContainer}>
         <nav className={style.navbarContainer}>
         <div className={style.navItem}>
+            <Link href="/">
             <img src={imageSrc} alt="Logo" className={style.brandLogo}/>
+            </Link>
         </div>
         <div className={style.navItemBtns}>
             <button className={style.switchType} data-active={isActive.urban} onClick={handleSwitchType}>
