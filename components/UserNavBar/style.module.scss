@@ -193,3 +193,7 @@
         }
     }
 }
+
+.bannerGoBack{
+    @include actionButton($green_color-9, $bg_white-color)
+}

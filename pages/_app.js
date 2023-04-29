@@ -17,15 +17,17 @@ import DivisionEditPopUp from '../components/DivisionEditPopUp'
 import { LotSelectedProvider } from '../context/selectedLotContext'
 import { DivisionSelectedProvider } from '../context/selectedDivisionContext'
 import { GlobalDivisionsDataProvider } from '../context/globalDivisionsDataContext'
+import { BannerPreviewProvider } from '../context/bannerPreviewContext';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import UserNavBar from '../components/UserNavBar'
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
   // var socket = io('${process.env.BACKEND_URL}')
   return (
-    router.pathname.includes('/admin') ? (
+    <BannerPreviewProvider>
+    { router.pathname.includes('/admin') ? (
+      
       <GlobalDivisionsDataProvider>
       <UserProvider>
       <PopUpsProvider>
@@ -72,7 +74,8 @@ function MyApp({ Component, pageProps }) {
 
       <Component {...pageProps} />
       </>
-    )
+    )}
+    </BannerPreviewProvider>
   )
 }
 

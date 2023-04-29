@@ -1,6 +1,8 @@
 import UserNavBar from "../components/UserNavBar"
 import BannerSlider from "../components/BannerSlider"
 import LotsListing from "../components/LotsListing"
+import { bannerPreviewContext } from "../context/bannerPreviewContext"
+import { useContext } from "react";
 
 export async function getServerSideProps() {
   const bannerImagesData = await fetch(`${process.env.BACKEND_URL}/banners/list`)
@@ -21,12 +23,14 @@ export async function getServerSideProps() {
   };
 }
 export default function Home({bannerImagesData, lotsData}) {
+  const {bannerPreview} = useContext(bannerPreviewContext);
   return (
     <>
       <UserNavBar imageSrc={'/images/brandLogo.svg'} 
        treeIcon={'/images/treeIcon.svg'}
        homeIcon={'/images/homeIcon.svg'}
        userImage={'/images/labels/profile.png'}
+       bannerPreview={bannerPreview}
        />
        <BannerSlider imagesData={bannerImagesData} isOnHome/>
        <LotsListing 

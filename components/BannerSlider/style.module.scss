@@ -63,7 +63,9 @@
 
 @media(max-width: 375px){
 .bannerContainer{
-    display: none;
+    img{
+        height: 200px;
+    }
 }
 }
 
@@ -73,6 +75,12 @@
     .bannerContainer{
         &.onHomeStyle{
             margin: 4rem auto 0;
+        }
+    }
+    .bannerContainer{
+        img{
+            height: 120px;
+            object-fit: cover;
         }
     }
 }

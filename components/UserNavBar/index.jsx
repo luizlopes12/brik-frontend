@@ -1,15 +1,21 @@
 import React,{useState} from 'react'
 import style from './style.module.scss'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 
 
-const UserNavBar = ({ imageSrc, treeIcon, homeIcon, userImage }) => {
+const UserNavBar = ({ imageSrc, treeIcon, homeIcon, userImage, bannerPreview }) => {
+    console.log(bannerPreview)
+    const router = useRouter()
     const [isActive, setIsActive] = useState({
         urban: true,
         rural: false,
         actions: false
     })
+    const handleGoBackToBanners = () => {
+        router.push('/admin/banners')
+    }
 
     const handleSwitchType = (e) => {
         const { active } = e.target.dataset
@@ -51,17 +57,20 @@ const UserNavBar = ({ imageSrc, treeIcon, homeIcon, userImage }) => {
                 </span>
             </button>
         </div>
-        <div className={style.navMenu} onClick={handleSwitchVisibility}>
-                <span>...</span>
-                <img src={userImage} alt="Usuário" />
-                <ul className={style.userActions} data-active={isActive.actions} >
-                    <li>Cadastre-se</li>
-                    <li>
-                    <Link href="/login">Login</Link>
-                        
-                    </li>
-                </ul>
+        {bannerPreview ? (
+            <button className={style.bannerGoBack} onClick={handleGoBackToBanners}>Voltar</button>
+        ) : <div className={style.navMenu} onClick={handleSwitchVisibility}>
+        <span>...</span>
+        <img src={userImage} alt="Usuário" />
+        <ul className={style.userActions} data-active={isActive.actions} >
+            <li>
+            <Link href="/login">Login</Link>
+            </li>
+        </ul>
         </div>
+}
+
+        
         </nav>
     </header>
   )

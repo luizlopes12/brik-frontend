@@ -6,6 +6,12 @@ import BannerSlider from '../../../components/BannerSlider';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BannersEditSlider from '../../../components/BannersEditSlider';
+import { bannerPreviewContext } from "../../../context/bannerPreviewContext"
+import { useContext } from "react";
+import { useRouter } from 'next/router';
+
+
+
 
 export async function getServerSideProps(context) {
   const banners = await fetch(`${process.env.BACKEND_URL}/banners/list`)
@@ -32,6 +38,15 @@ export async function getServerSideProps(context) {
   };
 }
 const Banners = ({banners}) => {
+  const router = useRouter();
+  const {setBannerPreview} = useContext(bannerPreviewContext);
+  setBannerPreview(false)
+
+  const handleShowHomePage = () => {
+    setBannerPreview(true)
+    router.push('/')
+  }
+
   const [bannerImages, setBannerImages] = useState(banners);
   return (
     <div className={style.bannersContainer}>
@@ -41,7 +56,7 @@ const Banners = ({banners}) => {
             <span>
             Adicione um banner na dimensão sugerida
             </span>
-            <button className={style.visualizeBanners}>Simulação na página<img src='/images/layoutIcon.svg' /></button>
+            <button className={style.visualizeBanners} onClick={handleShowHomePage}>Simulação na página<img src='/images/layoutIcon.svg' /></button>
           </div>
           </div>
           <BannerSlider imagesData={bannerImages}/>
