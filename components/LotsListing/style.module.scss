@@ -1,0 +1,253 @@
+@import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
+
+.lotListingContainer{
+    width: 100%;
+    max-width: 1180px;
+    padding: 1rem;
+    margin:  0 auto 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    .lotsList, .groupView{
+        align-self: flex-start;
+    }
+    .lotsList{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 2rem;
+
+        a{
+        width: 100%;
+            li{
+                background: $bg_white-color;
+                box-shadow: 0px 2px 5px rgba(124, 124, 124, 0.1);
+                display: flex;
+                border-radius: 12px;
+                overflow: hidden;
+                width: 100%;
+
+                .lotImage{
+                    position: relative;
+                    width: 40%;
+                    transition: all .2s ease-in-out;
+                    &::after{
+                    transition: all .3s ease-in-out;
+                        content: 'Ver mais';
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 1.2rem;
+                        font-weight: 500;
+                        position: absolute;
+                        left: 0;
+                        bottom: 0;
+                        right: 0;
+                        top: 0;
+                        background: rgba(0,0,0,.2);
+                        color: $bg_white-color;
+                        opacity: 0;
+                    }
+                    &:hover{
+                    &::after{
+                        opacity: 1;
+                    }
+                    }
+                    img{
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                    
+                }	
+                .lotInfo{
+                    padding: 1rem 3rem;
+                    width: 80%;
+                    .lotInfos{
+                        display: flex;
+                        flex-direction: column;
+                        gap: .25rem;
+                        .location{
+                            font-weight: 200;
+                            font-size: 1.1rem;
+                            color: $text-black;
+                        }
+                        .name{
+                            font-size: 1.4rem;
+                            font-weight: 600;
+                            color: $text-black;
+                        }
+                        .metrics{
+                            font-size: 1rem;
+                            color: $text-black;
+                        }
+                        .description{
+                            font-size: 1.1rem;
+                            font-weight: 300;
+                            color: lighten($text-black, 30%);
+                            width: 100%;
+                            white-space: pre-wrap;
+                            margin-bottom: .5rem;
+                        }
+
+                    }
+                    .lotItemActions{
+                        display: flex;
+                        width: 100%;
+                        justify-content: space-between;
+                        align-items: center;
+                        .itemPrice{
+                            font-size: 1.5rem;
+                            font-weight: 600;
+                            color: $green_color-9;
+                        }
+                        .showMoreBtn{
+                            @include actionButton($green_color-9, $bg_white-color);
+                            font-size: 1.2rem;
+                            padding-left: 3rem;
+                            padding-right: 3rem;
+                            font-weight: 400;
+                        }
+                    }
+                }
+                @media(max-width: 768px){
+                    flex-direction: column;
+                    justify-content: center;
+                    .lotImage{
+                        width: 100%;
+                        img{
+                            width: 100%;
+                        }
+                        
+                    }	
+                    .lotInfo{
+                        padding: 1rem;
+                        width: 100%;
+                        .lotItemActions{
+                            .showMoreBtn{
+                                padding-left: 1rem;
+                                padding-right: 1rem;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+.lotsListingControls{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    .controlPrev{
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: .5rem;
+        font-size: 1.2rem;
+        color: $green_color-3;
+        font-weight: 500;
+        img{
+            transform: rotate(180deg);
+            height: 20px;
+        }
+    }
+    .controlNext{
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: 1.2rem;
+        color: $green_color-3;
+        font-weight: 500;
+        img{
+            height: 20px;
+        }
+    }
+    .currentPage{
+        font-size: 1.2rem;
+        color: $bg_white-color;
+        font-weight: 500;
+        padding: .2rem .8rem;
+        background: $green_color-3;
+    }
+}
+
+
+.heading{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    h2{
+        position: relative;
+        font-size: 2.5rem;
+        font-weight: 700;
+        &::after{
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 120px;
+            height: 8px;
+            background: $green_color-3;
+            border-radius: 10px;
+        }
+    }
+    .filterBtns{
+        display: flex;
+        gap: 1rem;
+
+    .groupByLoteamento{
+        @include actionButton($green_color-3, $bg_white-color);
+        font-size: 1.1rem;
+        font-weight: 500;
+        &.active{
+            @include actionButton($bg_white-color,$green_color-3);
+        }
+    }
+    .filterBtn{
+        @include actionButton($text-black, $bg_white-color);
+        gap: .5rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
+        img{
+            width: 20px;
+        }
+    }
+}
+@media(max-width: 768px){
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    h2{
+        font-size: 2rem;
+    }
+    .filterBtns{
+        width: 100%;
+        gap: 0;
+        justify-content: space-between;
+    .groupByLoteamento{
+        font-size: 1rem;
+        padding: 0 1rem 0 0;
+    }
+}
+}
+}
+
+}
+
+
+@media(max-width: 375px){
+    .lotListingContainer{
+        margin-top: 5rem;
+    }
+}
