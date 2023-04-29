@@ -236,8 +236,14 @@
         gap: 0;
         justify-content: space-between;
     .groupByLoteamento{
+        font-size: .9rem;
+        padding: 0 .5rem 0 .5rem;
+    }
+    .filterBtn{
         font-size: 1rem;
-        padding: 0 1rem 0 0;
+        img{
+            width: 18px;
+        }
     }
 }
 }
