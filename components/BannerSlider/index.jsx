@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import style from './style.module.scss';
 
 
-const BannerSlider = ({imagesData}) => {
+const BannerSlider = ({imagesData, isOnHome}) => {
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -29,7 +29,7 @@ const BannerSlider = ({imagesData}) => {
 
 
   return (
-    <div className={style.bannerContainer} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div className={`${style.bannerContainer} ${isOnHome && style.onHomeStyle}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <a href={imagesData[currentBannerIndex].link}><img src={imagesData[currentBannerIndex].imageUrl} alt="Banner" /></a>
       <div className={style.bannerControls}>
       <ul className={style.bannerDots}>

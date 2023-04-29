@@ -4,6 +4,30 @@
 
 .bannerContainer{
     transition: all .3s ease-in-out;
+    &.onHomeStyle{
+        width: 100%;
+        max-width: 1180px;
+        margin: 2rem auto;
+        padding: .5rem;
+        .bannerControls{
+            .bannerDots{
+                gap: 1rem;
+                .bannerDot{
+                    width: 15px;
+                    height: 15px;
+                    outline: 2px solid $green_color-8;
+                    border: 2px solid $bg_white-color;
+                    background: $bg_white-color;
+                    &.active{
+                        background: $green_color-8;
+                    }
+                }
+            }
+        }
+    }
+    img{
+        border-radius: 20px;
+    }
 }
 
 .bannerControls{
@@ -33,5 +57,22 @@
     }
     &.active{
         background: $text-dark-blue;
+    }
+}
+
+
+@media(max-width: 375px){
+.bannerContainer{
+    display: none;
+}
+}
+
+
+
+@media(max-width: 625px){
+    .bannerContainer{
+        &.onHomeStyle{
+            margin: 4rem auto;
+        }
     }
 }
