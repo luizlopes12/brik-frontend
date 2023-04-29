@@ -32,7 +32,7 @@ const LotSelector = ({
               className={style.lotOption}
               onClick={() => handleSelectLot(lot)}
             >
-              <img src={lot.loteImages?.[0].imageUrl} />
+              <img src={lot.loteImages?.[0].imageUrl || 'https://i.imgur.com/YQOzMWA.png'} />
               <span>
                 {lot.name.length > 18
                   ? lot.name.substring(18, '...')
