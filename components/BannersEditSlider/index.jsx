@@ -21,6 +21,10 @@ const BannersEditSlider = ({ imagesData }) => {
   const handleSelectImage = (indexNum) => {
     setCurrentBannerIndex(indexNum);
   };
+
+  const handleAddImage = () => {
+    console.log('add image')
+  }
   return (
     <div className={style.slider} ref={sliderRef}>
       <div className={style.sliderImages}>
