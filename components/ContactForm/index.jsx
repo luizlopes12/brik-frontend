@@ -36,7 +36,7 @@ const ContactForm = ({arrowIcon}) => {
           })
         })
         .then(res => {
-          if (res.ok) {
+          if (res.status === 200) {
             return res.json();
           } else {
             throw new Error('Erro na requisição');
