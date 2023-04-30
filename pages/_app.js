@@ -35,6 +35,7 @@ function MyApp({ Component, pageProps }) {
         <LotSelectedProvider>
       <Head>
         <title>Brik Admin</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel='icon' href='/images/favicons/pageIcon.png'/>
       </Head>
       <main className={styles.mainContainer}>
@@ -64,6 +65,7 @@ function MyApp({ Component, pageProps }) {
       <>
       <Head>
         <title>Brik Empreendimentos</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel='icon' href='/images/favicons/pageIcon.png'/>
         <meta name="description" content="BRIK é uma empresa que te ajuda a encontrar e comprar o seu lote da melhor maneira possível."/>
         <meta property="og:title" content="BRIK - O lote dos seus sonhos!"/>

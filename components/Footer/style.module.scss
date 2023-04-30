@@ -7,7 +7,7 @@
     color: $bg_white-color;
     display: flex;
     justify-content: center;
-    padding: 4rem 0rem;
+    padding: 4rem 1rem;
     
 .footerContainer{
     width: 100%;
@@ -15,12 +15,23 @@
     margin: auto;
     display: flex;
     justify-content: space-between;
+    @media(max-width: 768px){
+        flex-direction: column;
+        gap: 1rem;
+    }
     .contact{
         width: 60%;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: repeat(2, 1fr);
         gap: 1rem;
+        @media(max-width: 768px){
+            width: 60%;
+            max-width: 320px;
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(4, 1fr);
+            margin: 0 auto;
+        }
         .footerItem{
             display: flex;
             flex-direction: column;
@@ -34,6 +45,7 @@
                 font-size: 1rem;
                 font-weight: 300;
                 color: $bg_white-color;
+                word-break: break-all;
             }
             .socials{
                 display: flex;
@@ -53,6 +65,12 @@
         img{
             height: 4rem;
             width: fit-content;
+        }
+        @media(max-width: 768px){
+            width: 60%;
+            max-width: 320px;
+            margin: 0 auto;
+            gap: 1rem;
         }
     }
 }

@@ -19,7 +19,7 @@ const Footer = ({
 
           <div className={style.footerItem}>
             <span className={style.itemTitle}>Email</span>
-            <span className={style.itemContent}>Email@bricks.com.br</span>
+            <span className={style.itemContent}>atendimento@brikempreendimentos.com</span>
           </div>
           <div className={style.footerItem}>
             <span className={style.itemTitle}>Endereço</span>
