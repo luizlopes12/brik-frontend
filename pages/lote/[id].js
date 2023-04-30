@@ -9,6 +9,17 @@ const LoteDetailsPage = ({}) => {
   const [lotData, setLotData] = useState(null);
 
   useEffect(() => {
+    const updateLotViews = async () => {
+      const data = await fetch(`${process.env.BACKEND_URL}/lots/edit/${lotId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({userViews: lotData.userViews + 1}),
+      })
+      .then((res) => res.json())
+      return data;
+    };
     const fetchLotData = async () => {
       const data = await fetch(`${process.env.BACKEND_URL}/lots/${lotId}`)
         .then((res) => res.json())
@@ -26,6 +37,7 @@ const LoteDetailsPage = ({}) => {
     };
       
     fetchLotData();
+    updateLotViews();
   }, [lotId]);
 
 

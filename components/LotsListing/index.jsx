@@ -7,7 +7,6 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [lotsDataPerPage, setlotsDataPerPage] = useState(6);
   const [isGroupView, setIsGroupView] = useState(false);
-
   const renderlotsData = useMemo(() => {
     const startIndex = (currentPage - 1) * lotsDataPerPage;
     const endIndex = startIndex + lotsDataPerPage;
