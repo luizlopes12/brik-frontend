@@ -35,11 +35,15 @@ const ContactForm = ({arrowIcon}) => {
             email: contactEmail.email
           })
         })
-        .then(res => {
+        .then(async res => {
+            console.log(res)
           if (res.status === 200) {
             return res.json();
           } else {
-            throw new Error('Erro na requisição');
+            return res.json().then(data => {
+                data.status = res.status;
+                throw data;
+            });
           }
         })
         .then(data => {
@@ -47,7 +51,7 @@ const ContactForm = ({arrowIcon}) => {
           setContactEmail({...contactEmail, loading: false});
         })
         .catch(err => {
-          toast.error('Não foi possível enviar o e-mail, tente novamente.');
+          toast.error(err.message);
           setContactEmail({...contactEmail, loading: false});
         });
       };

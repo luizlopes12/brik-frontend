@@ -71,7 +71,7 @@ function MyApp({ Component, pageProps }) {
         <meta property="og:url" content="https://brikempreendimentos.com/"/>
         <meta property="og:type" content="website"/>
       </Head>
-
+      <ToastContainer />
       <Component {...pageProps} />
       </>
     )}
