@@ -14,6 +14,7 @@ import DivisionRegisterPopUp from '../components/DivisionRegisterPopUp'
 import {PopUpsProvider} from '../context/popUpsContext'
 import TaxesEditPopUp from '../components/TaxesEditPopUp' 
 import DivisionEditPopUp from '../components/DivisionEditPopUp'
+import { LotTypeProvider } from '../context/lotTypeContext'
 import { LotSelectedProvider } from '../context/selectedLotContext'
 import { DivisionSelectedProvider } from '../context/selectedDivisionContext'
 import { GlobalDivisionsDataProvider } from '../context/globalDivisionsDataContext'
@@ -27,7 +28,6 @@ function MyApp({ Component, pageProps }) {
   return (
     <BannerPreviewProvider>
     { router.pathname.includes('/admin') ? (
-      
       <GlobalDivisionsDataProvider>
       <UserProvider>
       <PopUpsProvider>
@@ -74,7 +74,9 @@ function MyApp({ Component, pageProps }) {
         <meta property="og:type" content="website"/>
       </Head>
       <ToastContainer />
+      <LotTypeProvider>
       <Component {...pageProps} />
+      </LotTypeProvider>
       </>
     )}
     </BannerPreviewProvider>

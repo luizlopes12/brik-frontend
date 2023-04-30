@@ -58,7 +58,8 @@ const LoteDetailsPage = ({}) => {
 
   return(
     <>
-          <UserNavBar imageSrc={'/images/brandLogo.svg'} 
+      <UserNavBar 
+       imageSrc={'/images/brandLogo.svg'} 
        treeIcon={'/images/treeIcon.svg'}
        homeIcon={'/images/homeIcon.svg'}
        userImage={'/images/labels/profile.png'}

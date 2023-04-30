@@ -25,7 +25,6 @@ const BannerSlider = ({imagesData, isOnHome}) => {
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
-  console.log(imagesData)
 
 
   return (

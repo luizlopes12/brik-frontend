@@ -46,7 +46,6 @@ export async function getServerSideProps(context) {
       },
     };
   } catch (error) {
-    console.log(error);
     return {
       props: {
         salesSummary: [],
@@ -134,13 +133,10 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
       return dayF+"/"+monthF+"/"+yearF;
   }
   const handleRegisterSale = () => {
-    console.log('Cadastrar venda')
     setPopUps((prevState) => ({ ...prevState, registerSale: true }))
   }
-  console.log('sales', sales)
   const handleGenerateExcelReport = () => {
     const dataToSales = sales.map(sale => {
-    console.log(sale)
       return {
         "Cliente": sale.users.name, 
         "CPF/CNPJ": sale.users.CPF, 

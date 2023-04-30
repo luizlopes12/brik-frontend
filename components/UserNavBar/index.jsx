@@ -1,12 +1,13 @@
-import React,{useState} from 'react'
+import React,{useState, useContext} from 'react'
 import style from './style.module.scss'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { lotTypeContext } from '../../context/lotTypeContext';
 
 
 
 const UserNavBar = ({ imageSrc, treeIcon, homeIcon, userImage, bannerPreview }) => {
-    console.log(bannerPreview)
+  const { setLotType, lotType } = useContext(lotTypeContext);
     const router = useRouter()
     const [isActive, setIsActive] = useState({
         urban: true,
@@ -18,6 +19,7 @@ const UserNavBar = ({ imageSrc, treeIcon, homeIcon, userImage, bannerPreview }) 
     }
 
     const handleSwitchType = (e) => {
+        setLotType((prev) => prev == 'Urbano' ? 'Rural' : 'Urbano')
         const { active } = e.target.dataset
         if(active === 'true') return
         setIsActive(prev => ({
@@ -44,13 +46,13 @@ const UserNavBar = ({ imageSrc, treeIcon, homeIcon, userImage, bannerPreview }) 
             </Link>
         </div>
         <div className={style.navItemBtns}>
-            <button className={style.switchType} data-active={isActive.urban} onClick={handleSwitchType}>
+            <button className={style.switchType}  data-name='urban' data-active={isActive.urban} onClick={(e) => handleSwitchType(e)}>
                 <img src={homeIcon} alt="Loteamentos Urbanos" />
                 <span>
-                Imóveis Urbandos
+                Imóveis Urbanos
                 </span>
             </button>
-            <button className={style.switchType} data-active={isActive.rural} onClick={handleSwitchType}>
+            <button className={style.switchType} data-name='rural' data-active={isActive.rural} onClick={(e) => handleSwitchType(e)}>
                 <img src={treeIcon} alt="Loteamentos Rurais" />
                 <span>
                 Imóveis Rurais

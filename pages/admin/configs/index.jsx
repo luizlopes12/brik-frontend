@@ -75,7 +75,6 @@ const Configs = ({users}) => {
       editTaxes: checkboxValues.editTaxes ?? false,
     };
   
-    console.log(requestBody);
   
     setLoading(true);
     try {
@@ -90,19 +89,16 @@ const Configs = ({users}) => {
       const data = await response.json();
   
       if (response.status === 200) {
-        console.log(data.message);
         setLoading(false);
         toast.success('Permisões alteradas com sucesso!');
       } else {
         setLoading(false);
         const errorMessage = data.message || 'Erro ao alterar permissões!';
         toast.error(errorMessage);
-        console.log(data.message);
       }
     } catch (err) {
       setLoading(false);
       toast.error('Erro ao alterar permissões!');
-      console.log(err);
     }
   };
   

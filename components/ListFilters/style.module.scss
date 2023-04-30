@@ -1,6 +1,9 @@
 @import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
 
 .listFiltersContainer{
+    display: flex;
+    flex-direction: column;
     position: absolute;
     top: 5rem;
     right: 1rem;
@@ -35,6 +38,26 @@
     color: $text-dark-blue;
 }
 
+.rangeSubHeader{
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: $text-dark-blue;
+    margin-top: 1rem;
+}
+
+.locationInput{
+    background: $gray_color-6;
+    margin-top: .5rem;
+    border-radius: 8px;
+    font-size: .95rem;
+    padding: 0  .5rem; 
+    line-height: 2.5rem;
+    border: 1px solid $gray_color-1;
+    &::placeholder{
+        color: $gray_color-8;
+    }
+}
+
 .priceInputs{
     display: flex;
     justify-content: space-between;
@@ -57,4 +80,10 @@
         font-weight: 700;
         color: $text-black;
     }
+}
+
+.filterButton{
+    @include actionButton( $bg_white-color ,$green_color-3);
+    justify-content: center;
+    margin-top: 1rem;
 }

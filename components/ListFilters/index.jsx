@@ -1,4 +1,4 @@
-import React,{useMemo} from 'react';
+import React,{useMemo, useState} from 'react';
 import { styled, alpha, Box } from '@mui/system';
 import Slider, { sliderClasses } from '@mui/base/Slider';
 import style from './style.module.scss'
@@ -115,40 +115,47 @@ const StyledSlider = styled(Slider)(
 );
 
 
-export default function ListFilters({rangeValues, setRangeValues}) {
+export default function ListFilters({rangeValues, setFilters, location, hideFilter}) {
+  const [tempFilters, setTempFilters] = useState({
+    location: location,
+    rangeValues: rangeValues,
+  })
 
-  const handleChange = (event, newValue) => {
-    if(newValue){
-        setRangeValues(newValue);
+
+  const handleChangeFilters = (event, newValue) => {
+      setTempFilters(prev => {
+          if(event.target.name === 'location'){
+              return {...prev, location: event.target.value}
+          }
+          return {...prev, rangeValues: newValue}
+      });
+  }
+    const handleApplyFilters = () => {
+      setFilters(tempFilters);
+      hideFilter()
     }
-    if(event.target.value){
-        setRangeValues(prev => {
-            const newRangeValues = [...prev];
-            newRangeValues[Number(event.target.name)] = event.target.value;
-            return newRangeValues;
-        });
-        console.log(event.target.value)
-        console.log(rangeValues)
-    }
-  };
 
   return (
     <Box className={style.listFiltersContainer}>
       <h4 className={style.rangeHeader}>Preço</h4>
       <StyledSlider
-        value={rangeValues}
-        onChange={handleChange}
+        name="rangeValues"
+        value={tempFilters.rangeValues}
+        onChange={handleChangeFilters}
         getAriaLabel={() => 'Temperature range'}
         min={10000}
         max={1000000}
       />
+
       <div className={style.priceInputs}>
-        <span>{formatCurrency(rangeValues[0])}</span>
+        <span>{formatCurrency(tempFilters.rangeValues[0])}</span>
         <>-</>
-        <span>{formatCurrency(rangeValues[1])}</span>
+        <span>{formatCurrency(tempFilters.rangeValues[1])}</span>
       </div>
+      <h4 className={style.rangeSubHeader}>Localização</h4>
+      <input type="text" name='location' className={style.locationInput} placeholder='Digite uma rua, bairro ou cidade' value={tempFilters.location} onChange={handleChangeFilters} />
+      <button className={style.filterButton} onClick={handleApplyFilters}>Aplicar</button>
 
     </Box>
   );
 }
-

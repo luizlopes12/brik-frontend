@@ -12,7 +12,6 @@ const DivisionEditPopUp = () => {
   const uploadBlueprintForm = useRef()
   const { popUps, setPopUps } = useContext(popUpsContext)
   const { divisionSelected, setDivisionSelected } = useContext(selectedDivisionContext)
-  console.log(divisionSelected)
   const [dataSaved, setDataSaved] = useState(false)
   const [partnerPopUp, setPartnerPopUp] = useState(false)
   const [partnerData, setPartnerData] = useState({})
@@ -139,7 +138,6 @@ const DivisionEditPopUp = () => {
           .then(updatedResponse => updatedResponse.json())
           .then(updatedData => setGlobalDivisionsData(updatedData))
         setDivisionSelected(data.data[0])
-        console.log(data.data[0])
         setDataSaved(true)
         setTimeout(() => setDataSaved(false), 5000)
       }).catch(err => {
@@ -151,8 +149,6 @@ const DivisionEditPopUp = () => {
   const handleDownloadBlueprint = () => {
       downloadBlueprintRef.download = divisionSelected.bluePrint;
       downloadBlueprintRef.href = divisionSelected.bluePrint;
-      console.log(divisionData.bluePrint)
-      console.log(divisionSelected.bluePrint)
   }
 
   const handleAddPartner = async () => {

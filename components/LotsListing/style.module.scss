@@ -12,9 +12,11 @@
     flex-direction: column;
     align-items: flex-end;
     position: relative;
+    min-height: 400px;
 
     .lotsList, .groupView{
         align-self: flex-start;
+        width: 100%;
     }
     .lotsList{
         width: 100%;
@@ -72,6 +74,8 @@
                     justify-content: space-between;
                     padding: 1rem 3rem;
                     width: 80%;
+                    min-height: 240px;
+
                     .lotInfos{
                         display: flex;
                         flex-direction: column;
@@ -273,4 +277,9 @@
     .lotListingContainer{
         margin-top: 4rem;
     }
+}
+
+
+.noLotsFound{
+    font-size: 1.2rem;
 }

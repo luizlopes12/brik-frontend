@@ -1,12 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useContext, useMemo } from 'react'
 import style from './style.module.scss'
 import formatCurrency from '../../helpers/formatCurrency'
 import Link from 'next/link'
+import { lotTypeContext } from '../../context/lotTypeContext'
 
-const LotsCarousel = ({ lotsData, arrowIcon, title }) => {
+const LotsCarousel = ({ lotsData, arrowIcon, title, type }) => {
+    const { lotType } = useContext(lotTypeContext)
     const carouselRef = useRef(null)
     const [currentPage, setCurrentPage] = useState(1);
     const [lotsDataPerPage, setlotsDataPerPage] = useState(3);
+    const lotsDataFiltered = useMemo(() => {
+        return lotsData.filter((item) => {
+            const isTypeMatch = item.lotType.match(new RegExp(lotType, 'gi'));
+            return isTypeMatch;
+        });
+    }, [lotsData, lotType]);
+    
+
 
     useEffect(() => {
         setlotsDataPerPage(() =>{
@@ -46,7 +56,10 @@ const LotsCarousel = ({ lotsData, arrowIcon, title }) => {
                 break;
         }
     };
-    if (lotsData.length === 0) {
+    if(lotsDataFiltered.length === 0 && type == 'find'){
+        return <div className={style.noLotsFound}>Nenhum imóvel encontrado, entre em contato para mais informações.</div>
+    }
+    if (lotsDataFiltered.length === 0) {
         return 
     }
   return (
@@ -54,9 +67,9 @@ const LotsCarousel = ({ lotsData, arrowIcon, title }) => {
         <div className={style.lotsCarousel}>
         <h2 className={style.lotsCarouselTitle}>{title}</h2>
             <div className={style.lotsCarouselList} ref={carouselRef}>
-                {lotsData.map((item) => (
+                {lotsDataFiltered.map((item) => (
 
-                    <div className={style.lotItem}>
+                    <div className={style.lotItem} key={item.id}>
                 <Link href={`/lote/${item.id}`}>
 
                         <div className={style.lotImage}>
@@ -81,13 +94,17 @@ const LotsCarousel = ({ lotsData, arrowIcon, title }) => {
                 </div>
                 ))}
             </div>
-            <div className={style.lotsCarouselPagination}>
-                    <button onClick={() => handleScroll('left')} className={style.prevPage}><img src={arrowIcon}/></button>
-                                <span className={style.currentPage}>{currentPage} </span>
-                                <span>de</span>
-                                <span>{Math.ceil(lotsData.length / lotsDataPerPage)}</span>
-            <button onClick={() => handleScroll( 'right')} className={style.nextPage}><img src={arrowIcon}/></button>
-            </div>
+            {Math.ceil(lotsData.length / lotsDataPerPage) > 0 && (
+                <div className={style.lotsCarouselPagination}>
+                <button onClick={() => handleScroll('left')} className={style.prevPage}><img src={arrowIcon}/></button>
+                            <span className={style.currentPage}>{currentPage} </span>
+                            <span>de</span>
+                            <span>{Math.ceil(lotsData.length / lotsDataPerPage)}</span>
+        <button onClick={() => handleScroll( 'right')} className={style.nextPage}><img src={arrowIcon}/></button>
+        </div>
+            )
+                }
+            
         </div>
     </section>
   )

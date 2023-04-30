@@ -13,7 +13,6 @@ const ContactForm = ({arrowIcon}) => {
     const handleChangeInputs = (e) => {
         const {name, value} = e.target
         setContactEmail({...contactEmail, [name]: value})
-        console.log(contactEmail)
     }
 
     const handleSendEmail = () => {
@@ -36,7 +35,6 @@ const ContactForm = ({arrowIcon}) => {
           })
         })
         .then(async res => {
-            console.log(res)
           if (res.status === 200) {
             return res.json();
           } else {

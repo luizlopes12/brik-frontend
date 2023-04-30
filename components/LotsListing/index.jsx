@@ -1,24 +1,57 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useContext } from 'react';
 import style from './style.module.scss';
 import Link from 'next/link';
 import formatCurrency from '../../helpers/formatCurrency';
 import LotsCarousel from '../LotsCarousel';
 import ListFilters from '../ListFilters';
+import { lotTypeContext } from '../../context/lotTypeContext';
+
+
 
 const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
+  const { lotType } = useContext(lotTypeContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [lotsDataPerPage, setlotsDataPerPage] = useState(6);
-  const [divisionsData, setDivisionsData] = useState([]);
   const [showListFilters, setShowListFilters] = useState(false);
   const [isGroupView, setIsGroupView] = useState(false);
-  const [rangeValues, setRangeValues] = useState([10000, 1000000]);
+  const [filters, setFilters] = useState({
+    location: '',
+    rangeValues: [10000, 1000000],
+  });
+  const [divisionsData, setDivisionsData] = useState([]);
+
+  const lotsDataFiltered = useMemo(() => {
+    return lotsData.filter((item) => {
+      const isInRange = item.finalPrice >= filters.rangeValues[0] && item.finalPrice <= filters.rangeValues[1];
+      const isLocationMatch = filters.location === '' || item.location.match(new RegExp(filters.location, 'gi'));
+      const isTypeMatch = filters.type === '' || item.lotType.match(new RegExp(lotType, 'gi'));
+      return isInRange && isLocationMatch && isTypeMatch;
+    });
+  }, [filters.rangeValues, filters.location, lotsData, lotType]);
+  
+  const divisionsDataFiltered = useMemo(() => {
+    return divisionsData.filter((division) => {
+      const isDivisionLocationMatch = filters.location === '' || division.location.match(new RegExp(filters.location, 'gi'));
+      division.lotes = division.lotes.filter((item) => {
+        const isInRange = item.finalPrice >= filters.rangeValues[0] && item.finalPrice <= filters.rangeValues[1];
+        const isLocationMatch = filters.location === '' || item.location.match(new RegExp(filters.location, 'gi'));
+        return isInRange && isLocationMatch;
+      });
+
+      return isDivisionLocationMatch || division.lotes.length > 0;
+    });
+  }, [filters.rangeValues, filters.location, divisionsData]);
+  
+  
+  
+
   const renderlotsData = useMemo(() => {
     const startIndex = (currentPage - 1) * lotsDataPerPage;
     const endIndex = startIndex + lotsDataPerPage;
-    
-    return lotsData.slice(startIndex, endIndex).map((item) => (
-        <Link href={`/lote/${item.id}`}>
-            <li key={item.id}>
+    if(lotsDataFiltered.length === 0) return (<div className={style.noLotsFound}>Nenhum imóvel encontrado, entre em contato para mais informações.</div>)
+    return lotsDataFiltered.slice(startIndex, endIndex).map((item) => (
+        <Link href={`/lote/${item.id}`} key={item.id}>
+            <li>
                 <div className={style.lotImage}>
                 <img src={
                     item.loteImages[0]?.imageUrl || 'https://i.imgur.com/Nmdccpi.png'
@@ -40,13 +73,13 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
             </li>
         </Link>
     ));
-  }, [currentPage, lotsData, lotsDataPerPage]);
+  }, [currentPage, lotsDataFiltered, lotsDataPerPage]);
 
 
 
   const handlePageChange = (pageNumber) => {
     window.scrollTo(0, 200);
-    const totalPages = Math.ceil(lotsData.length / lotsDataPerPage);
+    const totalPages = Math.ceil(lotsDataFiltered.length / lotsDataPerPage);
     if (pageNumber < 1 || pageNumber > totalPages) {
       return;
     }
@@ -60,7 +93,7 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
   };
 
   const goToLastPage = () => {
-    setCurrentPage(Math.ceil(lotsData.length / lotsDataPerPage));
+    setCurrentPage(Math.ceil(lotsDataFiltered.length / lotsDataPerPage));
     window.scrollTo(0, 200);
   };
   const handleGroupView = () => {
@@ -71,10 +104,11 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
     setShowListFilters(prev => !prev)
   };
 
-  const totalPages = Math.ceil(lotsData.length / lotsDataPerPage);
+  const totalPages = Math.ceil(lotsDataFiltered.length / lotsDataPerPage);
   const isLastPage = currentPage === totalPages;
 
 
+  
   useEffect(() => {
     const getDivisions = () =>{
       fetch(`${process.env.BACKEND_URL}/divisions/list`)
@@ -95,15 +129,20 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
             </div>
             {
               showListFilters && (
-                <ListFilters rangeValues={rangeValues} setRangeValues={setRangeValues}/>
+                <ListFilters 
+                  hideFilter={handleShowFilters}
+                  rangeValues={filters.rangeValues} 
+                  setFilters={setFilters}
+                  lotsDataFiltered={lotsDataFiltered}
+                />
               )
-
             }
         </div>
         {isGroupView ? (
             <div className={style.groupView}>
-              {divisionsData.map((division) => (
+              {divisionsDataFiltered.map((division) => (
                 <LotsCarousel lotsData={division.lotes}
+                type={'find'}
                 arrowIcon={arrowIcon} 
                 title={<><img src={division.logoUrl} />{division.name}</>}
                 />
@@ -112,6 +151,8 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
         ): (
             <>
             <ul className={style.lotsList}>{renderlotsData}</ul>
+            {totalPages > 0 && (
+
             <div className={style.lotsListingControls}>
       {
         currentPage > 1 && (
@@ -133,7 +174,7 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
       }
 
       </div>
-            
+            )}
             </>
         )
         }

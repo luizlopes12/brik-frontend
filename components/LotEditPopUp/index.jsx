@@ -64,7 +64,6 @@ const LotRegisterPopUp = () => {
     lotSelected.loteImages?.forEach(image => {
         loteimagesArray.push(image.imageUrl)
     })
-    console.log(lotSelected.loteImages)
     setLotData(lotSelected);
     setLotImages(loteimagesArray)
   }, [lotSelected]);
@@ -260,7 +259,6 @@ const LotRegisterPopUp = () => {
     )
   }, [lotDivision.divisionPartners, showDivisionOptions, partnerSearchInput,lotSelected.lotePartners])
   const handleSaveLotData = async () => {
-    console.log(partnersUpdated)
     try{
         let lotDataToAdd = JSON.stringify({
         name: lotData.name,
