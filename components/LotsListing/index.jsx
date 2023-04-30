@@ -1,11 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import style from './style.module.scss';
 import Link from 'next/link';
 import formatCurrency from '../../helpers/formatCurrency';
+import LotsCarousel from '../LotsCarousel';
 
 const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [lotsDataPerPage, setlotsDataPerPage] = useState(6);
+  const [divisionsData, setDivisionsData] = useState([]);
   const [isGroupView, setIsGroupView] = useState(false);
   const renderlotsData = useMemo(() => {
     const startIndex = (currentPage - 1) * lotsDataPerPage;
@@ -36,6 +38,8 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
     ));
   }, [currentPage, lotsData, lotsDataPerPage]);
 
+
+
   const handlePageChange = (pageNumber) => {
     window.scrollTo(0, 200);
     const totalPages = Math.ceil(lotsData.length / lotsDataPerPage);
@@ -62,6 +66,17 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
   const totalPages = Math.ceil(lotsData.length / lotsDataPerPage);
   const isLastPage = currentPage === totalPages;
 
+
+  useEffect(() => {
+    const getDivisions = () =>{
+      let divisions = fetch(`${process.env.BACKEND_URL}/divisions/list`)
+      .then((res) => res.json())
+      .then((data) => {
+        setDivisionsData(data);
+      });
+    }
+    getDivisions()
+  }, []);
   return (
     <section className={style.lotListingContainer}>
         <div className={style.heading}>
@@ -73,7 +88,7 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
         </div>
         {isGroupView ? (
             <div className={style.groupView}>
-                Agrupamento por loteamentos
+                <LotsCarousel lotsData={divisionsData} type={'loteamentos'} />
             </div>
         ): (
             <>

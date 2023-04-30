@@ -1,7 +1,7 @@
 import UserNavBar from "../components/UserNavBar"
 import BannerSlider from "../components/BannerSlider"
 import LotsListing from "../components/LotsListing"
-import LotsViewedList from "../components/LotsViewedList"
+import LotsViewedList from "../components/LotsCarousel"
 import ContactForm from "../components/ContactForm"
 import Footer from "../components/Footer"
 import { bannerPreviewContext } from "../context/bannerPreviewContext"

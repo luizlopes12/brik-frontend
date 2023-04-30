@@ -3,7 +3,7 @@ import style from './style.module.scss'
 import formatCurrency from '../../helpers/formatCurrency'
 import Link from 'next/link'
 
-const LotsViewedList = ({ lotsData, arrowIcon }) => {
+const LotsCarousel = ({ lotsData, arrowIcon, type }) => {
     const carouselRef = useRef(null)
     const [currentPage, setCurrentPage] = useState(1);
     const [lotsDataPerPage, setlotsDataPerPage] = useState(3);
@@ -49,9 +49,10 @@ const LotsViewedList = ({ lotsData, arrowIcon }) => {
     if (lotsData.length === 0) {
         return 
     }
-  return (
-    <section className={style.lotsCarouselContainer}>
-        <div className={style.lotsCarousel}>
+
+    const renderLotsData = () => {
+        return (
+            <div className={style.lotsCarousel}>
             <h2 className={style.lotsCarouselTitle}>Lotes visualizados recentemente</h2>
             <div className={style.lotsCarouselList} ref={carouselRef}>
                 {lotsData.map((item) => (
@@ -82,17 +83,62 @@ const LotsViewedList = ({ lotsData, arrowIcon }) => {
                 ))}
             </div>
             <div className={style.lotsCarouselPagination}>
-                    <button onClick={() => handleScroll('left')} className={style.prevPage}><img src={arrowIcon}/></button>
-                    <>
-                                <span className={style.currentPage}>{currentPage} </span>
-                                <span>de</span>
-                                <span>{Math.ceil(lotsData.length / lotsDataPerPage)}</span>
-                    </>
+            <button onClick={() => handleScroll('left')} className={style.prevPage}><img src={arrowIcon}/></button>
+            <span className={style.currentPage}>{currentPage} </span>
+            <span>de</span>
+            <span>{Math.ceil(lotsData.length / lotsDataPerPage)}</span>
             <button onClick={() => handleScroll( 'right')} className={style.nextPage}><img src={arrowIcon}/></button>
             </div>
         </div>
+        )
+    }
+    const renderDivisionssData = () => {
+        return (
+          <div>
+            {lotsData.map((division) => (
+              <div key={division.id} className={style.lotsCarousel}>
+                <h2 className={style.lotsCarouselTitle}><img src={division.logoUrl} alt="Logo do loteamento" /> {division.name}</h2>
+                <div className={style.lotsCarouselList} ref={carouselRef}>
+                  {division.lotes.map((item) => (
+                    <div key={item.id} className={style.lotItem}>
+                      <Link href={`/lote/${item.id}`}>
+                        <div className={style.lotImage}>
+                          <img src={item.loteImages[0]?.imageUrl || 'https://i.imgur.com/Nmdccpi.png'} alt="Lote" />
+                        </div>
+                        <div className={style.lotInfo}>
+                          <div className={style.lotInfos}>
+                            <span className={style.itemPrice}>{formatCurrency(item.finalPrice)}</span>
+                            <p className={style.name}>{item.name}</p>
+                            <p className={style.metrics}>{item.metrics}m²</p>
+                            <p className={style.location}>{item.location}</p>
+                            <p className={style.description}>{item.description.length > 100 ? (item.description.substring(0, 100).trim() + "...") : item.description}</p>
+                          </div>
+                          <div className={style.lotItemActions}>
+                            <button className={style.showMoreBtn}>Ver detalhes</button>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+                <div className={style.lotsCarouselPagination}>
+                  <button onClick={() => handleScroll('left')} className={style.prevPage}><img src={arrowIcon} /></button>
+                  <span className={style.currentPage}>{currentPage} </span>
+                  <span>de</span>
+                  <span>{Math.ceil(division.lotes.length / lotsDataPerPage)}</span>
+                  <button onClick={() => handleScroll('right')} className={style.nextPage}><img src={arrowIcon} /></button>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      }
+      
+  return (
+    <section className={style.lotsCarouselContainer}>
+        {type === 'loteamentos' ? renderDivisionssData() : renderLotsData()}
     </section>
   )
 }
 
-export default LotsViewedList
+export default LotsCarousel

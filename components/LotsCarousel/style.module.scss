@@ -22,6 +22,12 @@
         align-items: center;
         gap: 1rem;
         margin-bottom: 1rem;
+        @media(max-width: 768px) {
+            span{
+                display: none;
+
+            }
+        }
         .prevPage{
 
             transform: rotate(180deg);
@@ -52,7 +58,16 @@
     font-size: 1.5rem;
     font-weight: 700;
     color: $text-dark-blue;
-    margin-bottom: 1rem;}
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-end;
+    gap: .5rem;
+    img{
+        background: #f1f1f1;
+        border-radius: 5px;
+        max-width: 50px;
+    }
+}
 
     .lotsCarouselList {
         scroll-behavior: smooth;
