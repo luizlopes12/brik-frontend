@@ -108,6 +108,10 @@
                             font-size: 1.5rem;
                             font-weight: 600;
                             color: $green_color-9;
+                            .hiddenPrice{
+                                font-size: 1.2rem;
+                                color: $blue_color-1;
+                            }
                         }
                         .showMoreBtn{
                             @include actionButton($green_color-9, $bg_white-color);

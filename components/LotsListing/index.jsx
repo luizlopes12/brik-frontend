@@ -26,7 +26,7 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
                     <p className={style.description}>{item.description.length > 200 ? item.description.substring(0, 200) + "...": item.description}</p>
                     </div>
                     <div className={style.lotItemActions}>
-                        <span className={style.itemPrice}>{formatCurrency(item.finalPrice)}
+                        <span className={style.itemPrice}>{item.hiddenPrice ? <span className={style.hiddenPrice}>Preço sob consulta</span>: formatCurrency(item.finalPrice)}
                         </span>
                         <button className={style.showMoreBtn}>Ver mais</button>
                     </div>
