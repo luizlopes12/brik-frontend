@@ -26,8 +26,8 @@
         grid-template-rows: repeat(2, 1fr);
         gap: 1rem;
         @media(max-width: 768px){
-            width: 60%;
-            max-width: 320px;
+            width: 90%;
+            max-width: 400px;
             grid-template-columns: 1fr;
             grid-template-rows: repeat(4, 1fr);
             margin: 0 auto;
@@ -67,8 +67,8 @@
             width: fit-content;
         }
         @media(max-width: 768px){
-            width: 60%;
-            max-width: 320px;
+            width: 90%;
+            max-width: 400px;
             margin: 0 auto;
             gap: 1rem;
         }
