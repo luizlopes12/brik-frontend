@@ -52,6 +52,7 @@ export default function Home({bannerImagesData, lotsData, viewedLots}) {
        <LotsViewedList
        arrowIcon={'/images/homeArrowIcon.svg'} 
        lotsData={viewedLots}
+       title={'Imóveis visualizados recentemente'}
        />
        <ContactForm 
        arrowIcon={'/images/arrowDownIcon.svg'} 

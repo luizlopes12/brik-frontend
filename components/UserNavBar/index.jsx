@@ -47,13 +47,13 @@ const UserNavBar = ({ imageSrc, treeIcon, homeIcon, userImage, bannerPreview }) 
             <button className={style.switchType} data-active={isActive.urban} onClick={handleSwitchType}>
                 <img src={homeIcon} alt="Loteamentos Urbanos" />
                 <span>
-                Loteamentos Urbanos
+                Imóveis Urbandos
                 </span>
             </button>
             <button className={style.switchType} data-active={isActive.rural} onClick={handleSwitchType}>
                 <img src={treeIcon} alt="Loteamentos Rurais" />
                 <span>
-                Loteamentos Rurais
+                Imóveis Rurais
                 </span>
             </button>
         </div>

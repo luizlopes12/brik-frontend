@@ -3,15 +3,19 @@ import style from './style.module.scss';
 import Link from 'next/link';
 import formatCurrency from '../../helpers/formatCurrency';
 import LotsCarousel from '../LotsCarousel';
+import ListFilters from '../ListFilters';
 
 const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [lotsDataPerPage, setlotsDataPerPage] = useState(6);
   const [divisionsData, setDivisionsData] = useState([]);
+  const [showListFilters, setShowListFilters] = useState(false);
   const [isGroupView, setIsGroupView] = useState(false);
+  const [rangeValues, setRangeValues] = useState([10000, 1000000]);
   const renderlotsData = useMemo(() => {
     const startIndex = (currentPage - 1) * lotsDataPerPage;
     const endIndex = startIndex + lotsDataPerPage;
+    
     return lotsData.slice(startIndex, endIndex).map((item) => (
         <Link href={`/lote/${item.id}`}>
             <li key={item.id}>
@@ -63,13 +67,17 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
     setIsGroupView(!isGroupView);
     };
 
+  const handleShowFilters = () => {
+    setShowListFilters(prev => !prev)
+  };
+
   const totalPages = Math.ceil(lotsData.length / lotsDataPerPage);
   const isLastPage = currentPage === totalPages;
 
 
   useEffect(() => {
     const getDivisions = () =>{
-      let divisions = fetch(`${process.env.BACKEND_URL}/divisions/list`)
+      fetch(`${process.env.BACKEND_URL}/divisions/list`)
       .then((res) => res.json())
       .then((data) => {
         setDivisionsData(data);
@@ -80,15 +88,26 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
   return (
     <section className={style.lotListingContainer}>
         <div className={style.heading}>
-        <h2>Encontre um Lote</h2>
+        <h2>Encontre um Imóvel</h2>
             <div className={style.filterBtns}>
                 <button onClick={handleGroupView} className={`${style.groupByLoteamento} ${isGroupView && style.active}`}>Agrupar por loteamento</button>
-                <button className={style.filterBtn}><img src={homeFilterIcon} alt="Filtrar" />Filtros</button>
+                <button className={style.filterBtn}  onClick={handleShowFilters}><img src={homeFilterIcon} alt="Filtrar" />Filtros</button>
             </div>
+            {
+              showListFilters && (
+                <ListFilters rangeValues={rangeValues} setRangeValues={setRangeValues}/>
+              )
+
+            }
         </div>
         {isGroupView ? (
             <div className={style.groupView}>
-                <LotsCarousel lotsData={divisionsData} type={'loteamentos'} />
+              {divisionsData.map((division) => (
+                <LotsCarousel lotsData={division.lotes}
+                arrowIcon={arrowIcon} 
+                title={<><img src={division.logoUrl} />{division.name}</>}
+                />
+              ))}
             </div>
         ): (
             <>

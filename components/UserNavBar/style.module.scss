@@ -46,6 +46,9 @@
             width: fit-content;
             margin: auto;
             justify-content: center;
+            @media(max-width: 320px){
+            border-radius: 20px;
+            }
         .switchType{
             &:hover{
                 cursor: pointer;
@@ -55,12 +58,19 @@
                 span{
                         margin-right: 1rem;
                 }
+                            @media(max-width: 320px){
+                                padding: .5rem 0 .5rem .9rem;
+                
+            }
             }
             &:nth-of-type(2){
                 padding: .5rem 2rem .5rem 0;
                 img{
                     margin-left: 1rem;
                 }
+                                            @media(max-width: 320px){
+                                padding: .5rem 0 .5rem .9rem;
+            }
             }
             &:nth-of-type(1)::after{
                 content: '';
@@ -79,7 +89,7 @@
                 margin-right: .5rem;
             }
             span{
-                font-size: .8rem;
+                font-size: .9rem;
                 font-weight: 600;
                 color: $green_color-7;
                 width: 100px;
