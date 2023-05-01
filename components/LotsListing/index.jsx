@@ -144,7 +144,9 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon, defaultImage }) => {
                 <LotsCarousel lotsData={division.lotes}
                 type={'find'}
                 arrowIcon={arrowIcon} 
-                title={<><img src={division.logoUrl} />{division.name}</>}
+                title={<><img src={division.logoUrl} 
+                defaultImage={defaultImage}
+                />{division.name}</>}
                 />
               ))}
             </div>

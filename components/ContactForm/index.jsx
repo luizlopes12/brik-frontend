@@ -17,13 +17,11 @@ const ContactForm = ({arrowIcon}) => {
 
     const handleSendEmail = () => {
         setContactEmail({...contactEmail, loading: true});
-      
         if (contactEmail.name === '' || contactEmail.email === '') {
           toast.error('Preencha todos os campos!');
           setContactEmail({...contactEmail, loading: false});
           return;
         }
-      
         fetch(`${process.env.BACKEND_URL}/email/home`, {
           method: 'POST',
           headers: {

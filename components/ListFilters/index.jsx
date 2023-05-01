@@ -1,8 +1,10 @@
-import React,{useMemo, useState} from 'react';
+import React,{useMemo, useState, useRef} from 'react';
 import { styled, alpha, Box } from '@mui/system';
 import Slider, { sliderClasses } from '@mui/base/Slider';
 import style from './style.module.scss'
 import formatCurrency from '../../helpers/formatCurrency';
+
+import autoAnimate from '@formkit/auto-animate'
 
 const blue = {
   100: '#eef4e1',

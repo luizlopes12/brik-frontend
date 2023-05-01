@@ -74,7 +74,7 @@ const LotsCarousel = ({ lotsData, arrowIcon, title, type, defaultImage }) => {
 
                         <div className={style.lotImage}>
                             <img src={
-                                item.loteImages[0]?.imageUrl || defaultImage
+                                item.loteImages[0]?.imageUrl || defaultImage || 'https://i.imgur.com/tKxr7jg.png'
                                 } alt="Lote" />
                         </div>
                         <div className={style.lotInfo}>

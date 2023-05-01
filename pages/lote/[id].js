@@ -1,7 +1,8 @@
-import React, { useEffect }  from 'react'
+import React, { useEffect, useState }  from 'react'
 import style from './style.module.scss'
 import UserNavBar from '../../components/UserNavBar'
 import LotsViewedList from '../../components/LotsCarousel'
+
 
 
 export async function getStaticPaths() {
@@ -29,9 +30,7 @@ export async function getStaticProps({ params }) {
 
 const LoteDetailsPage = ({lotData}) => {
   const lotId = lotData?.id;
-  const [viewedLots, setViewedLots] = React.useState([]);
-
-  console.log(lotData);
+  const [viewedLots, setViewedLots] = useState([]);
 
   useEffect(() => {
     const getViewedLots = async () => {
@@ -72,10 +71,11 @@ const LoteDetailsPage = ({lotData}) => {
   return(
     <>
       <UserNavBar 
-        imageSrc={'/images/brandLogo.svg'} 
+        imageSrc={'/images/brandLogo.svg'}
         treeIcon={'/images/treeIcon.svg'}
         homeIcon={'/images/homeIcon.svg'}
         userImage={'/images/labels/profile.png'}
+        navLocation={'details'}
       />
       <div className={style.lotDetails}>
         <div className={style.lotImages}>

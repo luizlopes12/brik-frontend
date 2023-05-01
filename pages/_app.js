@@ -1,4 +1,4 @@
-import React, { lazy, useState } from 'react'
+import React, { lazy, useRef, useState, useEffect } from 'react'
 import '../styles/main.scss'
 import Head from 'next/head'
 import { io } from "socket.io-client";
@@ -25,8 +25,11 @@ import ContactForm from '../components/ContactForm'
 import Footer from '../components/Footer'
 
 
+
+
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
+
   // var socket = io('${process.env.BACKEND_URL}')
   return (
     <BannerPreviewProvider>
@@ -76,6 +79,7 @@ function MyApp({ Component, pageProps }) {
         <meta property="og:url" content="https://brikempreendimentos.com/"/>
         <meta property="og:type" content="website"/>
       </Head>
+      <main>
       <ToastContainer />
       <LotTypeProvider>
       <Component {...pageProps} />
@@ -90,6 +94,7 @@ function MyApp({ Component, pageProps }) {
        twitterIcon={'/images/twitterIcon.svg'}
        />
       </LotTypeProvider>
+      </main>
       </>
     )}
     </BannerPreviewProvider>
