@@ -4,7 +4,6 @@ import Slider, { sliderClasses } from '@mui/base/Slider';
 import style from './style.module.scss'
 import formatCurrency from '../../helpers/formatCurrency';
 
-import autoAnimate from '@formkit/auto-animate'
 
 const blue = {
   100: '#eef4e1',

@@ -140,15 +140,21 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon, defaultImage }) => {
         </div>
         {isGroupView ? (
             <div className={style.groupView}>
-              {divisionsDataFiltered.map((division) => (
-                <LotsCarousel lotsData={division.lotes}
-                type={'find'}
-                arrowIcon={arrowIcon} 
-                title={<><img src={division.logoUrl} 
-                defaultImage={defaultImage}
-                />{division.name}</>}
-                />
-              ))}
+              {
+              divisionsDataFiltered.length > 0 ?(
+                divisionsDataFiltered.map((division) => (
+                  <LotsCarousel lotsData={division.lotes}
+                  type={'find'}
+                  arrowIcon={arrowIcon} 
+                  title={<><img src={division.logoUrl} 
+                  defaultImage={defaultImage}
+                  />{division.name}</>}
+                  />
+                ))
+              ):(
+                <div className={style.noLotsFound}>Nenhum imóvel encontrado, entre em contato para mais informações.</div>
+              )
+              }
             </div>
         ): (
             <>

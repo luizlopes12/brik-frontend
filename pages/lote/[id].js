@@ -2,6 +2,7 @@ import React, { useEffect, useState }  from 'react'
 import style from './style.module.scss'
 import UserNavBar from '../../components/UserNavBar'
 import LotsViewedList from '../../components/LotsCarousel'
+import ImagesSliderPopUp from '../../components/ImagesSliderPopUp'
 
 
 
@@ -31,6 +32,11 @@ export async function getStaticProps({ params }) {
 const LoteDetailsPage = ({lotData}) => {
   const lotId = lotData?.id;
   const [viewedLots, setViewedLots] = useState([]);
+  const [viewMoreImages, setViewMoreImages] = useState(false);
+
+  const handleShowMoreImages = () => {
+    setViewMoreImages(!viewMoreImages);
+  }
 
   useEffect(() => {
     const getViewedLots = async () => {
@@ -69,7 +75,7 @@ const LoteDetailsPage = ({lotData}) => {
   }
 
   return(
-    <>
+    <section className={style.detailsContainer}>
       <UserNavBar 
         imageSrc={'/images/brandLogo.svg'}
         treeIcon={'/images/treeIcon.svg'}
@@ -78,18 +84,25 @@ const LoteDetailsPage = ({lotData}) => {
         navLocation={'details'}
       />
       <div className={style.lotDetails}>
-        <div className={style.lotImages}>
+        <div className={style.lotImages} onClick={handleShowMoreImages}>
           <div className={style.lotImagesWrapper}>
             {lotData.loteImages?.slice(0,4).map((image, index) => (
               <img key={index} src={image.imageUrl || defaultImage} alt={`Imagem ${index + 1}`} />
             ))}
           </div>
-          <button className={style.viewMoreImagesButton}>
+          <button className={style.viewMoreImagesButton} onClick={handleShowMoreImages}>
             <img src="/images/gridIcon.svg" alt="Ver mais imagens" />
             Mostrar todas as fotos
           </button>
         </div>
       </div>
+      {viewMoreImages && (
+        <>
+        <button className={style.closeButton} onClick={handleShowMoreImages}> <img src='/images/closeIcon.svg'/></button>
+        <ImagesSliderPopUp images={lotData.loteImages} closeFunction={handleShowMoreImages} arrowIcon={'/images/arrowDownIcon.svg'}/>
+        </>
+      )}
+
       <LotsViewedList
        arrowIcon={'/images/homeArrowIcon.svg'} 
        lotsData={viewedLots}
@@ -97,7 +110,7 @@ const LoteDetailsPage = ({lotData}) => {
        type={'lotDetails'}
        defaultImage={'/images/labels/defaultImage.png'}
        />
-    </>
+    </section>
   );
 };
 

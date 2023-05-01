@@ -1,3 +1,5 @@
+@import './colors.scss';
+
 
 html{
     scroll-behavior: smooth;
@@ -102,3 +104,16 @@ body{
     background: $bg_white-color;
 }
 
+
+
+::-webkit-scrollbar {
+    width: 4px;
+    background: $bg_white-color;
+}
+::-webkit-scrollbar-track{
+    background:$bg_white-color ;
+}
+
+::-webkit-scrollbar-thumb{
+    background: $green_color-7;
+}
