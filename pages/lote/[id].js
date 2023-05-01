@@ -16,6 +16,9 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+
+
+
   const res = await fetch(`${process.env.BACKEND_URL}/lots/${params.id}`);
   const data = await res.json();
   const defaultImage = '/images/labels/defaultImage.png';
@@ -24,17 +27,19 @@ export async function getStaticProps({ params }) {
       data[0].loteImages.push({ imageUrl: defaultImage });
     }
   }
-  return { props: { lotData: data[0] } };
+
+  let data2 = await fetch(`${process.env.BACKEND_URL}/divisions/list`)
+  let divisionData  = await data2.json()
+  divisionData = divisionData.map((division) => division.lotes.find((lote) => lote.id === data[0].id) ? division : null).filter((division) => division !== null)[0]
+  
+
+  return { props: { lotData: data[0], divisionData, defaultImage } };
 }
 
-
-
-
-const LoteDetailsPage = ({lotData}) => {
+const LoteDetailsPage = ({lotData, defaultImage, divisionData}) => {
   const lotId = lotData?.id;
   const [viewedLots, setViewedLots] = useState([]);
   const [viewMoreImages, setViewMoreImages] = useState(false);
-
   const handleShowMoreImages = () => {
     setViewMoreImages(!viewMoreImages);
   }
@@ -103,7 +108,7 @@ const LoteDetailsPage = ({lotData}) => {
         <ImagesSliderPopUp images={lotData.loteImages} closeFunction={handleShowMoreImages} arrowIcon={'/images/arrowDownIcon.svg'}/>
         </>
       )}
-      <LotPageInfo lotData={lotData} />
+      <LotPageInfo lotData={lotData}  divisionData={divisionData} mapIcon={'/images/locationIcon.svg'} metricsIcon={'/images/metricsIcon.svg'}/>
       <LotsViewedList
        arrowIcon={'/images/homeArrowIcon.svg'} 
        lotsData={viewedLots}
