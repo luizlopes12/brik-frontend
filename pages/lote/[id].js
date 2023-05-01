@@ -1,89 +1,79 @@
-import React, { useEffect, useState }  from 'react'
-import { useRouter } from 'next/router'
+import React, { useEffect }  from 'react'
 import style from './style.module.scss'
 import UserNavBar from '../../components/UserNavBar'
 
-const LoteDetailsPage = ({}) => {
-  const router = useRouter();
-  const lotId = router.query.id;
-  const [lotData, setLotData] = useState(null);
 
+export async function getStaticPaths() {
+  const res = await fetch(`${process.env.BACKEND_URL}/lots/list`);
+  const data = await res.json();
+  const paths = data.map(lot => ({ params: { id: lot.id.toString() } }));
+
+  return { paths, fallback: false };
+}
+
+export async function getStaticProps({ params }) {
+  const res = await fetch(`${process.env.BACKEND_URL}/lots/${params.id}`);
+  const data = await res.json();
+  return { props: { lotData: data[0] } };
+}
+
+
+
+const LoteDetailsPage = ({lotData}) => {
+  const lotId = lotData?.id;
+  console.log(lotData);
   useEffect(() => {
-
-    const fetchLotData = async () => {
-      const data = await fetch(`${process.env.BACKEND_URL}/lots/${lotId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          const content = data[0];
-          if(content){
-            if(!content.lotImages){
-              content.lotImages = [{imageUrl: 'https://i.imgur.com/Nmdccpi.png'},              {imageUrl: 'https://i.imgur.com/Nmdccpi.png'},              {imageUrl: 'https://i.imgur.com/Nmdccpi.png'},              {imageUrl: 'https://i.imgur.com/Nmdccpi.png'},              ];
-            }
-          }
-          return content;
-        });
-          
-      setLotData(data);
-      updateLotViews(data);
-    };
-
-    const updateLotViews = async (lotDataToUpdate) => {
+    const updateLotViews = async () => {
       await fetch(`${process.env.BACKEND_URL}/lots/edit/${lotId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({userViews: lotDataToUpdate.userViews += 1}),
-      })
-    };
-      
-    fetchLotData();
-  }, []);
-
-
-    if (!lotData){
-        return (
-            <div className={style.loading}>
-                <div className={style.loadingAnimation}>
-                    
-        
-                </div>
-                <div className={style.imageWrapper}>
-                        <img src="/images/brandLogo.svg" alt="loading" />
-                    </div>
-            </div>
-            );
+        body: JSON.stringify({ userViews: lotData.userViews + 1 }),
+      });
     }
 
+    if (lotId) {
+      updateLotViews();
+    }
+  }, [lotData]);
+
+  if (!lotData) {
+    return (
+      <div className={style.loading}>
+        <div className={style.loadingAnimation}></div>
+        <div className={style.imageWrapper}>
+          <img src="/images/brandLogo.svg" alt="loading" />
+        </div>
+      </div>
+    );
+  }
 
   return(
     <>
       <UserNavBar 
-       imageSrc={'/images/brandLogo.svg'} 
-       treeIcon={'/images/treeIcon.svg'}
-       homeIcon={'/images/homeIcon.svg'}
-       userImage={'/images/labels/profile.png'}
-       />
-           <div className={style.lotDetails}>
+        imageSrc={'/images/brandLogo.svg'} 
+        treeIcon={'/images/treeIcon.svg'}
+        homeIcon={'/images/homeIcon.svg'}
+        userImage={'/images/labels/profile.png'}
+      />
+      <div className={style.lotDetails}>
         <div className={style.lotImages}>
-            <div className={style.lotImagesWrapper}>
-                {
-                lotData.lotImages?.slice(0,4).map((image) => (
-                    <>
-                    <img src={image.imageUrl} alt="Imagem do lote" />
-                    </>
-                ))}
-
-            </div>
-            <button className={style.viewMoreImagesButton}>
-                <img src="/images/gridIcon.svg" alt="Ver mais imagens" />
-                Mostrar todas as fotos
-            </button>
+          <div className={style.lotImagesWrapper}>
+            {lotData.loteImages?.slice(0,4).map((image, index) => (
+              <img key={index} src={image.imageUrl} alt={`Imagem ${index + 1}`} />
+            ))}
+          </div>
+          <button className={style.viewMoreImagesButton}>
+            <img src="/images/gridIcon.svg" alt="Ver mais imagens" />
+            Mostrar todas as fotos
+          </button>
         </div>
-    </div>
+      </div>
     </>
-
   );
 };
 
-export default LoteDetailsPage
+
+
+export default LoteDetailsPage;
