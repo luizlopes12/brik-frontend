@@ -54,11 +54,19 @@ const LotPageInfo = ({ lotData, divisionData, mapIcon, metricsIcon }) => {
             },
             body: JSON.stringify(visitData)
         })
-        .then(async res => {
-            toast.success(res.message)
-        }).catch(err => {
+        .then(async res => 
+            res.status === 200 ? res.json() : res.json().then(data => {
+                data.status = res.status
+                throw data
+            }))
+        .then(data => {
+            toast.success(data.message)
+            console.log(data)
+            setSendEmail(false)
+        })
+        .catch(err => {
+            console.log(err)
             toast.error(err.message)
-        }).finally(() => {
             setSendEmail(false)
         })
     }
@@ -95,7 +103,7 @@ const LotPageInfo = ({ lotData, divisionData, mapIcon, metricsIcon }) => {
           </h3>
           <h1>
             <span className={style.lotName}>{lotData.name},</span>
-            <span className={style.lotPrice}>
+            <span className={style.lotPrice}> {' '}
               {formatCurrency(lotData.finalPrice)}
             </span>
           </h1>

@@ -5,16 +5,31 @@
 .lotInfoSection{
     width: 100%;
     max-width: 1180px;
-    padding: 0 2rem;
+    padding: 0 1rem;
     margin: 0 auto 2rem;
     display: flex;
     justify-content: space-between;
+    @media(max-width: 800px) {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    @media(max-width: 425px) {
+    padding: 0 .5rem;
+    }
     .lotInfoContainer{
         display: flex;
         flex-direction: column;
         flex-grow: 1;
         min-width: 60%;
         max-width: 60%;
+        @media(max-width: 1024px) {
+            min-width: 60%;
+            max-width: 60%;
+        }
+        @media(max-width: 800px) {
+            min-width: 100%;
+            max-width: 100%;
+        }
         .lotInfo{
             display: flex;
             flex-direction: column;
@@ -34,11 +49,17 @@
             }
             .lotName{
                 font-size: 2.4rem;
+                @media(max-width: 500px) {
+                    font-size: 1.8rem;
+                }
             }
             .lotPrice{
                 font-size: 2rem;
                 font-weight: 800;
                 color: $text-black;
+                @media(max-width: 500px) {
+                    font-size: 1.6rem;
+                }
             }
             .lotLocation{
                 display: flex;
@@ -88,6 +109,9 @@
             flex-direction: column;
             gap: .5rem;
             max-width: 310px;
+            @media(max-width: 800px) {
+                align-self: center;
+            }
             .simulationTitle{
                 font-size: 1.1rem;
                 font-weight: 700;
@@ -174,6 +198,17 @@
         display: flex;
         flex-direction: column;
         gap: .5rem;
+        @media(max-width: 1024px) {
+            min-width: 40%;
+            max-width: 40%;
+        }
+        @media(max-width: 800px) {
+            min-width: 100%;
+            max-width: 100%;
+        }
+        @media(max-width: 375px) {
+            padding: 2rem 1rem;
+        }
         h3{
             font-size: 2rem;
             font-weight: 700;
@@ -204,6 +239,12 @@
                 display: flex;
                 width: 100%;
                 gap: 1rem; 
+                flex-wrap: wrap;
+                .visitInput{
+                    width: fit-content;
+                    max-width: 100%;
+                    flex-grow: 1;
+                }
             }
             .visitBtn{
                 background: $green_color-3;
