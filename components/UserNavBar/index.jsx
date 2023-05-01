@@ -44,7 +44,7 @@ const UserNavBar = ({
 
   return (
     <header className={style.headerContainer}>
-      <nav className={style.navbarContainer}>
+      <nav className={`${style.navbarContainer} ${style.navbarTwoCols }`}>
         <div className={style.navItem}>
           <Link href="/">
             <img src={imageSrc} alt="Logo" className={style.brandLogo} />
