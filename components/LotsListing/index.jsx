@@ -8,7 +8,7 @@ import { lotTypeContext } from '../../context/lotTypeContext';
 
 
 
-const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
+const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon, defaultImage }) => {
   const { lotType } = useContext(lotTypeContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [lotsDataPerPage, setlotsDataPerPage] = useState(6);
@@ -54,7 +54,7 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon }) => {
             <li>
                 <div className={style.lotImage}>
                 <img src={
-                    item.loteImages[0]?.imageUrl || 'https://i.imgur.com/Nmdccpi.png'
+                    item.loteImages[0]?.imageUrl || defaultImage
                     } alt="Lote" />
                 </div>
                 <div className={style.lotInfo}>

@@ -15,8 +15,15 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const res = await fetch(`${process.env.BACKEND_URL}/lots/${params.id}`);
   const data = await res.json();
+  const defaultImage = '/images/labels/defaultImage.png';
+  if(data[0].loteImages.length < 4) {
+    for(let i = data[0].loteImages.length; i < 4; i++) {
+      data[0].loteImages.push({ imageUrl: defaultImage });
+    }
+  }
   return { props: { lotData: data[0] } };
 }
+
 
 
 
@@ -74,7 +81,7 @@ const LoteDetailsPage = ({lotData}) => {
         <div className={style.lotImages}>
           <div className={style.lotImagesWrapper}>
             {lotData.loteImages?.slice(0,4).map((image, index) => (
-              <img key={index} src={image.imageUrl} alt={`Imagem ${index + 1}`} />
+              <img key={index} src={image.imageUrl || defaultImage} alt={`Imagem ${index + 1}`} />
             ))}
           </div>
           <button className={style.viewMoreImagesButton}>
@@ -88,6 +95,7 @@ const LoteDetailsPage = ({lotData}) => {
        lotsData={viewedLots}
        title={'Imóveis populares'}
        type={'lotDetails'}
+       defaultImage={'/images/labels/defaultImage.png'}
        />
     </>
   );

@@ -4,7 +4,7 @@ import formatCurrency from '../../helpers/formatCurrency'
 import Link from 'next/link'
 import { lotTypeContext } from '../../context/lotTypeContext'
 
-const LotsCarousel = ({ lotsData, arrowIcon, title, type }) => {
+const LotsCarousel = ({ lotsData, arrowIcon, title, type, defaultImage }) => {
     const { lotType } = useContext(lotTypeContext)
     const carouselRef = useRef(null)
     const [currentPage, setCurrentPage] = useState(1);
@@ -74,7 +74,7 @@ const LotsCarousel = ({ lotsData, arrowIcon, title, type }) => {
 
                         <div className={style.lotImage}>
                             <img src={
-                                item.loteImages[0]?.imageUrl || 'https://i.imgur.com/Nmdccpi.png'
+                                item.loteImages[0]?.imageUrl || defaultImage
                                 } alt="Lote" />
                         </div>
                         <div className={style.lotInfo}>

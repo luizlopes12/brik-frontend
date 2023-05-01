@@ -45,12 +45,14 @@ export default function Home({bannerImagesData, lotsData, viewedLots}) {
        lotsData={lotsData} 
        arrowIcon={'/images/homeArrowIcon.svg'} 
        homeFilterIcon={'/images/homeFilterIcon.svg'} 
+       defaultImage={'/images/labels/defaultImage.png'}
        />
        <LotsViewedList
        arrowIcon={'/images/homeArrowIcon.svg'} 
        lotsData={viewedLots}
        title={'Imóveis visualizados recentemente'}
        type={'viewed'}
+       defaultImage={'/images/labels/defaultImage.png'}
        />
     </>
   )
