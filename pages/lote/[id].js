@@ -3,6 +3,7 @@ import style from './style.module.scss'
 import UserNavBar from '../../components/UserNavBar'
 import LotsViewedList from '../../components/LotsCarousel'
 import ImagesSliderPopUp from '../../components/ImagesSliderPopUp'
+import LotPageInfo from '../../components/LotPageInfo'
 
 
 
@@ -102,7 +103,7 @@ const LoteDetailsPage = ({lotData}) => {
         <ImagesSliderPopUp images={lotData.loteImages} closeFunction={handleShowMoreImages} arrowIcon={'/images/arrowDownIcon.svg'}/>
         </>
       )}
-
+      <LotPageInfo lotData={lotData} />
       <LotsViewedList
        arrowIcon={'/images/homeArrowIcon.svg'} 
        lotsData={viewedLots}

@@ -42,6 +42,8 @@
     width: 100%;
     max-width: 1180px;
     margin: auto;
+    margin-bottom: 1rem;
+
 .lotImages{
     width: 100%;
     max-width: 900px;
@@ -55,6 +57,7 @@
         padding: 0 0 1rem; 
     }
     .lotImagesWrapper {
+        
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: repeat(2, 1fr);
