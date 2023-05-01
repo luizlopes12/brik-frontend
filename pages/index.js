@@ -2,10 +2,8 @@ import UserNavBar from "../components/UserNavBar"
 import BannerSlider from "../components/BannerSlider"
 import LotsListing from "../components/LotsListing"
 import LotsViewedList from "../components/LotsCarousel"
-import ContactForm from "../components/ContactForm"
-import Footer from "../components/Footer"
 import { bannerPreviewContext } from "../context/bannerPreviewContext"
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 export async function getServerSideProps() {
   const bannerImagesData = await fetch(`${process.env.BACKEND_URL}/banners/list`)
@@ -53,16 +51,6 @@ export default function Home({bannerImagesData, lotsData, viewedLots}) {
        lotsData={viewedLots}
        title={'Imóveis visualizados recentemente'}
        type={'viewed'}
-       />
-       <ContactForm 
-       arrowIcon={'/images/arrowDownIcon.svg'} 
-       />
-       <Footer
-       brandLogo={'/images/brandLogoWhite.png'} 
-       instagramIcon={'/images/instagramIcon.svg'}
-       linkedinIcon={'/images/linkedinIcon.svg'}
-       facebookIcon={'/images/facebookIcon.svg'}
-       twitterIcon={'/images/twitterIcon.svg'}
        />
     </>
   )

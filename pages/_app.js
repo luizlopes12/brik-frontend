@@ -21,6 +21,9 @@ import { GlobalDivisionsDataProvider } from '../context/globalDivisionsDataConte
 import { BannerPreviewProvider } from '../context/bannerPreviewContext';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import ContactForm from '../components/ContactForm'
+import Footer from '../components/Footer'
+
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
@@ -76,6 +79,16 @@ function MyApp({ Component, pageProps }) {
       <ToastContainer />
       <LotTypeProvider>
       <Component {...pageProps} />
+      <ContactForm 
+       arrowIcon={'/images/arrowDownIcon.svg'} 
+       />
+       <Footer
+       brandLogo={'/images/brandLogoWhite.png'} 
+       instagramIcon={'/images/instagramIcon.svg'}
+       linkedinIcon={'/images/linkedinIcon.svg'}
+       facebookIcon={'/images/facebookIcon.svg'}
+       twitterIcon={'/images/twitterIcon.svg'}
+       />
       </LotTypeProvider>
       </>
     )}

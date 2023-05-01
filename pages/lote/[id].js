@@ -1,6 +1,7 @@
 import React, { useEffect }  from 'react'
 import style from './style.module.scss'
 import UserNavBar from '../../components/UserNavBar'
+import LotsViewedList from '../../components/LotsCarousel'
 
 
 export async function getStaticPaths() {
@@ -21,8 +22,19 @@ export async function getStaticProps({ params }) {
 
 const LoteDetailsPage = ({lotData}) => {
   const lotId = lotData?.id;
+  const [viewedLots, setViewedLots] = React.useState([]);
+
   console.log(lotData);
+
   useEffect(() => {
+    const getViewedLots = async () => {
+      const lotsData = await fetch(`${process.env.BACKEND_URL}/lots/list`)
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      });
+      setViewedLots(lotsData.filter((lot) => lot.userViews > 0))
+    }
     const updateLotViews = async () => {
       await fetch(`${process.env.BACKEND_URL}/lots/edit/${lotId}`, {
         method: 'PATCH',
@@ -36,6 +48,7 @@ const LoteDetailsPage = ({lotData}) => {
     if (lotId) {
       updateLotViews();
     }
+    getViewedLots();
   }, [lotData]);
 
   if (!lotData) {
@@ -70,6 +83,12 @@ const LoteDetailsPage = ({lotData}) => {
           </button>
         </div>
       </div>
+      <LotsViewedList
+       arrowIcon={'/images/homeArrowIcon.svg'} 
+       lotsData={viewedLots}
+       title={'Imóveis populares'}
+       type={'lotDetails'}
+       />
     </>
   );
 };

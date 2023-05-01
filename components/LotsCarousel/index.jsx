@@ -44,7 +44,7 @@ const LotsCarousel = ({ lotsData, arrowIcon, title, type }) => {
                 }
                 break;
             case 'right':
-                currentPage < Math.ceil(lotsData.length / lotsDataPerPage) && setCurrentPage(currentPage + 1);
+                currentPage < Math.ceil(lotsDataFiltered.length / lotsDataPerPage) && setCurrentPage(currentPage + 1);
                 if (window.innerWidth < 768) {
                     carouselRef.current.scrollLeft = carouselRef.current.scrollLeft + (carouselRef.current.querySelector('div').clientWidth+18)
 
@@ -94,12 +94,12 @@ const LotsCarousel = ({ lotsData, arrowIcon, title, type }) => {
                 </div>
                 ))}
             </div>
-            {Math.ceil(lotsData.length / lotsDataPerPage) > 0 && (
+            {Math.ceil(lotsDataFiltered.length / lotsDataPerPage) > 0 && (
                 <div className={style.lotsCarouselPagination}>
                 <button onClick={() => handleScroll('left')} className={style.prevPage}><img src={arrowIcon}/></button>
                             <span className={style.currentPage}>{currentPage} </span>
                             <span>de</span>
-                            <span>{Math.ceil(lotsData.length / lotsDataPerPage)}</span>
+                            <span>{Math.ceil(lotsDataFiltered.length / lotsDataPerPage)}</span>
         <button onClick={() => handleScroll( 'right')} className={style.nextPage}><img src={arrowIcon}/></button>
         </div>
             )
