@@ -80,7 +80,7 @@ const LoteDetailsPage = ({lotData, defaultImage, divisionData}) => {
     );
   }
 
-  const viewedLotsFiltered = viewedLots.filter((lot) => lot.id !== lotId); 
+  const viewedLotsFiltered = useMemo(() => {viewedLots.filter((lot) => lot.id !== lotId)},[viewedLots,lotData]); 
 
   return(
     <section className={style.detailsContainer}>
