@@ -94,7 +94,7 @@ const LotsCarousel = ({ lotsData, arrowIcon, title, type, defaultImage }) => {
                 </div>
                 ))}
             </div>
-            {Math.ceil(lotsDataFiltered.length / lotsDataPerPage) > 0 && (
+            {Math.ceil(lotsDataFiltered.length / lotsDataPerPage) > 1 && (
                 <div className={style.lotsCarouselPagination}>
                 <button onClick={() => handleScroll('left')} className={style.prevPage}><img src={arrowIcon}/></button>
                             <span className={style.currentPage}>{currentPage} </span>
@@ -102,8 +102,7 @@ const LotsCarousel = ({ lotsData, arrowIcon, title, type, defaultImage }) => {
                             <span>{Math.ceil(lotsDataFiltered.length / lotsDataPerPage)}</span>
         <button onClick={() => handleScroll( 'right')} className={style.nextPage}><img src={arrowIcon}/></button>
         </div>
-            )
-                }
+            )}
             
         </div>
     </section>
