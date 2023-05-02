@@ -29,8 +29,8 @@ const ImagesSlidePopUp = ({images, arrowIcon}) => {
           })}
         </div>
         <div className={style.controlButtons}>
-        <button className={style.prev} onClick={() => handleScroll('left')}><img src={arrowIcon} alt="Anterior"/> Anterior</button>
-        <button className={style.next} onClick={() => handleScroll('right')}> Próxima <img src={arrowIcon} alt="Próximo" /> </button>
+        <button className={style.prev} onClick={() => handleScroll('left')}><img src={arrowIcon} alt="Anterior"/> </button>
+        <button className={style.next} onClick={() => handleScroll('right')}>  <img src={arrowIcon} alt="Próximo" /> </button>
         </div>
    </section>
   );
