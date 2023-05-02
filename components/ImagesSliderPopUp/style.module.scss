@@ -47,6 +47,9 @@
       img {
         width: 72vw;
         border-radius: 5px;
+        @media(max-width: 425px) {
+          width: 95vw;
+        }
       }
     }
   }
