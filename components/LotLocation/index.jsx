@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import style from './style.module.scss';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 
@@ -22,18 +22,24 @@ function LotLocation({ address }) {
   const [map, setMap] = React.useState(null);
   const [center, setCenter] = React.useState({ lat: 0, lng: 0 });
 
-  React.useEffect(() => {
-    if (address && isLoaded) {
-      const geocoder = new window.google.maps.Geocoder();
-      geocoder.geocode({ address }, (results, status) => {
-        if (status === 'OK') {
-          setCenter(results[0].geometry.location);
-        } else {
-          console.log('Geocode was not successful for the following reason: ' + status);
-        }
-      });
+  useEffect(() => {
+    if (address) {
+      const url = `https://nominatim.openstreetmap.org/search?q=${address}&format=json`;
+
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.length > 0) {
+            setCenter({ lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) });
+          } else {
+            console.log('Could not find the location');
+          }
+        })
+        .catch((error) => {
+          console.log('Error fetching location:', error);
+        });
     }
-  }, [address, isLoaded]);
+  }, [address]);
 
   const onLoad = React.useCallback(function callback(map) {
     setMap(map)

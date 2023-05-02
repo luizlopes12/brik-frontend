@@ -5,7 +5,7 @@ import { LinearScale, CategoryScale, PointElement, LineElement } from 'chart.js'
 
 Chart.register(LinearScale, CategoryScale, PointElement, LineElement);
 
-const SalesChart = ({periodOption, chartData, componentRef}) => {
+const SalesChart = ({periodOption, chartData, type, componentRef}) => {
   const data = {
     labels: chartData.map((item) => `${periodOption.value == 0 ? item.month : item.day}`),
     datasets: [
@@ -49,7 +49,7 @@ const SalesChart = ({periodOption, chartData, componentRef}) => {
   };
 
   return (
-    <div style={{ width: '100%', maxHeight: 300 }} ref={componentRef}>
+    <div style={{ width: '100%', height: type == 'overview'? 200 : 200 }} ref={componentRef}>
       <Line data={data} options={options} />
     </div>
   );
