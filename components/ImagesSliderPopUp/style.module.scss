@@ -71,6 +71,8 @@
     justify-content: space-between;
     align-items: center;
     width: 70vw;
+    height: 100vh;
+
     @media(max-width: 425px) {
              width: 95vw;
            }
