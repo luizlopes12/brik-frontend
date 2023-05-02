@@ -49,7 +49,7 @@ const SalesChart = ({periodOption, chartData, type, componentRef}) => {
   };
 
   return (
-    <div style={{ width: '100%', height: type == 'overview'? 200 : 200 }} ref={componentRef}>
+    <div style={{ width: '100%', height: type == 'overview'? 250 : 200 }} ref={componentRef}>
       <Line data={data} options={options} />
     </div>
   );

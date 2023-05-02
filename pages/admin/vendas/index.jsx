@@ -222,7 +222,7 @@ const Vendas = ({ salesData, globalDivisionsDataFetched, salesSummary, divisions
       <ul className={style.salesList}>
         <li>
           <div className={style.salesListHeading}>
-            <span>Lote</span>
+            <span>Imóvel</span>
             <span>Loteamento</span>
             <span>Status</span>
             <span>Rateio(total)</span>

@@ -9,6 +9,7 @@ import { globalDivisionsDataContext } from '../../../context/globalDivisionsData
 import { lotSelectedContext } from '../../../context/selectedLotContext'
 import nextCookies from "next-cookies";
 import { toast } from 'react-toastify';
+import Link from 'next/link';
 
 export async function getServerSideProps(context) {
       const cookies = nextCookies(context);
@@ -171,7 +172,7 @@ const Loteamentos = ({ firstDivisionsData }) => {
                                     {(lot.id == showOptions.id && showOptions.selected) && (
                                         <span className={style.lotOptions}>
                                             <button onClick={(e) => {handleLotEditPopUp(lot)}}>Editar</button>
-                                            <button>Visualizar</button>
+                                            <button><Link href={`/lotes/${lot.id}`}>Visualizar</Link></button>
                                         </span>
                                     )}
                                     <div className={style.lotViews}>

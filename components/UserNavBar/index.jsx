@@ -3,6 +3,7 @@ import style from "./style.module.scss";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { lotTypeContext } from "../../context/lotTypeContext";
+import { userContext } from "../../context/userContext";
 
 const UserNavBar = ({
   imageSrc,
@@ -13,6 +14,7 @@ const UserNavBar = ({
   navLocation,
 }) => {
   const { setLotType, lotType } = useContext(lotTypeContext);
+  const { userData } = useContext(userContext);
   const router = useRouter();
   const [isActive, setIsActive] = useState({
     urban: true,
@@ -85,7 +87,7 @@ const UserNavBar = ({
             <img src={userImage} alt="Usuário" />
             <ul className={style.userActions} data-active={isActive.actions}>
               <li>
-                <Link href="/login">Login</Link>
+                <Link href="/login">{userData.email !== 'Luiz@luiz.com' ? 'Meu painel' : 'Login'}</Link>
               </li>
             </ul>
           </div>

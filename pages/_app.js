@@ -33,9 +33,9 @@ function MyApp({ Component, pageProps }) {
   // var socket = io('${process.env.BACKEND_URL}')
   return (
     <BannerPreviewProvider>
+      <UserProvider>
     { router.pathname.includes('/admin') ? (
       <GlobalDivisionsDataProvider>
-      <UserProvider>
       <PopUpsProvider>
         <DivisionSelectedProvider>
         <LotSelectedProvider>
@@ -63,7 +63,6 @@ function MyApp({ Component, pageProps }) {
       </LotSelectedProvider>
       </DivisionSelectedProvider>
       </PopUpsProvider>
-      </UserProvider>
       </GlobalDivisionsDataProvider>
     )
     :
@@ -97,6 +96,7 @@ function MyApp({ Component, pageProps }) {
       </main>
       </>
     )}
+    </UserProvider>
     </BannerPreviewProvider>
   )
 }
