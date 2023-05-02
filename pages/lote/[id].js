@@ -80,7 +80,10 @@ const LoteDetailsPage = ({lotData, defaultImage, divisionData}) => {
     );
   }
 
-  const viewedLotsFiltered = useMemo(() => {viewedLots.filter((lot) => lot.id !== lotId)},[viewedLots,lotData]); 
+  const viewedLotsFiltered = useMemo(() => {
+    let viewed = viewedLots.filter((lot) => lot.id !== lotId)
+    return viewed
+  },[viewedLots,lotData]); 
 
   return(
     <section className={style.detailsContainer}>
@@ -119,13 +122,15 @@ const LoteDetailsPage = ({lotData, defaultImage, divisionData}) => {
       metricsIcon={'/images/metricsIcon.svg'}
       />
       <LotLocation  address={lotData.location} />
-      <LotsViewedList
+      {viewedLotsFiltered.length > 0 && <LotsViewedList
        arrowIcon={'/images/homeArrowIcon.svg'} 
        lotsData={viewedLotsFiltered}
        title={'Imóveis populares'}
        type={'lotDetails'}
        defaultImage={'/images/labels/defaultImage.png'}
        />
+      }
+      
     </section>
   );
 };
