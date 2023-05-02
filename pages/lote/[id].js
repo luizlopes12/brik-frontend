@@ -80,6 +80,8 @@ const LoteDetailsPage = ({lotData, defaultImage, divisionData}) => {
     );
   }
 
+  const viewedLotsFiltered = viewedLots.filter((lot) => lot.id !== lotId); 
+
   return(
     <section className={style.detailsContainer}>
       <UserNavBar 
@@ -119,7 +121,7 @@ const LoteDetailsPage = ({lotData, defaultImage, divisionData}) => {
       <LotLocation  address={lotData.location} />
       <LotsViewedList
        arrowIcon={'/images/homeArrowIcon.svg'} 
-       lotsData={viewedLots}
+       lotsData={viewedLotsFiltered}
        title={'Imóveis populares'}
        type={'lotDetails'}
        defaultImage={'/images/labels/defaultImage.png'}

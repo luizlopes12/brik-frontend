@@ -7,7 +7,7 @@
 .slider{
     position: relative;
     width: 100%;
-    max-width: 1060px;
+    max-width: 1180px;
     overflow-x: scroll;
     padding-bottom: 3rem;
     &::-webkit-scrollbar{
@@ -22,6 +22,7 @@
     padding-bottom: 3rem;
 }
 .sliderImages{
+    position: relative;
     display: flex;
     gap: .5rem;
     width: max-content;
@@ -57,9 +58,9 @@
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
-    position: fixed;
-    bottom: 2.5rem;
-    right: 4rem;
+    position: absolute;
+    bottom: -2.6rem;
+    left: 2rem;
 }
 
 .sliderPrev{

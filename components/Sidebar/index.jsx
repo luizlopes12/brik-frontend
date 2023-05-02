@@ -88,7 +88,7 @@ const Sidebar = () => {
       <nav className={style.nav}>
         <ul>
           <li className={router.pathname == '/admin' ? style.active : null}>
-            <Link href='/admin'>
+            <Link href='/admin' onClick={handleShowMenu}>
             <OverviewIconSvg/>
             <span className={style.navText}>
             Overview
@@ -96,7 +96,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li className={router.pathname == '/admin/loteamentos' ? style.active : null}>
-            <Link href='/admin/loteamentos'>
+            <Link href='/admin/loteamentos' onClick={handleShowMenu}>
             <LoteamentosIconSvg/>
             <span className={style.navText}>
             Loteamentos
@@ -104,7 +104,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li className={router.pathname == '/admin/vendas' ? style.active : null}>
-            <Link href='/admin/vendas'>
+            <Link href='/admin/vendas' onClick={handleShowMenu}>
             <VendasIconSvg/>
             <span className={style.navText}>
             Vendas
@@ -112,7 +112,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li className={router.pathname == '/admin/banners' ? style.active : null}>
-              <Link href='/admin/banners'>
+              <Link href='/admin/banners' onClick={handleShowMenu}>
               <BannersIconSvg/>
               <span className={style.navText}>
               Banners
@@ -122,7 +122,7 @@ const Sidebar = () => {
         </ul>
         <ul>
           <li className={router.pathname == '/admin/configs' ? style.active : null}>
-            <Link href='/admin/configs'>
+            <Link href='/admin/configs' onClick={handleShowMenu}>
             <ConfigIconSvg/>
             <span className={style.navText}>
             Permissões

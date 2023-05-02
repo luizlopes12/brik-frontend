@@ -25,7 +25,8 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon, defaultImage }) => {
       const isInRange = item.finalPrice >= filters.rangeValues[0] && item.finalPrice <= filters.rangeValues[1];
       const isLocationMatch = filters.location === '' || item.location.match(new RegExp(filters.location, 'gi'));
       const isTypeMatch = filters.type === '' || item.lotType.match(new RegExp(lotType, 'gi'));
-      return isInRange && isLocationMatch && isTypeMatch;
+      const isAvailable = item.isAvaible === 'avaible';
+      return isInRange && isLocationMatch && isTypeMatch && isAvailable;
     });
   }, [filters.rangeValues, filters.location, lotsData, lotType]);
   
@@ -35,7 +36,9 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon, defaultImage }) => {
       division.lotes = division.lotes.filter((item) => {
         const isInRange = item.finalPrice >= filters.rangeValues[0] && item.finalPrice <= filters.rangeValues[1];
         const isLocationMatch = filters.location === '' || item.location.match(new RegExp(filters.location, 'gi'));
-        return isInRange && isLocationMatch;
+        const isTypeMatch = filters.type === '' || item.lotType.match(new RegExp(lotType, 'gi'));
+        const isAvailable = item.isAvaible === 'avaible';
+        return isInRange && isLocationMatch && isTypeMatch && isAvailable;
       });
 
       return isDivisionLocationMatch || division.lotes.length > 0;
