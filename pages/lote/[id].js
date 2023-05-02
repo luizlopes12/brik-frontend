@@ -1,4 +1,4 @@
-import React, { useEffect, useState }  from 'react'
+import React, { useEffect, useState, useMemo }  from 'react'
 import style from './style.module.scss'
 import UserNavBar from '../../components/UserNavBar'
 import LotsViewedList from '../../components/LotsCarousel'
