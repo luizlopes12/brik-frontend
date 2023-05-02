@@ -240,10 +240,33 @@
                 width: 100%;
                 gap: 1rem; 
                 flex-wrap: wrap;
-                .visitInput{
+                .inputItem{
                     width: fit-content;
                     max-width: 100%;
                     flex-grow: 1;
+                    position: relative;
+                    display: flex;
+                    input::-webkit-calendar-picker-indicator,
+                    input::-webkit-calendar-picker-indicator {
+                        display: none;
+                    }
+
+                    input{
+                        padding-right: 3rem;
+                        flex-grow: 1;
+                    }
+                    label{
+                        position: absolute;
+                        right: 1.8rem;
+                        top: 1.2rem;
+                        img{
+                            max-width: 1.2rem;
+                        }
+                    }
+                }
+                .visitInput{
+                    width: fit-content;
+                    max-width: 100%;
                 }
             }
             .visitBtn{

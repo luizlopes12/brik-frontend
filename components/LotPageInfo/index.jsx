@@ -5,7 +5,7 @@ import { CircularProgress } from '@mui/material'
 import { toast } from 'react-toastify';
 
 
-const LotPageInfo = ({ lotData, divisionData, mapIcon, metricsIcon }) => {
+const LotPageInfo = ({ lotData, divisionData, mapIcon, metricsIcon, calendarIcon, clockIcon }) => {
 
     const [sendEmail, setSendEmail] = useState(false)
 
@@ -163,8 +163,16 @@ const LotPageInfo = ({ lotData, divisionData, mapIcon, metricsIcon }) => {
           <input type="text" name='name' className={style.visitInput} placeholder="Nome completo" onChange={handleVisitData}/>
           <input type="email" name='email' className={style.visitInput} placeholder="E-mail" onChange={handleVisitData}/>
           <div className={style.dateGroup}>
-          <input type="date" name='date' className={style.visitInput} onChange={handleVisitData}/>
+            <span className={style.inputItem}> 
+                <label><img src={calendarIcon} alt="Data" /></label>
+                <input type="date" name='date' className={style.visitInput} onChange={handleVisitData}/>
+                </span>
+                <span className={style.inputItem}> 
+                <label><img src={clockIcon} alt="Horario" /></label>
+          
           <input type="time" name='time'  className={style.visitInput} onChange={handleVisitData}/>
+          </span>
+
           </div>
           <button className={style.visitBtn} onClick={() => handleSendEmail()}>
                 {sendEmail ? <CircularProgress size={22} color='inherit'/> : 'Agendar visita'}

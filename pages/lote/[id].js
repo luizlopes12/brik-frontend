@@ -7,7 +7,6 @@ import LotPageInfo from '../../components/LotPageInfo'
 import LotLocation from '../../components/LotLocation'
 
 
-
 export async function getStaticPaths() {
   const res = await fetch(`${process.env.BACKEND_URL}/lots/list`);
   const data = await res.json();
@@ -109,8 +108,15 @@ const LoteDetailsPage = ({lotData, defaultImage, divisionData}) => {
         <ImagesSliderPopUp images={lotData.loteImages} closeFunction={handleShowMoreImages} arrowIcon={'/images/arrowDownIcon.svg'}/>
         </>
       )}
-      <LotPageInfo lotData={lotData}  divisionData={divisionData} mapIcon={'/images/locationIcon.svg'} metricsIcon={'/images/metricsIcon.svg'}/>
-      <LotLocation/>
+      <LotPageInfo 
+      calendarIcon={'/images/calendarIconGreen.svg'}  
+      clockIcon={'/images/clockIconGreen.svg'}  
+      lotData={lotData}  
+      divisionData={divisionData} 
+      mapIcon={'/images/locationIcon.svg'} 
+      metricsIcon={'/images/metricsIcon.svg'}
+      />
+      <LotLocation  address={lotData.location} />
       <LotsViewedList
        arrowIcon={'/images/homeArrowIcon.svg'} 
        lotsData={viewedLots}
