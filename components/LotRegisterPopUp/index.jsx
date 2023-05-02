@@ -20,6 +20,15 @@ const LotRegisterPopUp = () => {
   const partnersListRef = useRef()
   const [lotDataSaved , setLotDataSaved] = useState(false)
   const [taxes , setTaxes] = useState({ taxPercentage: 0, taxPercentage24: 0 })
+  const [lotType, setLotType] = useState({urbano: true, rural: false})
+  const handleSetLotType = (type) => {
+    if(type === 'urbano') {
+      setLotType({urbano: true, rural: false})
+    } else {
+      setLotType({urbano: false, rural: true})
+    }
+  }
+
   const [newPartner, setNewPartner] = useState({
     name: '',
     CPF: '',
@@ -233,6 +242,7 @@ const LotRegisterPopUp = () => {
         location: lotData.location,
         metrics: lotData.metrics,
         basePrice: lotData.basePrice,
+        lotType: lotType.rural ? 'rural' : 'urbano',
         finalPrice: lotData.price,
         description: lotData.description,
         isAvaible: selectValues.availability,
@@ -442,9 +452,21 @@ const LotRegisterPopUp = () => {
                   </div>
                 )}
               </div>
+              <div className={style.typeOptionsContainer}>
+                <div className={style.typeOptions}>
+                  <span className={style.typeInput}>
+                    Rural
+                    <input type="radio" value='Rural' name='lotType' onClick={() => handleSetLotType('rural')} checked={lotType.rural} className={style.seletionRadio} />
+                  </span>
+                  <span className={style.typeInput}>
+                    Urbano
+                    <input type="radio" value='Rural' name='lotType' onClick={() => handleSetLotType('urbano')} checked={lotType.urbano} className={style.seletionRadio} />
+                  </span>
+                  </div>
               <div className={style.hiddenPrice}>
                 <input type='checkbox' value={lotData.hiddenPrice} name='hiddenPrice' onChange={handleLotData} />
                 <span>Preço sob consulta</span>
+              </div>
               </div>
 
             </div>
