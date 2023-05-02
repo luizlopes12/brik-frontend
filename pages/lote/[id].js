@@ -4,6 +4,7 @@ import UserNavBar from '../../components/UserNavBar'
 import LotsViewedList from '../../components/LotsCarousel'
 import ImagesSliderPopUp from '../../components/ImagesSliderPopUp'
 import LotPageInfo from '../../components/LotPageInfo'
+import LotLocation from '../../components/LotLocation'
 
 
 
@@ -109,6 +110,7 @@ const LoteDetailsPage = ({lotData, defaultImage, divisionData}) => {
         </>
       )}
       <LotPageInfo lotData={lotData}  divisionData={divisionData} mapIcon={'/images/locationIcon.svg'} metricsIcon={'/images/metricsIcon.svg'}/>
+      <LotLocation/>
       <LotsViewedList
        arrowIcon={'/images/homeArrowIcon.svg'} 
        lotsData={viewedLots}

@@ -61,11 +61,9 @@ const LotPageInfo = ({ lotData, divisionData, mapIcon, metricsIcon }) => {
             }))
         .then(data => {
             toast.success(data.message)
-            console.log(data)
             setSendEmail(false)
         })
         .catch(err => {
-            console.log(err)
             toast.error(err.message)
             setSendEmail(false)
         })
