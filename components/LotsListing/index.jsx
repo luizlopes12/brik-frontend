@@ -51,7 +51,7 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon, defaultImage }) => {
   const renderlotsData = useMemo(() => {
     const startIndex = (currentPage - 1) * lotsDataPerPage;
     const endIndex = startIndex + lotsDataPerPage;
-    if(lotsDataFiltered.length === 0) return (<div className={style.noLotsFound}>Nenhum imóvel encontrado, entre em contato para mais informações.</div>)
+    if(lotsDataFiltered.length === 0 && !isGroupView) return (<div className={style.noLotsFound}>Nenhum imóvel encontrado, entre em contato para mais informações.</div>)
     return lotsDataFiltered.slice(startIndex, endIndex).map((item) => (
         <Link href={`/lote/${item.id}`} key={item.id}>
             <li>
