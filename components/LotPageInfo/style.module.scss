@@ -248,19 +248,25 @@
                     display: flex;
                     input::-webkit-calendar-picker-indicator,
                     input::-webkit-calendar-picker-indicator {
-                        display: none;
+                        position: absolute;
+                        right: 1.3rem;
+                        top: 1.2rem;
+                        width: 1.5rem;
+                        opacity: 0;
+                        z-index: 100;
                     }
                     
                     input{
-                        padding-right: 3rem;
                         flex-grow: 1;
                     }
                     label{
+                        z-index: 99;
                         position: absolute;
                         right: 1.8rem;
                         top: 1.2rem;
                         img{
-                            max-width: 1.2rem;
+                            z-index: 99;
+                            width: 1.2rem;
                         }
                     }
                 }
