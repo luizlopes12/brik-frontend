@@ -75,8 +75,10 @@ function MyApp({ Component, pageProps }) {
         <meta name="description" content="BRIK é uma empresa que te ajuda a encontrar e comprar o seu lote da melhor maneira possível."/>
         <meta property="og:title" content="BRIK - O lote dos seus sonhos!"/>
         <meta name="og:description" content="BRIK é uma empresa que te ajuda a encontrar e comprar o seu lote da melhor maneira possível."/>
-        <meta property="og:url" content="https://brikempreendimentos.com/"/>
+        <meta property="og:url" content="https://imoveis.brikempreendimentos.com/"/>
         <meta property="og:type" content="website"/>
+        <meta name="robots" content="lotes, loteamentos, lote, loteamento, imóvel, imóveis"/>
+        <meta name="googlebot" content="lotes, loteamentos, lote, loteamento, imóvel, imóveis"/>
       </Head>
       <main>
       <ToastContainer />
