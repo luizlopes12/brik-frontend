@@ -1,10 +1,10 @@
 import React, { useRef, useState, useContext } from "react";
 import style from "./style.module.scss";
-import { PopUpsContext } from "../../context/popUpsContext";
+import { popUpsContext } from "../../context/popUpsContext";
 
 const BannersEditSlider = ({ imagesData }) => {
   const sliderRef = useRef(null);
-  const { popUps, setPopUps } = useContext(PopUpsContext);
+  const { popUps, setPopUps } = useContext(popUpsContext);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
   const handlePrevClick = () => {
