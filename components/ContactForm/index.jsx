@@ -57,7 +57,7 @@ const ContactForm = ({arrowIcon}) => {
         <div className={style.linkToLanding}>
             <h1>Quem somos</h1>
             <p>Leia sobre a Brick, entre em contato ou se torne um parceiro!</p>
-            <Link href={'#'} target='_blank'>Navegue para o nosso site <img src={arrowIcon} alt="" /></Link>
+            <Link href={'https://www.brikempreendimentos.com/'} target='_blank'>Navegue para o nosso site <img src={arrowIcon} alt="" /></Link>
         </div>
         <div className={style.contactForm}>
             <h2 className={style.contactFormTitle}>Entre em contato</h2>
