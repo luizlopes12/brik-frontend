@@ -1,8 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import style from "./style.module.scss";
+import { PopUpsContext } from "../../context/popUpsContext";
 
 const BannersEditSlider = ({ imagesData }) => {
   const sliderRef = useRef(null);
+  const { popUps, setPopUps } = useContext(PopUpsContext);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
   const handlePrevClick = () => {
@@ -23,7 +25,7 @@ const BannersEditSlider = ({ imagesData }) => {
   };
 
   const handleAddImage = () => {
-    console.log('add image')
+    setPopUps({ ...popUps, bannerAdd: true })
   }
   return (
     <div className={style.slider} ref={sliderRef}>

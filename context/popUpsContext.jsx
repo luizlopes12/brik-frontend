@@ -10,6 +10,7 @@ const PopUpsProvider = ({children}) =>{
     divisionRegister: false,
     divisionEdit: false,
     registerSale: false,
+    bannerAdd: false,
   }) 
 
     return <popUpsContext.Provider value={{popUps, setPopUps}}>{children}</popUpsContext.Provider>
