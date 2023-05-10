@@ -11,6 +11,7 @@ import LotRegisterPopUp from '../components/LotRegisterPopUp'
 import LotEditPopUp from '../components/LotEditPopUp'
 import RegisterSalePopUp from '../components/RegisterSalePopUp'
 import DivisionRegisterPopUp from '../components/DivisionRegisterPopUp'
+import BannerAddPopUp from '../components/BannerAddPopUp'
 import {PopUpsProvider} from '../context/popUpsContext'
 import TaxesEditPopUp from '../components/TaxesEditPopUp' 
 import DivisionEditPopUp from '../components/DivisionEditPopUp'
@@ -47,6 +48,7 @@ function MyApp({ Component, pageProps }) {
       <main className={styles.mainContainer}>
       <ToastContainer />
       <RegisterSalePopUp/>
+      <BannerAddPopUp/>
       <LotEditPopUp/>
       <LotRegisterPopUp/>
       <TaxesEditPopUp/>
