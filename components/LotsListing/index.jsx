@@ -9,6 +9,8 @@ import { lotTypeContext } from '../../context/lotTypeContext';
 
 
 const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon, defaultImage }) => {
+  const [divisionsFromBackend, setDivisionsFromBackend] = useState([]);
+  const [divisionsData, setDivisionsData] = useState(divisionsFromBackend);
   const { lotType } = useContext(lotTypeContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [lotsDataPerPage, setlotsDataPerPage] = useState(6);
@@ -18,7 +20,8 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon, defaultImage }) => {
     location: '',
     rangeValues: [10000, 1000000],
   });
-  const [divisionsData, setDivisionsData] = useState([]);
+
+
 
   const lotsDataFiltered = useMemo(() => {
     return lotsData.filter((item) => {
@@ -28,22 +31,29 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon, defaultImage }) => {
       const isAvailable = item.isAvaible === 'avaible';
       return isInRange && isLocationMatch && isTypeMatch && isAvailable;
     });
-  }, [filters.rangeValues, filters.location, lotsData, lotType]);
+  }, [filters.rangeValues, filters.location, lotsData, divisionsData, lotType]); 
   
   const divisionsDataFiltered = useMemo(() => {
     return divisionsData.filter((division) => {
-      const isDivisionLocationMatch = filters.location === '' || division.location.match(new RegExp(filters.location, 'gi'));
+      const isDivisionLocationMatch =
+        filters.location === '' ||
+        division.location.match(new RegExp(filters.location, 'gi'));
       division.lotes = division.lotes.filter((item) => {
-        const isInRange = item.finalPrice >= filters.rangeValues[0] && item.finalPrice <= filters.rangeValues[1];
-        const isLocationMatch = filters.location === '' || item.location.match(new RegExp(filters.location, 'gi'));
-        const isTypeMatch = filters.type === '' || item.lotType.match(new RegExp(lotType, 'gi'));
+        const isInRange =
+          item.finalPrice >= filters.rangeValues[0] &&
+          item.finalPrice <= filters.rangeValues[1];
+        const isLocationMatch =
+          filters.location === '' ||
+          item.location.match(new RegExp(filters.location, 'gi'));
+        const isTypeMatch =
+          filters.type === '' || item.lotType.match(new RegExp(lotType, 'gi'));
         const isAvailable = item.isAvaible === 'avaible';
         return isInRange && isLocationMatch && isTypeMatch && isAvailable;
       });
-
+  
       return isDivisionLocationMatch || division.lotes.length > 0;
     });
-  }, [filters.rangeValues, filters.location, divisionsData]);
+  }, [divisionsData, filters.location, filters.rangeValues, lotsData, lotType]);
   
   
   
@@ -113,17 +123,18 @@ const LotsListing = ({ lotsData, arrowIcon, homeFilterIcon, defaultImage }) => {
   const isLastPage = currentPage === totalPages;
 
 
-  
   useEffect(() => {
-    const getDivisions = () =>{
-      fetch(`${process.env.BACKEND_URL}/divisions/list`)
+    const getDivisions = async () =>{
+      await fetch(`${process.env.BACKEND_URL}/divisions/list`)
       .then((res) => res.json())
       .then((data) => {
+        setDivisionsFromBackend(data);
         setDivisionsData(data);
       });
-    }
+    } 
     getDivisions()
-  }, []);
+  }, [divisionsDataFiltered]);
+
   return (
     <section className={style.lotListingContainer}>
         <div className={style.heading}>
