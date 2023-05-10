@@ -4,11 +4,15 @@ import formatCurrency from '../../helpers/formatCurrency'
 import Link from 'next/link'
 import { lotTypeContext } from '../../context/lotTypeContext'
 
-const LotsCarousel = ({ lotsData, arrowIcon, title, type, defaultImage }) => {
+const LotsCarousel = ({ lotsData, arrowIcon, title, type, divisionData, defaultImage }) => {
     const { lotType } = useContext(lotTypeContext)
     const carouselRef = useRef(null)
     const [currentPage, setCurrentPage] = useState(1);
     const [lotsDataPerPage, setlotsDataPerPage] = useState(3);
+    const divisionsDataFiltered = useMemo(() => {
+        return divisionData
+    }, [divisionData])
+
     const lotsDataFiltered = useMemo(() => {
         return lotsData.filter((item) => {
             const isTypeMatch = item.lotType.match(new RegExp(lotType, 'gi'));
@@ -56,7 +60,7 @@ const LotsCarousel = ({ lotsData, arrowIcon, title, type, defaultImage }) => {
                 break;
         }
     };
-    if(lotsDataFiltered.length === 0 && type == 'find'){
+    if(lotsDataFiltered.length === 0 && type == 'find' && divisionsDataFiltered?.length === 0){
         return <div className={style.noLotsFound}>Nenhum imóvel encontrado, entre em contato para mais informações.</div>
     }
     if (lotsDataFiltered.length === 0) {
@@ -79,7 +83,7 @@ const LotsCarousel = ({ lotsData, arrowIcon, title, type, defaultImage }) => {
                         </div>
                         <div className={style.lotInfo}>
                             <div className={style.lotInfos}>
-                                <span className={style.itemPrice}>{formatCurrency(item.finalPrice)}
+                                <span className={style.itemPrice}>{item.hiddenPrice ? <span className={style.hiddenPrice}>Preço sob consulta</span>: formatCurrency(item.finalPrice)}
                                 </span>
                                 <p className={style.name}>{item.name}</p>
                                 <p className={style.metrics}>{item.metrics}m²</p>
