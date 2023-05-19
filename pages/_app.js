@@ -48,7 +48,7 @@ function MyApp({ Component, pageProps }) {
       <main className={styles.mainContainer}>
       <ToastContainer />
       <RegisterSalePopUp/>
-      <BannerAddPopUp/>
+      <BannerAddPopUp defaultBanner='/images/labels/defaultBanner.png' closeIcon='/images/closeIcon.svg'/>
       <LotEditPopUp/>
       <LotRegisterPopUp/>
       <TaxesEditPopUp/>

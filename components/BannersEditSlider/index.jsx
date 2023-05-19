@@ -1,8 +1,10 @@
-import React, { useRef, useState, useContext } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import style from "./style.module.scss";
 import { popUpsContext } from "../../context/popUpsContext";
+import { toast } from "react-toastify";
 
-const BannersEditSlider = ({ imagesData }) => {
+const BannersEditSlider = ({ imagesData, fetchBanners, trashIcon }) => {
+  
   const sliderRef = useRef(null);
   const { popUps, setPopUps } = useContext(popUpsContext);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
@@ -14,6 +16,7 @@ const BannersEditSlider = ({ imagesData }) => {
     });
   };
 
+  
   const handleNextClick = () => {
     sliderRef.current.scrollBy({
       left: sliderRef.current.offsetWidth,
@@ -27,6 +30,30 @@ const BannersEditSlider = ({ imagesData }) => {
   const handleAddImage = () => {
     setPopUps({ ...popUps, bannerAdd: true })
   }
+
+  const handleDeleteIcon = (image) => {
+    fetch(`${process.env.BACKEND_URL}/banners/delete/${image.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        toast.success("Banner excluído com sucesso!");
+        fetchBanners();
+      }
+      )
+      .catch((err) => {
+        console.log(err);
+      }
+      );
+    }
+
+
+  useEffect(() => {
+    fetchBanners();
+  }, [popUps.bannerAdd]);
+
   return (
     <div className={style.slider} ref={sliderRef}>
       <div className={style.sliderImages}>
@@ -50,9 +77,12 @@ const BannersEditSlider = ({ imagesData }) => {
               alt={`Image ${image.name}`}
             />
             <span className={style.imageNumber}>{index + 1}</span>
+            { index === currentBannerIndex && <span className={style.deleteBtn} onClick={() => handleDeleteIcon(image)}><img src={trashIcon} alt="Excluir" /></span>}
           </div>
         ))}
-        <div className={style.bannerEditControls}>
+
+      </div>
+      <div className={style.bannerEditControls}>
           <button className={style.sliderPrev} onClick={handlePrevClick}>
             <svg
               width="16"
@@ -88,7 +118,6 @@ const BannersEditSlider = ({ imagesData }) => {
             </svg>
           </button>
         </div>
-      </div>
     </div>
   );
 };

@@ -37,10 +37,14 @@ export default function Home({bannerImagesData, lotsData, viewedLots}) {
        userImage={'/images/labels/profile.png'}
        bannerPreview={bannerPreview}
        />
-       <BannerSlider 
-       imagesData={bannerImagesData} 
-       isOnHome
-       />
+       {
+        bannerImagesData.length > 0 
+        && <BannerSlider 
+        imagesData={bannerImagesData} 
+        isOnHome
+        />
+       }
+       
        <LotsListing 
        lotsData={lotsData} 
        arrowIcon={'/images/homeArrowIcon.svg'} 

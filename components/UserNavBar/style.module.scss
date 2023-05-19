@@ -124,6 +124,7 @@
     gap: .5rem;
     border-radius: 200px;
     transition: all .3s ease-in-out;
+    z-index: 99999;
     span{
         font-weight: 900;
     }

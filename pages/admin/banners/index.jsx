@@ -39,16 +39,27 @@ export async function getServerSideProps(context) {
 }
 const Banners = ({banners}) => {
   const router = useRouter();
+  const [bannerImages, setBannerImages] = useState(banners);
   const {setBannerPreview} = useContext(bannerPreviewContext);
   setBannerPreview(false)
+
+
+  const fetchBanners = async () => {
+    const banners = await fetch(`${process.env.BACKEND_URL}/banners/list`)
+    .then((res) => res.json())
+    .then((data) => {
+      return data;
+    });
+    setBannerImages(banners)
+  }
 
   const handleShowHomePage = () => {
     setBannerPreview(true)
     router.push('/')
   }
 
-  const [bannerImages, setBannerImages] = useState(banners);
   return (
+
     <div className={style.bannersContainer}>
     <div className={style.heading}>
           <HeadingText>Web <span>Banner</span></HeadingText>
@@ -56,12 +67,12 @@ const Banners = ({banners}) => {
             <span>
             Adicione um banner na dimensão sugerida
             </span>
-            <button className={style.visualizeBanners} onClick={handleShowHomePage}>Simulação na página<img src='/images/layoutIcon.svg' /></button>
+            <button className={style.visualizeBanners} onClick={handleShowHomePage}>Visualizar<img src='/images/layoutIcon.svg' /></button>
           </div>
           </div>
-          <BannerSlider imagesData={bannerImages}/>
+          {bannerImages.length > 0 && <BannerSlider imagesData={bannerImages}/>}
           <div className={style.bannersEdit}>
-            <BannersEditSlider imagesData={bannerImages}/>
+            <BannersEditSlider imagesData={bannerImages} fetchBanners={fetchBanners} trashIcon='/images/deleteIcon.svg' />
           </div>  
     </div>
   )

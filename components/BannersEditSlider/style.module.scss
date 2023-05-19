@@ -7,7 +7,8 @@
 .slider{
     position: relative;
     width: 100%;
-    max-width: 1180px;
+    max-width: 1040px;
+    
     overflow-x: scroll;
     padding-bottom: 3rem;
     &::-webkit-scrollbar{
@@ -29,7 +30,7 @@
     
     .imageNumber{
         position: absolute;
-        bottom: -35px;
+        bottom: -32px;
         left: 20px;
         background: $green_color-2;
         color: $text-dark-blue;
@@ -55,14 +56,17 @@
 }
 
 .bannerEditControls{
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    position: absolute;
-    bottom: -2.6rem;
-    left: 2rem;
+    display: none;
 }
-
+.deleteBtn{
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    bottom: -28px;
+    img{
+        max-width: 24px;
+    }
+}
 .sliderPrev{
     transform: rotate(90deg);
     background: transparentize($bg_white-color, 0.48);
