@@ -1,8 +1,6 @@
 import React, { useContext, useState, useEffect, useMemo } from 'react';
 import style from './style.module.scss';
 import Cookie from 'js-cookie';
-import nextCookies from 'next-cookies';
-import io from 'socket.io-client';
 
 const Navbar = () => {
   const [name, setName] = useState('');
@@ -13,38 +11,33 @@ const Navbar = () => {
   }, [notifications]);
 
   useEffect(() => {
-    const socket = io(process.env.BACKEND_SOCKET_URL);
-    socket.on("notification", (data) => { 
-      console.log(data);
-      setNotifications(prev => [data, ...prev]);
-    });
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    fetch(`${process.env.BACKEND_URL}/notifications/list`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': Cookie.get('token'),
-        'x-access-token-refresh': Cookie.get('refreshToken'),
-      },
-    })
-      .then(res =>{
-       if(res.ok) {
-        return res.json()
-       } else {
-        return []
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${process.env.BACKEND_URL}/notifications/list`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': Cookie.get('token'),
+            'x-access-token-refresh': Cookie.get('refreshToken'),
+          },
+        });
+  
+        if (response.ok) {
+          const data = await response.json();
+          // Check if the notifications already exist in the array
+          const existingNotificationIds = notifications.map((notification) => notification.id);
+          const newNotifications = data.filter((notification) => !existingNotificationIds.includes(notification.id));
+          setNotifications((prevNotifications) => [...prevNotifications, ...newNotifications]);
+        } else {
+          setNotifications([]);
         }
-      })
-      .then(data => {
-        console.log(data);
-        setNotifications(data);
-      })
-      .catch(err => console.log(err));
-  }, []);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    fetchData();
+  }, [5000]);
 
   useEffect(() => {
     const nameOnCookie = Cookie.get('name');
