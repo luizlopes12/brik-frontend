@@ -36,8 +36,12 @@ const Navbar = () => {
       }
     };
   
-    fetchData();
-  }, [5000]);
+    const intervalId = setInterval(fetchData, 5000);
+  
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   useEffect(() => {
     const nameOnCookie = Cookie.get('name');
