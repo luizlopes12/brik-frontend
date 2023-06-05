@@ -36,8 +36,11 @@ const Navbar = () => {
         console.log(err);
       }
     };
-  
-    fetchData();
+    const intervalId = setInterval(fetchData, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
   
 
