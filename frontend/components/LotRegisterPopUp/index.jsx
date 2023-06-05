@@ -236,7 +236,11 @@ const LotRegisterPopUp = () => {
         taxPercentage : lotData.taxPercentage,
         taxPercentage24 : lotData.taxPercentage24,
         })
+<<<<<<< Updated upstream:frontend/components/LotRegisterPopUp/index.jsx
         await fetch('http://localhost:8080/lots/add', {
+=======
+        await fetch(`${process.env.BACKEND_URL_LOCAL}/lots/add`, {
+>>>>>>> Stashed changes:components/LotRegisterPopUp/index.jsx
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -250,7 +254,11 @@ const LotRegisterPopUp = () => {
           }
           lotImages.forEach( async image => {
             let newImage = JSON.stringify({url: image})
+<<<<<<< Updated upstream:frontend/components/LotRegisterPopUp/index.jsx
             await fetch(`http://localhost:8080/lots/${data.newLot?.id}/images/add`, {
+=======
+            await fetch(`${process.env.BACKEND_URL_LOCAL}/lots/${data.newLot?.id}/images/add`, {
+>>>>>>> Stashed changes:components/LotRegisterPopUp/index.jsx
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -264,7 +272,11 @@ const LotRegisterPopUp = () => {
           lotData.partners.forEach( async partner => {
           partner.idLote = data.newLot.id
           let newPartner = JSON.stringify(partner)
+<<<<<<< Updated upstream:frontend/components/LotRegisterPopUp/index.jsx
           await fetch(`http://localhost:8080/lots/${partner.idLote}/partners/add`, {
+=======
+          await fetch(`${process.env.BACKEND_URL_LOCAL}/lots/${partner.idLote}/partners/add`, {
+>>>>>>> Stashed changes:components/LotRegisterPopUp/index.jsx
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -310,7 +322,11 @@ const LotRegisterPopUp = () => {
           setLotImages([
             '/images/labels/without-image.png',
           ])
+<<<<<<< Updated upstream:frontend/components/LotRegisterPopUp/index.jsx
           await fetch('http://localhost:8080/divisions/list')
+=======
+          await fetch(`${process.env.BACKEND_URL_LOCAL}/divisions/list`)
+>>>>>>> Stashed changes:components/LotRegisterPopUp/index.jsx
           .then(updatedResponse => updatedResponse.json())
           .then(updatedData => setGlobalDivisionsData(updatedData), console.log('Lote cadastrado com sucesso!'))
           .catch(err => console.log(err))
@@ -327,7 +343,11 @@ const LotRegisterPopUp = () => {
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     };
     const getTaxes = async () =>{
+<<<<<<< Updated upstream:frontend/components/LotRegisterPopUp/index.jsx
       await fetch('http://localhost:8080/taxes/list').then(res => res.json())
+=======
+      await fetch(`${process.env.BACKEND_URL_LOCAL}/taxes/list`).then(res => res.json())
+>>>>>>> Stashed changes:components/LotRegisterPopUp/index.jsx
       .then(data => {
         setTaxes(data[0])
         setLotData((prev) => ({ ...prev, taxPercentage: parseFloat(data[0].defaultTax), taxPercentage24: parseFloat(data[0].after24Months)

@@ -11,7 +11,11 @@ import { lotSelectedContext } from '../../../context/selectedLotContext'
 export async function getStaticProps() {
     let firstDivisionsData;
     try {
+<<<<<<< Updated upstream:frontend/pages/admin/loteamentos/index.jsx
         firstDivisionsData = await fetch('http://localhost:8080/divisions/list').then(res => res.json())
+=======
+        firstDivisionsData = await fetch(`${process.env.BACKEND_URL_LOCAL}/divisions/list`).then(res => res.json())
+>>>>>>> Stashed changes:pages/admin/loteamentos/index.jsx
     } catch (error) {
         firstDivisionsData = []
     }

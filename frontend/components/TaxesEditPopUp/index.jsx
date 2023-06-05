@@ -21,7 +21,11 @@ const TaxesEditPopUp = () => {
       currentIGPM: currentIGPM.slice(-1)[0],
       currentIPCA: currentIPCA.slice(-1)[0]
     });
+<<<<<<< Updated upstream:frontend/components/TaxesEditPopUp/index.jsx
     await fetch('http://localhost:8080/taxes/list').then(res => res.json())
+=======
+    await fetch(`${process.env.BACKEND_URL_LOCAL}/taxes/list`).then(res => res.json())
+>>>>>>> Stashed changes:components/TaxesEditPopUp/index.jsx
     .then(data => {
       setTaxes({ defaultTax: parseFloat(data[0].defaultTax), after24Months: parseFloat(data[0].after24Months) })
     })
@@ -32,7 +36,11 @@ const TaxesEditPopUp = () => {
     setTaxes({ ...taxes, [e.target.name]: e.target.value })
   }
   const handleSaveNewTax = async () => {
+<<<<<<< Updated upstream:frontend/components/TaxesEditPopUp/index.jsx
     await fetch('http://localhost:8080/taxes/edit',{
+=======
+    await fetch(`${process.env.BACKEND_URL_LOCAL}`, {
+>>>>>>> Stashed changes:components/TaxesEditPopUp/index.jsx
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

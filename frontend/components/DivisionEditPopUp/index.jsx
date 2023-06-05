@@ -127,7 +127,11 @@ const DivisionEditPopUp = () => {
       location: divisionData.location,
       bluePrint: divisionData.bluePrint,
     })
+<<<<<<< Updated upstream:frontend/components/DivisionEditPopUp/index.jsx
     await fetch(`http://localhost:8080/divisions/edit/${divisionData.id}`, {
+=======
+    await fetch(`${process.env.BACKEND_URL_LOCAL}/divisions/edit/${divisionData.id}`, {
+>>>>>>> Stashed changes:components/DivisionEditPopUp/index.jsx
       method: 'PATCH',
       headers: {
         'Content-type': 'application/json',
@@ -135,7 +139,11 @@ const DivisionEditPopUp = () => {
       body: divisionDataToRequest
     }).then(res => res.json())
       .then(async data => {
+<<<<<<< Updated upstream:frontend/components/DivisionEditPopUp/index.jsx
         await fetch('http://localhost:8080/divisions/list')
+=======
+        await fetch(`${process.env.BACKEND_URL_LOCAL}/divisions/list`)
+>>>>>>> Stashed changes:components/DivisionEditPopUp/index.jsx
           .then(updatedResponse => updatedResponse.json())
           .then(updatedData => setGlobalDivisionsData(updatedData))
         setDivisionSelected(data.data[0])
@@ -161,7 +169,11 @@ const DivisionEditPopUp = () => {
   const handleAddPartnertoDivision = async () => {
     if (partnerValues.name?.length > 0 && partnerValues.CPF?.length >= 11 && partnerValues?.percentage > 0) {
       setPartnerPopUp(false)
+<<<<<<< Updated upstream:frontend/components/DivisionEditPopUp/index.jsx
       await fetch(`http://localhost:8080/divisions/${divisionData.id}/partners/add`, {
+=======
+      await fetch(`${process.env.BACKEND_URL_LOCAL}/divisions/${divisionData.id}/partners/add`, {
+>>>>>>> Stashed changes:components/DivisionEditPopUp/index.jsx
         method: 'POST',
         headers: {
           'Content-type': 'application/json',

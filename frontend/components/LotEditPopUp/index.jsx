@@ -276,7 +276,11 @@ const LotRegisterPopUp = () => {
         taxPercentage : lotData.taxPercentage,
         taxPercentage24 : lotData.taxPercentage24,
         })
+<<<<<<< Updated upstream:frontend/components/LotEditPopUp/index.jsx
         await fetch(`http://localhost:8080/lots/edit/${lotData.id}`, {
+=======
+        await fetch(`${process.env.BACKEND_URL_LOCAL}/lots/edit/${lotData.id}`, {
+>>>>>>> Stashed changes:components/LotEditPopUp/index.jsx
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -289,7 +293,11 @@ const LotRegisterPopUp = () => {
           }
             lotImages.forEach( async image => {
               let newImage = JSON.stringify({url: image})
+<<<<<<< Updated upstream:frontend/components/LotEditPopUp/index.jsx
               await fetch(`http://localhost:8080/lots/${lotData.id}/images/add`, {
+=======
+              await fetch(`${process.env.BACKEND_URL_LOCAL}/lots/${lotData.id}/images/add`, {
+>>>>>>> Stashed changes:components/LotEditPopUp/index.jsx
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -301,7 +309,11 @@ const LotRegisterPopUp = () => {
             if(deletedPartners.length > 0){
                 deletedPartners.forEach( async partner => {
                     let deletePartner = JSON.stringify(partner)
+<<<<<<< Updated upstream:frontend/components/LotEditPopUp/index.jsx
                     await fetch(`http://localhost:8080/lots/partners/delete/${lotData.id}/${partner.id}`, {
+=======
+                    await fetch(`${process.env.BACKEND_URL_LOCAL}/lots/partners/delete/${lotData.id}/${partner.id}`, {
+>>>>>>> Stashed changes:components/LotEditPopUp/index.jsx
                     method: 'DELETE',
                     headers: {
                       'Content-Type': 'application/json',
@@ -316,7 +328,11 @@ const LotRegisterPopUp = () => {
             if(newPartnersAdded.length > 0){
               newPartnersAdded.forEach( async partner => {
                 let newPartner = JSON.stringify(partner)
+<<<<<<< Updated upstream:frontend/components/LotEditPopUp/index.jsx
                 await fetch(`http://localhost:8080/lots/${lotData.id}/partners/add`, {
+=======
+                await fetch(`${process.env.BACKEND_URL_LOCAL}/lots/${lotData.id}/partners/add`, {
+>>>>>>> Stashed changes:components/LotEditPopUp/index.jsx
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -331,7 +347,11 @@ const LotRegisterPopUp = () => {
             if(partnersUpdated.length > 0){
                 partnersUpdated.forEach( async partner => {
                     let updatedPartner = JSON.stringify(partner)
+<<<<<<< Updated upstream:frontend/components/LotEditPopUp/index.jsx
                     await fetch(`http://localhost:8080/lots/partners/edit/${partner.id}`, {
+=======
+                    await fetch(`${process.env.BACKEND_URL_LOCAL}/lots/partners/edit/${partner.id}`, {
+>>>>>>> Stashed changes:components/LotEditPopUp/index.jsx
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -353,7 +373,11 @@ const LotRegisterPopUp = () => {
             setTimeout(() => {
               setLotDataSaved(false)
             }, 3000)
+<<<<<<< Updated upstream:frontend/components/LotEditPopUp/index.jsx
           await fetch('http://localhost:8080/divisions/list')
+=======
+          await fetch(`${process.env.BACKEND_URL_LOCAL}/divisions/list`)
+>>>>>>> Stashed changes:components/LotEditPopUp/index.jsx
           .then(updatedResponse => updatedResponse.json())
           .then(updatedData => setGlobalDivisionsData(updatedData), console.log('Lote atualizado com sucesso!'))
           .catch(err => console.log(err))

@@ -128,7 +128,11 @@ const DivisionRegisterPopUp = () => {
       location: divisionData.location,
       bluePrint: divisionData.bluePrint
     })
+<<<<<<< Updated upstream:frontend/components/DivisionRegisterPopUp/index.jsx
     await fetch(`http://localhost:8080/divisions/add`,{
+=======
+    await fetch(`${process.env.BACKEND_URL_LOCAL}/divisions/add`,{
+>>>>>>> Stashed changes:components/DivisionRegisterPopUp/index.jsx
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
@@ -136,7 +140,11 @@ const DivisionRegisterPopUp = () => {
       body: divisionDataToRequest
     }).then(res => res.json())
     .then(async data => {
+<<<<<<< Updated upstream:frontend/components/DivisionRegisterPopUp/index.jsx
       await fetch('http://localhost:8080/divisions/list')
+=======
+      await fetch(`${process.env.BACKEND_URL_LOCAL}/divisions/list`)
+>>>>>>> Stashed changes:components/DivisionRegisterPopUp/index.jsx
       .then(updatedResponse => updatedResponse.json())
       .then(updatedData => setGlobalDivisionsData(updatedData))
       setDivisionData(data.data)
