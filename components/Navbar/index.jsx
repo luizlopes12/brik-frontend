@@ -13,7 +13,7 @@ const Navbar = () => {
   }, [notifications]);
 
   useEffect(() => {
-    const socket = io(process.env.BACKEND_SOCKET_URL_LOCAL);
+    const socket = io(process.env.BACKEND_SOCKET_URL);
     socket.on("notification", (data) => { 
       console.log(data);
       setNotifications(prev => [data, ...prev]);
