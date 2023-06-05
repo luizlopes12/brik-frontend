@@ -42,6 +42,35 @@ const Navbar = () => {
       clearInterval(intervalId);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${process.env.BACKEND_URL}/notifications/list`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': Cookie.get('token'),
+            'x-access-token-refresh': Cookie.get('refreshToken'),
+          },
+        });
+  
+        if (response.ok) {
+          const data = await response.json();
+          setNotifications((prevNotifications) => {
+            const existingNotificationIds = prevNotifications.map((notification) => notification.id);
+            const newNotifications = data.filter((notification) => !existingNotificationIds.includes(notification.id));
+            return [...prevNotifications, ...newNotifications];
+          });
+        } else {
+          setNotifications([]);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  }, []);
+  
   
 
   useEffect(() => {
