@@ -27,7 +27,7 @@ const Navbar = () => {
           setNotifications((prevNotifications) => {
             const existingNotificationIds = prevNotifications.map((notification) => notification.id);
             const newNotifications = data.filter((notification) => !existingNotificationIds.includes(notification.id));
-            return [...prevNotifications, ...newNotifications];
+            return [...newNotifications,...prevNotifications];
           });
         } else {
           setNotifications([]);
