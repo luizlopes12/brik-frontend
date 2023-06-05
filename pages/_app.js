@@ -1,7 +1,7 @@
 import React, { lazy, useRef, useState, useEffect } from 'react'
 import '../styles/main.scss'
 import Head from 'next/head'
-import { io } from "socket.io-client";
+import io from "socket.io-client";
 import Sidebar from '../components/Sidebar'
 import Navbar from '../components/Navbar'
 import { useRouter } from 'next/router'
@@ -29,6 +29,8 @@ import Footer from '../components/Footer'
 
 
 function MyApp({ Component, pageProps }) {
+
+
   const router = useRouter()
 
   // var socket = io('${process.env.BACKEND_URL}')

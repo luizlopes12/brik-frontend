@@ -49,7 +49,7 @@ const Form = ({ lotData, divisionData }) => {
     // You can access the form data from the formData state
 
     // Simulating an asynchronous operation for demonstration purposes
-    await fetch(`${process.env.BACKEND_URL_LOCAL}/sales/contract/fill`, {
+    await fetch(`${process.env.BACKEND_URL}/sales/contract/fill`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -1,4 +1,4 @@
-import React,{ useRef } from 'react'
+import React,{ useRef, useState, useEffect } from 'react'
 import style from './style.module.scss'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -68,6 +68,23 @@ const Sidebar = () => {
   const handleShowMenu = () => {
     navContainerRef.current.classList.toggle(style.active)
   }
+  const initialPermissions = Cookie.get('permissions');
+  const [userPermissions, setUserPermissions] = useState({
+    admin: false,
+    editDivisions: false,
+    editBanners: false,
+  });
+
+  useEffect(() => {
+    if (initialPermissions) {
+      const permissions = JSON.parse(initialPermissions);
+      setUserPermissions(permissions);
+    }
+  }, [initialPermissions]);
+
+
+
+  console.log(userPermissions)
   const handleUserLogout = () => {
     Cookie.remove("token");
     Cookie.remove("refreshToken");
@@ -87,6 +104,8 @@ const Sidebar = () => {
       </div>
       <nav className={style.nav}>
         <ul>
+          {userPermissions.admin && (	
+            
           <li className={router.pathname == '/admin' ? style.active : null}>
             <Link href='/admin' onClick={handleShowMenu}>
             <OverviewIconSvg/>
@@ -95,6 +114,9 @@ const Sidebar = () => {
             </span>
             </Link>
           </li>
+          )}
+          {userPermissions.editDivisions && (	
+          
           <li className={router.pathname == '/admin/loteamentos' ? style.active : null}>
             <Link href='/admin/loteamentos' onClick={handleShowMenu}>
             <LoteamentosIconSvg/>
@@ -103,6 +125,7 @@ const Sidebar = () => {
             </span>
             </Link>
           </li>
+          )}
           <li className={router.pathname == '/admin/vendas' ? style.active : null}>
             <Link href='/admin/vendas' onClick={handleShowMenu}>
             <VendasIconSvg/>
@@ -111,6 +134,8 @@ const Sidebar = () => {
             </span>
             </Link>
           </li>
+          {userPermissions.editBanners && (	
+
           <li className={router.pathname == '/admin/banners' ? style.active : null}>
               <Link href='/admin/banners' onClick={handleShowMenu}>
               <BannersIconSvg/>
@@ -119,6 +144,7 @@ const Sidebar = () => {
               </span>
               </Link>
           </li>
+          )}
         </ul>
         <ul>
           <li className={router.pathname == '/admin/configs' ? style.active : null}>

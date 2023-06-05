@@ -47,23 +47,36 @@ const Configs = ({users}) => {
   };
 
   const handleCheckboxChange = (event) => {
-    setCheckboxValues({
-      ...checkboxValues,
-      [event.target.name]: event.target.checked,
-    });
-    if(event.target.name === 'admin' && event.target.checked){
-      setCheckboxValues({
-        ...checkboxValues,
+    const { name, checked } = event.target;
+  
+    setCheckboxValues((prevValues) => ({
+      ...prevValues,
+      [name]: checked,
+    }));
+  
+    if (name === 'admin' && checked) {
+      setCheckboxValues((prevValues) => ({
+        ...prevValues,
         admin: true,
         editDivisions: true,
         editLots: true,
         editPartners: true,
         editBanners: true,
         editTaxes: true,
-      });
+      }));
+    } else if (name === 'admin' && !checked) {
+      setCheckboxValues((prevValues) => ({
+        ...prevValues,
+        admin: false,
+        editDivisions: false,
+        editLots: false,
+        editPartners: false,
+        editBanners: false,
+        editTaxes: false,
+      }));
     }
   };
-
+  
   const handleSubmit = async () => {
     const requestBody = {
       id: selectedUser.id,

@@ -82,6 +82,14 @@ const LoginPage = () => {
         Cookie.set("name", data.name)
         Cookie.set("email", data.email)
         Cookie.set("phone", data.phone)
+        Cookie.set("permissions", JSON.stringify({
+          admin: data.admin,
+          editDivisions: data.editDivisions,
+          editLots: data.editLots,
+          editPartners: data.editPartners,
+          editBanners: data.editBanners,
+          editTaxes: data.editTaxes,
+        }))
         Cookie.set("token", data.token, { expires: 1 })
         Cookie.set("refreshToken", data.refreshToken, { expires: 1 })
         if(rememberMe){
@@ -168,7 +176,7 @@ const LoginPage = () => {
                 }
                 label="Manter logado"
               />
-              <Button
+              {/* <Button
                 size="medium"
                 color="success"
                 sx={{
@@ -177,7 +185,7 @@ const LoginPage = () => {
                 onClick={handleForgotPassword}
               >
                 Redefinir senha
-              </Button>
+              </Button> */}
             </Box>
             <Button
               size="large"
