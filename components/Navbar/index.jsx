@@ -129,7 +129,7 @@ const Navbar = () => {
               <div key={index} className={style.notification}>
                 <h5>{notification.title} { notification.opened && <span>visualizado</span> }</h5>
                 <p>{notification.description}</p>
-                {notification.actionLink?.length > 0 && <a href={notification.actionLink} onClick={() => handleVisualizeNotification(notification.id)}>Mais detalhes</a>}
+                {notification.actionLink?.length > 0 && <a href={notification.actionLink} target='_blank' onClick={() => handleVisualizeNotification(notification.id)}>Mais detalhes</a>}
               </div>
             ))}
           </div>
