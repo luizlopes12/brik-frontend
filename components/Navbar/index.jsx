@@ -24,10 +24,11 @@ const Navbar = () => {
   
         if (response.ok) {
           const data = await response.json();
-          // Check if the notifications already exist in the array
-          const existingNotificationIds = notifications.map((notification) => notification.id);
-          const newNotifications = data.filter((notification) => !existingNotificationIds.includes(notification.id));
-          setNotifications((prevNotifications) => [...prevNotifications, ...newNotifications]);
+          setNotifications((prevNotifications) => {
+            const existingNotificationIds = prevNotifications.map((notification) => notification.id);
+            const newNotifications = data.filter((notification) => !existingNotificationIds.includes(notification.id));
+            return [...prevNotifications, ...newNotifications];
+          });
         } else {
           setNotifications([]);
         }
@@ -36,12 +37,9 @@ const Navbar = () => {
       }
     };
   
-    const intervalId = setInterval(fetchData, 5000);
-  
-    return () => {
-      clearInterval(intervalId);
-    };
+    fetchData();
   }, []);
+  
 
   useEffect(() => {
     const nameOnCookie = Cookie.get('name');
