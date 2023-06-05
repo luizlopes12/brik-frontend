@@ -7,7 +7,7 @@ const Navbar = () => {
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const notificationNumber = useMemo(() => {
-    return notifications.length;
+    return notifications.filter(not => not.opened == false).length;
   }, [notifications]);
 
   useEffect(() => {
