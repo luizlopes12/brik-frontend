@@ -161,7 +161,7 @@ const RegisterSalePopUp = () => {
       initDate: formattedDate
   }
   console.log(saleData);
-    await fetch(`${process.env.BACKEND_URL_LOCAL}/sales/contract/email/send`, {
+    await fetch(`${process.env.BACKEND_URL}/sales/contract/email/send`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
