@@ -17,7 +17,7 @@ const TaxesEditPopUp = () => {
     )
       .then((res) => res.json())
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         return [];
       });
     const currentIPCA = await fetch(
@@ -25,7 +25,7 @@ const TaxesEditPopUp = () => {
     )
       .then((res) => res.json())
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         return [];
       });
     let accumulatedIGPM = currentIGPM.slice(-12).reduce((acc, curr) => {
@@ -53,7 +53,7 @@ const TaxesEditPopUp = () => {
           after24Months: parseFloat(data[0].after24Months),
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => // console.log(err));
   };
   const handleChangeTax = (e) => {
     setTaxes({ ...taxes, [e.target.name]: e.target.value });
@@ -68,7 +68,7 @@ const TaxesEditPopUp = () => {
     })
       .then((res) => res.json())
       .then((res) => (res.message ? setSavedTaxes(true) : setSavedTaxes(false)))
-      .catch((err) => console.log(err));
+      .catch((err) => // console.log(err));
 
     setTimeout(() => {
       setSavedTaxes(false);

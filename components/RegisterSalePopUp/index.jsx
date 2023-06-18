@@ -11,7 +11,7 @@ const RegisterSalePopUp = () => {
   const { globalDivisionsData, setGlobalDivisionsData } = useContext(
     globalDivisionsDataContext
   );
-  console.log(globalDivisionsData);
+  // console.log(globalDivisionsData);
   const [showDivisionOptions, setShowDivisionOptions] = useState(false);
   const [divisionSearch, setDivisionSearch] = useState("");
   const [showLotOptions, setShowLotOptions] = useState(false);
@@ -101,7 +101,7 @@ const RegisterSalePopUp = () => {
 
     setLotData((prev) => ({ ...prev, partners: [] }));
     setShowDivisionOptions(false);
-    console.log(lotDivision);
+    // console.log(lotDivision);
   };
   const handleSelectLot = (selectedLot) => {
     setLotSelected(() => {

@@ -355,7 +355,7 @@ const LotRegisterPopUp = () => {
                 },
                 body: newImage,
               }
-            ).catch((imageErr) => console.log(imageErr));
+            ).catch((imageErr) => // console.log(imageErr));
           });
           if (deletedPartners.length > 0) {
             deletedPartners.forEach(async (partner) => {
@@ -371,8 +371,8 @@ const LotRegisterPopUp = () => {
                 }
               )
                 .then((res) => res.json())
-                .then((data) => console.log(data))
-                .catch((partnerErr) => console.log(partnerErr));
+                .then((data) => // console.log(data))
+                .catch((partnerErr) => // console.log(partnerErr));
             });
           }
           if (newPartnersAdded.length > 0) {
@@ -389,8 +389,8 @@ const LotRegisterPopUp = () => {
                 }
               )
                 .then((res) => res.json())
-                .then((data) => console.log(data))
-                .catch((partnerErr) => console.log(partnerErr));
+                .then((data) => // console.log(data))
+                .catch((partnerErr) => // console.log(partnerErr));
             });
           }
           if (partnersUpdated.length > 0) {
@@ -407,12 +407,12 @@ const LotRegisterPopUp = () => {
                 }
               )
                 .then((res) => res.json())
-                .then((data) => console.log(data))
-                .catch((partnerErr) => console.log(partnerErr));
+                .then((data) => // console.log(data))
+                .catch((partnerErr) => // console.log(partnerErr));
             });
           }
         })
-        .catch((lotErr) => console.log(lotErr))
+        .catch((lotErr) => // console.log(lotErr))
         .finally(async () => {
           setDeletedPartners([]);
           setNewPartnersAdded([]);
@@ -426,9 +426,9 @@ const LotRegisterPopUp = () => {
             .then((updatedResponse) => updatedResponse.json())
             .then(
               (updatedData) => setGlobalDivisionsData(updatedData),
-              console.log("Lote atualizado com sucesso!")
+              // console.log("Lote atualizado com sucesso!")
             )
-            .catch((err) => console.log(err));
+            .catch((err) => // console.log(err));
         });
     } catch (error) {
       alert("Ocorreu um erro ao atualizar o lote, tente novamente!");
