@@ -4,6 +4,7 @@ import { popUpsContext } from "../../context/popUpsContext";
 import DivisionSelector from "../DivisionSelector";
 import LotSelector from "../LotSelector";
 import { globalDivisionsDataContext } from "../../context/globalDivisionsDataContext";
+import { toast } from "react-toastify";
 
 const RegisterSalePopUp = () => {
   const { popUps, setPopUps } = useContext(popUpsContext);
@@ -34,6 +35,7 @@ const RegisterSalePopUp = () => {
     taxPercentage24: 0,
     partners: [],
     metrics: "",
+    entryValue: 0,
     parcels: 0,
   });
 
@@ -131,14 +133,47 @@ const RegisterSalePopUp = () => {
       maxPortionsQuantity: 0,
       taxPercentage: 0,
       taxPercentage24: 0,
+      entryValue: 0,
       partners: [],
     });
   };
 
   const handleSubmit = async () => {
-    console.log(textsInputs);
-  };
-  console.log(lotSelected);
+  let currentDate = new Date();
+  currentDate.setMonth(currentDate.getMonth() + 1);
+  let year = currentDate.getFullYear();
+  let month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  let day = String(currentDate.getDate()).padStart(2, '0');
+  let formattedDate = `${year}-${month}-${day}`;
+    await fetch(`${process.env.BACKEND_URL}/sales/contract/email/send`, {
+      type: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        "seller": {
+            "name": "Vendedor",
+            "email": textsInputs.seller
+        },
+        "buyer": {
+            "name": "Cliente",
+            "email": textsInputs.buyer
+        },
+        "loteId": lotSelected.id,
+        "parcelsQuantity": lotSelected.maxPortionsQuantity,
+        "entryValue": lotSelected.entryValue,
+        "initDate": formattedDate
+    },
+    }
+    ).then(res => res.json())
+    .then((data) =>{
+      toast.success(data.message);
+    })
+    .catch((err) => {
+      toast.error(err.message);
+    })
+  }
+
   const formatPrice = (price) => {
     const priceAsNumber = parseFloat(price);
     return priceAsNumber.toLocaleString("pt-br", {

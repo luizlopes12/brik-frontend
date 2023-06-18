@@ -38,7 +38,7 @@ const LotSelector = ({
             >
               <img
                 src={
-                  lot.loteImages?.[0].imageUrl ||
+                  lot.loteImages[0]?.imageUrl ||
                   "https://i.imgur.com/YQOzMWA.png"
                 }
               />
