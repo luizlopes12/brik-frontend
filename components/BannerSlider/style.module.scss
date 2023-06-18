@@ -1,86 +1,82 @@
-@import '../../styles/colors.scss';
-@import '../../styles/mixins.scss';
+@import "../../styles/colors.scss";
+@import "../../styles/mixins.scss";
 
-
-.bannerContainer{
-    transition: all .3s ease-in-out;
-    &.onHomeStyle{
-        width: 100%;
-        max-width: 1180px;
-        margin: 2rem auto;
-        padding: .5rem;
-        .bannerControls{
-            .bannerDots{
-                gap: 1rem;
-                .bannerDot{
-                    width: 15px;
-                    height: 15px;
-                    outline: 2px solid $green_color-8;
-                    border: 2px solid $bg_white-color;
-                    background: $bg_white-color;
-                    &.active{
-                        background: $green_color-8;
-                    }
-                }
-            }
-        }
-    }
-    img{
-        border-radius: 20px;
-    }
-}
-
-.bannerControls{
-    display: flex;
-    justify-content:center;
+.bannerContainer {
+  transition: all 0.3s ease-in-out;
+  &.onHomeStyle {
     width: 100%;
-    margin: auto;
+    max-width: 1180px;
+    margin: 2rem auto;
+    padding: 0.5rem;
+    .bannerControls {
+      .bannerDots {
+        gap: 1rem;
+        .bannerDot {
+          width: 15px;
+          height: 15px;
+          outline: 2px solid $green_color-8;
+          border: 2px solid $bg_white-color;
+          background: $bg_white-color;
+          &.active {
+            background: $green_color-8;
+          }
+        }
+      }
+    }
+  }
+  img {
+    border-radius: 20px;
+  }
 }
 
-.bannerDots{
-    display: flex;
-    gap: .5rem;
-    justify-content: center;
-    margin-top: 1rem;
+.bannerControls {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: auto;
 }
 
-.bannerDot{
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: $gray_color-2;
+.bannerDots {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.bannerDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: $gray_color-2;
+  opacity: 1;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    cursor: pointer;
     opacity: 1;
-    transition: all .3s ease-in-out;
-    &:hover{
-        cursor: pointer;
-        opacity: 1;
-    }
-    &.active{
-        background: $text-dark-blue;
-    }
+  }
+  &.active {
+    background: $text-dark-blue;
+  }
 }
 
-
-@media(max-width: 375px){
-.bannerContainer{
-    img{
-        height: 200px;
+@media (max-width: 375px) {
+  .bannerContainer {
+    img {
+      height: 200px;
     }
+  }
 }
-}
 
-
-
-@media(max-width: 625px){
-    .bannerContainer{
-        &.onHomeStyle{
-            margin: 4rem auto 0;
-        }
+@media (max-width: 625px) {
+  .bannerContainer {
+    &.onHomeStyle {
+      margin: 4rem auto 0;
     }
-    .bannerContainer{
-        img{
-            height: 120px;
-            object-fit: cover;
-        }
+  }
+  .bannerContainer {
+    img {
+      height: 120px;
+      object-fit: cover;
     }
+  }
 }

@@ -1,107 +1,101 @@
-@import '../../styles/colors.scss';
+@import "../../styles/colors.scss";
 
-.navContainer{
-   background: $gray_color-6;
-   min-height: 100vh;
-   min-width: 14vw;
-   display: flex;
-   flex-direction: column;
-   align-items: flex-end;
-   gap: 3rem;
-   padding: 2rem 0;
-   position: fixed;
-   top: -1rem;
-   left: 0;
-   z-index: 10;
+.navContainer {
+  background: $gray_color-6;
+  min-height: 100vh;
+  min-width: 14vw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3rem;
+  padding: 2rem 0;
+  position: fixed;
+  top: -1rem;
+  left: 0;
+  z-index: 10;
 }
-.brandLogoWrapper{
-   min-width: 100%;
-   display: flex;
-   justify-content: center;
-   padding: 0 20px;
+.brandLogoWrapper {
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
 }
 
-.brandLogo{
-   max-width: 100px;
+.brandLogo {
+  max-width: 100px;
 }
-.nav{
-   display: flex;
-   align-items: flex-end;
-   flex-direction: column;
-   flex-grow: 1;
-   justify-content: space-between;
-   ul{
+.nav {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+  ul {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    li {
+      &.active {
+        background: #fff;
+        border-radius: 20px 0 0 20px;
+        path {
+          stroke: $green_color-3;
+        }
+        // span{
+        //    font-weight: 500;
+        // }
+        // .navText{
+        //    font-weight: 500;
+        // }
+      }
+      a {
+        display: flex;
+        padding: 12px 40px 12px 20px;
+        align-items: center;
+        gap: 5px;
+        max-width: 100%;
+        img {
+          stroke: red;
+        }
+        .navText {
+          font-weight: 400;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1080px) {
+  .navContainer {
+    z-index: 999;
+    position: absolute;
+    transform: translateX(-100%);
+    transition: all 0.3s ease-in-out;
+    padding-bottom: 100vh;
+    .hamburguerMenu {
+      position: absolute;
+      transition: all 0.3s ease-in-out;
+      top: 18px;
+      right: -5px;
+      transform: translate(-10px, 0);
       display: flex;
       flex-direction: column;
-      width: 100%;
-      li{
-         &.active{
-            background: #fff;
-            border-radius: 20px 0 0 20px;
-            path{
-               stroke: $green_color-3;
-            }
-            // span{
-            //    font-weight: 500;
-            // }
-            // .navText{
-            //    font-weight: 500;
-            // }
-         }
-         a{
-            display: flex;
-            padding: 12px 40px 12px 20px;
-            align-items: center;
-            gap: 5px;
-            max-width: 100%;
-            img{
-                  stroke: red;
-            }
-            .navText{
-               font-weight: 400;
-            }
-         }
+      gap: 0.2rem;
+      > div {
+        width: 20px;
+        height: 3px;
+        border-radius: 1rem;
+        background: $green_color-3;
       }
-   }
-}
-
-
-
-
-@media(max-width: 1080px){
-   .navContainer{
-      z-index: 999;
-      position: absolute;
-      transform: translateX(-100%);
-      transition: all .3s ease-in-out;
-      padding-bottom: 100vh;
-      .hamburguerMenu{
-         position: absolute;
-         transition: all .3s ease-in-out;
-         top: 18px;
-         right: -5px;
-         transform: translate(-10px, 0);
-         display: flex;
-         flex-direction: column; 
-         gap: .2rem;
-         > div{
-            width: 20px;
-            height: 3px;
-            border-radius: 1rem;
-            background: $green_color-3;
-         }
+    }
+    .hamburguerMenu {
+      transform: translate(35px, 1rem);
+    }
+    &.active {
+      transform: translateX(0);
+      .hamburguerMenu {
+        transform: translate(-15px, 1rem);
       }
-      .hamburguerMenu{
-         transform: translate(35px, 1rem);
-      }
-         &.active{
-            transform: translateX(0);
-            .hamburguerMenu{
-               
-               transform: translate(-15px, 1rem);;
-            }
-         }
-   }
-
-
+    }
+  }
 }

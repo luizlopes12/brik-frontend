@@ -1,6 +1,6 @@
 @import './colors.scss';
 
-@mixin dropDown(){
+@mixin dropDown() {
     background: $bg_white-color;
     padding: 10px 35px 10px 20px;
     border-radius: 8px;
@@ -11,14 +11,15 @@
     background-position: calc(100% - 15px) center;
     background-size: 12px;
     width: fit-content;
-    > option{
+
+    >option {
         color: $text-black;
         background: $bg_white-color;
         padding-top: 20px;
     }
 }
 
-@mixin actionButton($color, $background){
+@mixin actionButton($color, $background) {
     background: $background;
     color: $color;
     padding: 10px 12px;
@@ -29,11 +30,13 @@
     align-items: center;
     gap: 3px;
     transition: all .3s ease-in-out;
-    &:hover{
+
+    &:hover {
         cursor: pointer;
         background: darken($background, 3%);
     }
-    > img{
+
+    >img {
         max-height: 22px;
     }
 }

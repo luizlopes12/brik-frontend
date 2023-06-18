@@ -1,11 +1,10 @@
-@import '../../styles/colors.scss';
+@import "../../styles/colors.scss";
 
-.headingText{
-    font-size: 2.4rem;
-    font-weight: 700;
-    color: $text-dark-blue;
-    span{
-        color: $green_color-6;
-    }
+.headingText {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: $text-dark-blue;
+  span {
+    color: $green_color-6;
+  }
 }
-

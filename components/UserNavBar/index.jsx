@@ -46,7 +46,11 @@ const UserNavBar = ({
 
   return (
     <header className={style.headerContainer}>
-      <nav className={`${style.navbarContainer} ${navLocation === "details" && style.navbarTwoCols }`}>
+      <nav
+        className={`${style.navbarContainer} ${
+          navLocation === "details" && style.navbarTwoCols
+        }`}
+      >
         <div className={style.navItem}>
           <Link href="/">
             <img src={imageSrc} alt="Logo" className={style.brandLogo} />
@@ -87,7 +91,9 @@ const UserNavBar = ({
             <img src={userImage} alt="Usuário" />
             <ul className={style.userActions} data-active={isActive.actions}>
               <li>
-                <Link href="/login">{userData.email !== 'Luiz@luiz.com' ? 'Meu painel' : 'Login'}</Link>
+                <Link href="/login">
+                  {userData.email !== "Luiz@luiz.com" ? "Meu painel" : "Login"}
+                </Link>
               </li>
             </ul>
           </div>

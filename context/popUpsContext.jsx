@@ -1,8 +1,7 @@
 import { createContext, useState } from "react";
 
-const popUpsContext = createContext({})
-const PopUpsProvider = ({children}) =>{
-    
+const popUpsContext = createContext({});
+const PopUpsProvider = ({ children }) => {
   const [popUps, setPopUps] = useState({
     lotRegister: false,
     lotEdit: false,
@@ -11,9 +10,13 @@ const PopUpsProvider = ({children}) =>{
     divisionEdit: false,
     registerSale: false,
     bannerAdd: false,
-  }) 
+  });
 
-    return <popUpsContext.Provider value={{popUps, setPopUps}}>{children}</popUpsContext.Provider>
-}
+  return (
+    <popUpsContext.Provider value={{ popUps, setPopUps }}>
+      {children}
+    </popUpsContext.Provider>
+  );
+};
 
-export {PopUpsProvider, popUpsContext};
+export { PopUpsProvider, popUpsContext };

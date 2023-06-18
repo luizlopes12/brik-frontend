@@ -9,20 +9,19 @@ import {
   Button,
   IconButton,
   InputAdornment,
-  CircularProgress 
+  CircularProgress,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import style from './style.module.scss'
+import style from "./style.module.scss";
 import { useRouter } from "next/router";
 import Cookie from "js-cookie";
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import nextCookies from "next-cookies";
-
 
 export async function getServerSideProps(context) {
   const cookies = nextCookies(context);
-    const { token, refreshToken } = cookies?cookies:{};
+  const { token, refreshToken } = cookies ? cookies : {};
 
   if (token || refreshToken) {
     return {
@@ -47,7 +46,6 @@ const LoginPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-
   const handleForgotPassword = () => {
     setView("forgot");
   };
@@ -62,43 +60,47 @@ const LoginPage = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "access-control-allow-headers": "Origin,X-Requested-With,Content-Type,Accept,content-type,application/json",
+        "access-control-allow-headers":
+          "Origin,X-Requested-With,Content-Type,Accept,content-type,application/json",
       },
       body: JSON.stringify({
         email,
         password,
       }),
     })
-    .then((res) => {
-      if (res.status === 200) {
-        return res.json();
-      } else {
-        setLoginAlert("Email ou senha incorretos");
-      }
-      setLoading(false);
-    })
-    .then((data) => {
-      if (data && data.token && data.refreshToken) {
-        Cookie.set("name", data.name)
-        Cookie.set("email", data.email)
-        Cookie.set("phone", data.phone)
-        Cookie.set("permissions", JSON.stringify({
-          admin: data.admin,
-          editDivisions: data.editDivisions,
-          editLots: data.editLots,
-          editPartners: data.editPartners,
-          editBanners: data.editBanners,
-          editTaxes: data.editTaxes,
-        }))
-        Cookie.set("token", data.token, { expires: 1 })
-        Cookie.set("refreshToken", data.refreshToken, { expires: 1 })
-        if(rememberMe){
-          Cookie.set("refreshToken", data.refreshToken, { expires: 7 })
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        } else {
+          setLoginAlert("Email ou senha incorretos");
         }
-        router.push("/admin");
-      }
-    })
-  }
+        setLoading(false);
+      })
+      .then((data) => {
+        if (data && data.token && data.refreshToken) {
+          Cookie.set("name", data.name);
+          Cookie.set("email", data.email);
+          Cookie.set("phone", data.phone);
+          Cookie.set(
+            "permissions",
+            JSON.stringify({
+              admin: data.admin,
+              editDivisions: data.editDivisions,
+              editLots: data.editLots,
+              editPartners: data.editPartners,
+              editBanners: data.editBanners,
+              editTaxes: data.editTaxes,
+            })
+          );
+          Cookie.set("token", data.token, { expires: 1 });
+          Cookie.set("refreshToken", data.refreshToken, { expires: 1 });
+          if (rememberMe) {
+            Cookie.set("refreshToken", data.refreshToken, { expires: 7 });
+          }
+          router.push("/admin");
+        }
+      });
+  };
 
   const handleResetPassword = () => {
     // Perform reset password action here
@@ -114,12 +116,15 @@ const LoginPage = () => {
           justifyContent: "center",
         }}
       >
-        <Typography className={style.brandLogo} variant="h4" onClick={() => router.push("/")}>
+        <Typography
+          className={style.brandLogo}
+          variant="h4"
+          onClick={() => router.push("/")}
+        >
           <img src="/images/brandLogo.png" alt="Logo" width="160" />
         </Typography>
         {view === "login" ? (
           <>
-
             <TextField
               margin="normal"
               fullWidth
@@ -195,11 +200,19 @@ const LoginPage = () => {
               variant="contained"
               onClick={handleLogin}
             >
-              {loading ? <CircularProgress color="inherit" size={28} /> : <b>Entrar</b>}
-              
+              {loading ? (
+                <CircularProgress color="inherit" size={28} />
+              ) : (
+                <b>Entrar</b>
+              )}
             </Button>
-          <p className={style.alertMessage}>{loginAlert && loginAlert}</p>
-          <Button color="success" className={style.backToHome} size="small" onClick={() => router.push("/")}>
+            <p className={style.alertMessage}>{loginAlert && loginAlert}</p>
+            <Button
+              color="success"
+              className={style.backToHome}
+              size="small"
+              onClick={() => router.push("/")}
+            >
               <ArrowBackIosNewIcon fontSize="small" />
               Voltar
             </Button>
@@ -231,7 +244,13 @@ const LoginPage = () => {
             >
               Enviar
             </Button>
-            <Button color="success" className={style.backToHome} size="large" sx={{ marginTop: 5 }} onClick={handleBackToLogin}>
+            <Button
+              color="success"
+              className={style.backToHome}
+              size="large"
+              sx={{ marginTop: 5 }}
+              onClick={handleBackToLogin}
+            >
               <ArrowBackIosNewIcon fontSize="small" />
               Voltar
             </Button>

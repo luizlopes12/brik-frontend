@@ -1,21 +1,21 @@
-@import '../../styles/colors.scss';
+@import "../../styles/colors.scss";
 
-.alertMessage{
-    color: $alert_font-color;
-    margin-top: 2rem;
+.alertMessage {
+  color: $alert_font-color;
+  margin-top: 2rem;
 }
 
-.brandLogo{
-    &:hover{
-        cursor: pointer;
-    }
+.brandLogo {
+  &:hover {
+    cursor: pointer;
+  }
 }
 
-.backToHome{
-    align-self: flex-start;
-    font-weight: bold;
-    gap: 0.5rem;
-    &:hover{
-        background: transparent;
-    }
+.backToHome {
+  align-self: flex-start;
+  font-weight: bold;
+  gap: 0.5rem;
+  &:hover {
+    background: transparent;
+  }
 }

@@ -1,16 +1,16 @@
-.formContainer{
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    width: 100%;
-    max-width: 500px;
-    margin: 2rem auto 10rem;
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 500px;
+  margin: 2rem auto 10rem;
 }
 
-.subText{
-    font-size: .8rem;
-    color: #666;
-    margin-top: .5rem;
-    display: flex;
-    flex-direction: column;
+.subText {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
 }

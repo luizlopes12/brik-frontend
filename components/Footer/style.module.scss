@@ -1,79 +1,79 @@
-@import '../../styles/colors.scss';
+@import "../../styles/colors.scss";
 
-.footerSection{
-    margin-top: 5rem;
-    width: 100%;
-    background: $footer_bg-color;
-    color: $bg_white-color;
-    display: flex;
-    justify-content: center;
-    padding: 4rem 1rem;
-    
-.footerContainer{
+.footerSection {
+  margin-top: 5rem;
+  width: 100%;
+  background: $footer_bg-color;
+  color: $bg_white-color;
+  display: flex;
+  justify-content: center;
+  padding: 4rem 1rem;
+
+  .footerContainer {
     width: 100%;
     max-width: 1180px;
     margin: auto;
     display: flex;
     justify-content: space-between;
-    @media(max-width: 768px){
-        flex-direction: column;
-        gap: 1rem;
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 1rem;
     }
-    .contact{
-        width: 60%;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(2, 1fr);
-        gap: 1rem;
-        @media(max-width: 768px){
-            width: 90%;
-            max-width: 400px;
-            grid-template-columns: 1fr;
-            grid-template-rows: repeat(4, 1fr);
-            gap: 0;
-            grid-row-gap: 1rem;
-            margin: 0 auto;
-        }
-        .footerItem{
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            .itemTitle{
-                font-size: 1.1rem;
-                font-weight: 700;
-                color: $bg_white-color;
-            }
-            .itemContent{
-                font-size: 1rem;
-                font-weight: 300;
-                color: $bg_white-color;
-                word-break: break-all;
-            }
-            .socials{
-                display: flex;
-                gap: 2rem;
-                img{
-                    height: 1.5rem;
-                    width: 1.5rem;
-                }
-            }
-        }
-    }
-    .about{
-        width: 35%;
+    .contact {
+      width: 60%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 1rem;
+      @media (max-width: 768px) {
+        width: 90%;
+        max-width: 400px;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+        gap: 0;
+        grid-row-gap: 1rem;
+        margin: 0 auto;
+      }
+      .footerItem {
         display: flex;
         flex-direction: column;
-        gap: 4rem;
-        img{
-            height: 4rem;
-            width: fit-content;
+        gap: 1rem;
+        .itemTitle {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: $bg_white-color;
         }
-        @media(max-width: 768px){
-            width: 90%;
-            max-width: 400px;
-            margin: 0 auto;
-            gap: 1rem;
+        .itemContent {
+          font-size: 1rem;
+          font-weight: 300;
+          color: $bg_white-color;
+          word-break: break-all;
         }
+        .socials {
+          display: flex;
+          gap: 2rem;
+          img {
+            height: 1.5rem;
+            width: 1.5rem;
+          }
+        }
+      }
     }
-}
+    .about {
+      width: 35%;
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+      img {
+        height: 4rem;
+        width: fit-content;
+      }
+      @media (max-width: 768px) {
+        width: 90%;
+        max-width: 400px;
+        margin: 0 auto;
+        gap: 1rem;
+      }
+    }
+  }
 }

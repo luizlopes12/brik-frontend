@@ -1,7 +1,6 @@
-import React from 'react';
-import style from './style.module.scss';
-import SearchInput from '../SearchInput';
-
+import React from "react";
+import style from "./style.module.scss";
+import SearchInput from "../SearchInput";
 
 const DivisionSelector = ({
   lotDivision,
@@ -14,7 +13,10 @@ const DivisionSelector = ({
 }) => {
   return (
     <div className={style.lotDivision}>
-      <div className={style.divisionSelected} onClick={handleShowDivisionOptions}>
+      <div
+        className={style.divisionSelected}
+        onClick={handleShowDivisionOptions}
+      >
         <img src={lotDivision.logoUrl} />
         <span>{lotDivision.name}</span>
       </div>
@@ -35,7 +37,7 @@ const DivisionSelector = ({
               <img src={division.logoUrl} />
               <span>
                 {division.name.length > 18
-                  ? division.name.substring(18, '...')
+                  ? division.name.substring(18, "...")
                   : division.name}
               </span>
             </li>

@@ -7,22 +7,24 @@ import { globalDivisionsDataContext } from "../../context/globalDivisionsDataCon
 
 const RegisterSalePopUp = () => {
   const { popUps, setPopUps } = useContext(popUpsContext);
-  const { globalDivisionsData, setGlobalDivisionsData } = useContext(globalDivisionsDataContext)
-  console.log(globalDivisionsData)
+  const { globalDivisionsData, setGlobalDivisionsData } = useContext(
+    globalDivisionsDataContext
+  );
+  console.log(globalDivisionsData);
   const [showDivisionOptions, setShowDivisionOptions] = useState(false);
-  const [divisionSearch, setDivisionSearch] = useState('');
+  const [divisionSearch, setDivisionSearch] = useState("");
   const [showLotOptions, setShowLotOptions] = useState(false);
   const [parcelsAlert, setParcelsAlert] = useState(false);
   const [lotDivision, setLotDivision] = useState({
-    name: 'Selecione um Loteamento',
-    logoUrl: 'https://i.imgur.com/YQOzMWA.png',
+    name: "Selecione um Loteamento",
+    logoUrl: "https://i.imgur.com/YQOzMWA.png",
     id: 0,
     partners: [],
-  })
+  });
 
   const [lotSelected, setLotSelected] = useState({
-    name: 'Selecione um Lote',
-    logoUrl: 'https://i.imgur.com/YQOzMWA.png',
+    name: "Selecione um Lote",
+    logoUrl: "https://i.imgur.com/YQOzMWA.png",
     id: 0,
     price: 0,
     basePrice: 0,
@@ -31,55 +33,61 @@ const RegisterSalePopUp = () => {
     taxPercentage: 0,
     taxPercentage24: 0,
     partners: [],
-    metrics: '',
+    metrics: "",
     parcels: 0,
-  })
+  });
 
-  const [lotSearch, setLotSearch] = useState('');
+  const [lotSearch, setLotSearch] = useState("");
 
   const [lotData, setLotData] = useState({
-    name: '',
-    description: '',
-    location: '',
-    metrics: '',
-    price: '',
-    basePrice: '',
+    name: "",
+    description: "",
+    location: "",
+    metrics: "",
+    price: "",
+    basePrice: "",
     hiddenPrice: false,
     maxPortionsQuantity: 0,
-    taxPercentage: '',
-    taxPercentage24: '',
-    partners: [
-    ],
-  })
+    taxPercentage: "",
+    taxPercentage24: "",
+    partners: [],
+  });
   const handleShowDivisionOptions = () => {
-    setShowDivisionOptions(!showDivisionOptions)
-  }
+    setShowDivisionOptions(!showDivisionOptions);
+  };
   const handleShowLotOptions = () => {
-    setShowLotOptions(!showLotOptions)
-  }
-  
-  
+    setShowLotOptions(!showLotOptions);
+  };
+
   const [textsInputs, setTextsInputs] = useState({
-    seller: '',
-    buyer: '',
-  }); 
+    seller: "",
+    buyer: "",
+  });
   const globalDivisionsDataFiltered = useMemo(() => {
-    return globalDivisionsData.filter(division => divisionSearch.length > 0 ? division.name.toLowerCase().includes(divisionSearch.toLowerCase()) : division)
-  }, [divisionSearch, globalDivisionsData])
+    return globalDivisionsData.filter((division) =>
+      divisionSearch.length > 0
+        ? division.name.toLowerCase().includes(divisionSearch.toLowerCase())
+        : division
+    );
+  }, [divisionSearch, globalDivisionsData]);
   const lotsDataFiltered = useMemo(() => {
-    return lotDivision.lotes?.filter(lot => lotSearch.length > 0 ? lot.name.toLowerCase().includes(lotSearch.toLowerCase()) : lot)
-  }, [lotSearch, lotDivision.lotes])
+    return lotDivision.lotes?.filter((lot) =>
+      lotSearch.length > 0
+        ? lot.name.toLowerCase().includes(lotSearch.toLowerCase())
+        : lot
+    );
+  }, [lotSearch, lotDivision.lotes]);
 
   const handleChangeTextsInputs = (e) => {
     setTextsInputs({ ...textsInputs, [e.target.name]: e.target.value });
   };
 
   const handleSearchDivision = (e) => {
-    setDivisionSearch(e.target.value)
-  }
+    setDivisionSearch(e.target.value);
+  };
   const handleSearchLot = (e) => {
-    setLotSearch(e.target.value)
-  }
+    setLotSearch(e.target.value);
+  };
   const handleSelectDivisionToLot = (selectedDivision) => {
     setLotDivision({
       name: selectedDivision.name,
@@ -87,78 +95,72 @@ const RegisterSalePopUp = () => {
       id: selectedDivision.id,
       partners: selectedDivision.divisionPartners,
       lotes: selectedDivision.lotes,
-    })
+    });
 
-
-
-    
-    setLotData(prev => ({ ...prev, partners: [] }))
-    setShowDivisionOptions(false)
-    console.log(lotDivision)
-  }
+    setLotData((prev) => ({ ...prev, partners: [] }));
+    setShowDivisionOptions(false);
+    console.log(lotDivision);
+  };
   const handleSelectLot = (selectedLot) => {
     setLotSelected(() => {
-      selectedLot.parcels = selectedLot.maxPortionsQuantity
-      selectedLot.entryValue = 0
-      return selectedLot
-    
-    })
+      selectedLot.parcels = selectedLot.maxPortionsQuantity;
+      selectedLot.entryValue = 0;
+      return selectedLot;
+    });
 
-    setShowLotOptions(false)
-  }
+    setShowLotOptions(false);
+  };
 
   const handleExitPopUp = () => {
-    setShowDivisionOptions(false)
-    setShowLotOptions(false)
-    setPopUps({ ...popUps, registerSale: false })
+    setShowDivisionOptions(false);
+    setShowLotOptions(false);
+    setPopUps({ ...popUps, registerSale: false });
     setLotDivision({
-        name: 'Selecione um Loteamento',
-        logoUrl: 'https://i.imgur.com/YQOzMWA.png',
-        id: 0,
-        partners: [],
-      })
+      name: "Selecione um Loteamento",
+      logoUrl: "https://i.imgur.com/YQOzMWA.png",
+      id: 0,
+      partners: [],
+    });
     setLotSelected({
-        name: 'Selecione um Lote',
-        logoUrl: 'https://i.imgur.com/YQOzMWA.png',
-        id: 0,
-        price: 0,
-        basePrice: 0,
-        hiddenPrice: false,
-        maxPortionsQuantity: 0,
-        taxPercentage: 0,
-        taxPercentage24: 0,
-        partners: [],
-      })
+      name: "Selecione um Lote",
+      logoUrl: "https://i.imgur.com/YQOzMWA.png",
+      id: 0,
+      price: 0,
+      basePrice: 0,
+      hiddenPrice: false,
+      maxPortionsQuantity: 0,
+      taxPercentage: 0,
+      taxPercentage24: 0,
+      partners: [],
+    });
   };
 
   const handleSubmit = async () => {
-    console.log(textsInputs)
+    console.log(textsInputs);
   };
-  console.log(lotSelected)
+  console.log(lotSelected);
   const formatPrice = (price) => {
     const priceAsNumber = parseFloat(price);
-    return priceAsNumber.toLocaleString('pt-br', {
-      style: 'currency',
-      currency: 'BRL',
+    return priceAsNumber.toLocaleString("pt-br", {
+      style: "currency",
+      currency: "BRL",
       minimumFractionDigits: 2,
-      decimalSeparator: ',',
-      thousandsSeparator: '.'
+      decimalSeparator: ",",
+      thousandsSeparator: ".",
     });
   };
 
   const handleVerifyParcels = (e) => {
     if (lotSelected.maxPortionsQuantity >= e.target.value) {
-      setParcelsAlert(false)
-      setLotSelected(prev => ({ ...prev, parcels: e.target.value }))
+      setParcelsAlert(false);
+      setLotSelected((prev) => ({ ...prev, parcels: e.target.value }));
     } else {
-      setParcelsAlert(true)
-
+      setParcelsAlert(true);
     }
-  }
+  };
   const handleEntryInput = (e) => {
-      setLotSelected(prev => ({ ...prev, entryValue: e.target.value }))
-  }
-
+    setLotSelected((prev) => ({ ...prev, entryValue: e.target.value }));
+  };
 
   return (
     <div
@@ -178,60 +180,90 @@ const RegisterSalePopUp = () => {
           </button>
         </div>
         <section className={style.lotSelection}>
-        <DivisionSelector
-              lotDivision={lotDivision}
-              handleShowDivisionOptions={handleShowDivisionOptions}
-              showDivisionOptions={showDivisionOptions}
-              divisionSearch={divisionSearch}
-              handleSearchDivision={handleSearchDivision}
-              globalDivisionsDataFiltered={globalDivisionsDataFiltered}
-              handleSelectDivisionToLot={handleSelectDivisionToLot}
-            />
-        <LotSelector
-              lotSelected={lotSelected}
-              showLotOptions={showLotOptions}
-              lotsDataFiltered={lotsDataFiltered}
-              handleShowLotOptions={handleShowLotOptions}
-              handleSelectLot={handleSelectLot}
-              handleSearchLot={handleSearchLot}
-              lotSearch={lotSearch}
-            />
+          <DivisionSelector
+            lotDivision={lotDivision}
+            handleShowDivisionOptions={handleShowDivisionOptions}
+            showDivisionOptions={showDivisionOptions}
+            divisionSearch={divisionSearch}
+            handleSearchDivision={handleSearchDivision}
+            globalDivisionsDataFiltered={globalDivisionsDataFiltered}
+            handleSelectDivisionToLot={handleSelectDivisionToLot}
+          />
+          <LotSelector
+            lotSelected={lotSelected}
+            showLotOptions={showLotOptions}
+            lotsDataFiltered={lotsDataFiltered}
+            handleShowLotOptions={handleShowLotOptions}
+            handleSelectLot={handleSelectLot}
+            handleSearchLot={handleSearchLot}
+            lotSearch={lotSearch}
+          />
         </section>
         <section className={style.lotData}>
-          {
-          lotSelected.name !== 'Selecione um Lote' && (
+          {lotSelected.name !== "Selecione um Lote" && (
             <>
-            <div className={style.lotDataWrapper}>
-            <span className={style.dataType}>Nome:</span> <span>{lotSelected.name}</span>
-              <span className={style.dataType}>Preço:</span> <span>{formatPrice(lotSelected.finalPrice)}</span>
-              <span className={style.dataType}>Área:</span> <span>{lotSelected.metrics}m²</span>
-              <span className={style.dataType}>Parcelas:</span> <span>
-                <input type="number" className={style.parcelsInput} value={lotSelected.parcels} onChange={handleVerifyParcels} />
-                {parcelsAlert && <span className={style.parcelsAlert}>Parcelas não podem ser maiores que {lotSelected.maxPortionsQuantity}</span>}
-              </span>
-                
-              <span className={style.dataType}>Entrada:</span> <span className={style.entryInputContainer}>
-              R$
-                <input type="number" className={style.entryInput} value={lotSelected.entryValue} onChange={handleEntryInput} />
-              </span>
-            </div>
-              
+              <div className={style.lotDataWrapper}>
+                <span className={style.dataType}>Nome:</span>{" "}
+                <span>{lotSelected.name}</span>
+                <span className={style.dataType}>Preço:</span>{" "}
+                <span>{formatPrice(lotSelected.finalPrice)}</span>
+                <span className={style.dataType}>Área:</span>{" "}
+                <span>{lotSelected.metrics}m²</span>
+                <span className={style.dataType}>Parcelas:</span>{" "}
+                <span>
+                  <input
+                    type="number"
+                    className={style.parcelsInput}
+                    value={lotSelected.parcels}
+                    onChange={handleVerifyParcels}
+                  />
+                  {parcelsAlert && (
+                    <span className={style.parcelsAlert}>
+                      Parcelas não podem ser maiores que{" "}
+                      {lotSelected.maxPortionsQuantity}
+                    </span>
+                  )}
+                </span>
+                <span className={style.dataType}>Entrada:</span>{" "}
+                <span className={style.entryInputContainer}>
+                  R$
+                  <input
+                    type="number"
+                    className={style.entryInput}
+                    value={lotSelected.entryValue}
+                    onChange={handleEntryInput}
+                  />
+                </span>
+              </div>
             </>
-          
           )}
         </section>
         <section className={style.inputsSection}>
-            <div className={style.inputs}>
-                <div className={style.input}>
-                  <label>Email do Vendedor:</label>
-                  <input type="email" placeholder='vendedor@gmail.com' value={textsInputs.seller} name='seller' onChange={handleChangeTextsInputs}/>
-                </div>
-                <div className={style.input}>
-                  <label>Email do Cliente:</label>
-                  <input type="email" placeholder='cliente@gmail.com' value={textsInputs.buyer} name='buyer' onChange={handleChangeTextsInputs}/>
-                </div>
-                <button className={style.sendEmail} onClick={handleSubmit}>Enviar</button>
+          <div className={style.inputs}>
+            <div className={style.input}>
+              <label>Email do Vendedor:</label>
+              <input
+                type="email"
+                placeholder="vendedor@gmail.com"
+                value={textsInputs.seller}
+                name="seller"
+                onChange={handleChangeTextsInputs}
+              />
             </div>
+            <div className={style.input}>
+              <label>Email do Cliente:</label>
+              <input
+                type="email"
+                placeholder="cliente@gmail.com"
+                value={textsInputs.buyer}
+                name="buyer"
+                onChange={handleChangeTextsInputs}
+              />
+            </div>
+            <button className={style.sendEmail} onClick={handleSubmit}>
+              Enviar
+            </button>
+          </div>
         </section>
       </div>
     </div>

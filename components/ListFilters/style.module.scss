@@ -1,89 +1,87 @@
-@import '../../styles/colors.scss';
-@import '../../styles/mixins.scss';
+@import "../../styles/colors.scss";
+@import "../../styles/mixins.scss";
 
-.listFiltersContainer{
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 5rem;
+.listFiltersContainer {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 5rem;
+  right: 1rem;
+  background: $bg_white-color;
+  box-shadow: 0px 2px 5px rgba(124, 124, 124, 0.1);
+  border: 2px solid $gray_color-3;
+  padding: 2rem;
+  width: fit-content;
+  z-index: 999;
+  border-radius: 3px;
+  @media (max-width: 768px) {
+    top: 8rem;
     right: 1rem;
-    background: $bg_white-color;	
-    box-shadow: 0px 2px 5px rgba(124, 124, 124, 0.1);
-    border: 2px solid $gray_color-3;
-    padding: 2rem;
-    width: fit-content;
-    z-index: 999;
-    border-radius: 3px;
-    @media(max-width: 768px){
-        top: 8rem;
-        right: 1rem;
-        margin: 0 auto;
-    }
-    @media(max-width: 340px){
-        width: 100%;
-        top: 10rem;
-        right: 0;
-        margin: 0 auto;
-    }
-    @media(max-width: 320px){
+    margin: 0 auto;
+  }
+  @media (max-width: 340px) {
+    width: 100%;
+    top: 10rem;
+    right: 0;
+    margin: 0 auto;
+  }
+  @media (max-width: 320px) {
     padding: 2rem 1rem;
-
-    }
-
+  }
 }
 
-.rangeHeader{
+.rangeHeader {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $text-dark-blue;
+}
+
+.rangeSubHeader {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: $text-dark-blue;
+  margin-top: 1rem;
+}
+
+.locationInput {
+  background: $gray_color-6;
+  margin-top: 0.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  padding: 0 0.5rem;
+  line-height: 2.5rem;
+  border: 1px solid $gray_color-1;
+  &::placeholder {
+    color: $gray_color-8;
+  }
+}
+
+.priceInputs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  @media (max-width: 280px) {
+    flex-direction: column;
+    gap: 0;
+  }
+  span {
+    padding: 0.5rem;
+    background: $gray_color-5;
+    border-radius: 5px;
+    font-size: 0.8rem;
+  }
+  b {
     font-size: 1.5rem;
     font-weight: 700;
-    color: $text-dark-blue;
+    color: $text-black;
+  }
 }
 
-.rangeSubHeader{
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: $text-dark-blue;
-    margin-top: 1rem;
-}
-
-.locationInput{
-    background: $gray_color-6;
-    margin-top: .5rem;
-    border-radius: 8px;
-    font-size: .95rem;
-    padding: 0  .5rem; 
-    line-height: 2.5rem;
-    border: 1px solid $gray_color-1;
-    &::placeholder{
-        color: $gray_color-8;
-    }
-}
-
-.priceInputs{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-    @media(max-width: 280px){
-        flex-direction: column;
-        gap: 0;
-    }
-    span{
-        padding: .5rem;
-        background: $gray_color-5;
-        border-radius: 5px;
-        font-size: .8rem;
-    }
-    b{
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: $text-black;
-    }
-}
-
-.filterButton{
-    @include actionButton( $bg_white-color ,$green_color-3);
-    justify-content: center;
-    margin-top: 1rem;
+.filterButton {
+  @include actionButton($bg_white-color, $green_color-3);
+  justify-content: center;
+  margin-top: 1rem;
 }

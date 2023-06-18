@@ -1,77 +1,74 @@
-@import '../../styles/colors.scss';
-@import '../../styles/mixins.scss';
+@import "../../styles/colors.scss";
+@import "../../styles/mixins.scss";
 
-
-.popUpBackdrop{
-    position: fixed;
-    min-width: 100%;
-    min-height: 100%;
-    background: transparentize($bg_dark-color, 0.6);
-    z-index: 100;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
+.popUpBackdrop {
+  position: fixed;
+  min-width: 100%;
+  min-height: 100%;
+  background: transparentize($bg_dark-color, 0.6);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.popUpDisabled{
-    display: none;
+.popUpDisabled {
+  display: none;
 }
 
+.popUp {
+  background: $bg_white-color;
+  padding: 1rem;
+  border-radius: 8px;
+  min-width: 280px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-end;
+}
 
-.popUp{
-    background: $bg_white-color;
-    padding: 1rem;
+.popUpHeader {
+  width: 100%;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  button {
+    cursor: pointer;
+  }
+}
+
+.popUpBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  input {
+    width: 100%;
+    padding: 0.5rem;
     border-radius: 8px;
-    min-width: 280px;
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem; 
-    align-items: flex-end;
+    border: 1px solid transparentize($gray_color-7, 0.5);
+    background: $gray_color-5;
+    color: $gray_color-7;
+    &::placeholder {
+      color: transparentize($gray_color-7, 0.5);
+    }
+  }
+  img {
+    cursor: pointer;
+    border-radius: 8px;
+    width: 590px;
+    height: 125px;
+    transition: all 0.3s ease-in-out;
+    &:hover {
+      filter: brightness(0.8);
+    }
+  }
 }
 
-.popUpHeader{
-    width: 100%  ;
-    font-size: 1.4rem;
-    font-weight: 700;
-    text-align: center;
-    display: flex;
-    justify-content: space-between;
-    button{
-        cursor: pointer;
-    }
-}
-
-.popUpBody{
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    input{
-        width: 100%;
-        padding: .5rem;
-        border-radius: 8px;
-        border: 1px solid transparentize($gray_color-7, 0.5);
-        background: $gray_color-5;
-        color:  $gray_color-7;
-        &::placeholder{
-            color: transparentize($gray_color-7, 0.5);
-        }
-    }
-    img{
-        cursor: pointer;
-        border-radius: 8px;
-        width: 590px;
-        height: 125px;
-        transition: all .3s ease-in-out;
-        &:hover{
-            filter: brightness(0.8);
-        }
-    }
-}
-
-.addBannerBtn{
-    @include actionButton( $text-black, $green_color-2);
-    justify-content: center;
-    padding: 1rem 3rem;
-    width: max-content;
+.addBannerBtn {
+  @include actionButton($text-black, $green_color-2);
+  justify-content: center;
+  padding: 1rem 3rem;
+  width: max-content;
 }

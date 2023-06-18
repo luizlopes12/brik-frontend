@@ -1,737 +1,723 @@
-@import '../../styles/colors.scss';
-@import '../../styles/mixins.scss';
+@import "../../styles/colors.scss";
+@import "../../styles/mixins.scss";
 
-
-.popUpBackdrop{
-    position: fixed;
-    min-width: 100%;
-    min-height: 100%;
-    background: transparentize($bg_dark-color, 0.6);
-    z-index: 100;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.popUpBackdrop {
+  position: fixed;
+  min-width: 100%;
+  min-height: 100%;
+  background: transparentize($bg_dark-color, 0.6);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.popUpDisabled{
-    display: none;
-}
-
-.popUpWrapper{
-    background: $bg_white-color;
-    padding: 30px 20px 20px;
-    border-radius: 5px;
-    position: relative;
+.popUpDisabled {
+  display: none;
 }
 
-.closeBtn{
+.popUpWrapper {
+  background: $bg_white-color;
+  padding: 30px 20px 20px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.closeBtn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  img {
+    width: 25px;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.lotInfoWrapper {
+  display: flex;
+  gap: 1rem;
+}
+.uploadImage {
+  position: relative;
+  @include actionButton($text-dark-blue, $gray_color-6);
+
+  justify-content: center;
+  img {
+    width: 20px;
+  }
+  input {
+    max-width: max-content;
     position: absolute;
-    right: 10px;
-    top: 10px;
-    img{
-        width: 25px;
-    }
-    &:hover{
-        cursor: pointer;
-    }
-}
-
-.lotInfoWrapper{
-    display: flex;
-    gap: 1rem;
-}
-.uploadImage{
-    position: relative;
-    @include actionButton($text-dark-blue, $gray_color-6);
-
-    justify-content: center;
-    img{
-        width: 20px;
-    }
-    input{
-        max-width: max-content;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        left: 0;
-        opacity: 0;
-        &::file-selector-button{
-            cursor: pointer;
-        }   
-    }
-}   
-
-.lotImagesWrapper{
     width: 100%;
-    max-width: 240px;
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-}
-.lotImages{
-    outline: 1px solid $gray_color-4;
-    border-radius: 8px;
-    max-width: 100%;
-    position: relative;
-
-    .lotImagesCarrousel{
-        display: flex;
-        overflow: hidden;
-        transition: all .2s ease-in-out;
-        border-radius: 8px;
-        scroll-behavior: smooth;
-        max-width: 240px;
-        max-height: 120px;
-       >img{
-            max-width: 100%;
-            max-height: 100%;
-        }
-    }
-    .carrouselControllers{
-        overflow: hidden;
-        position: absolute;
-        border-radius: 8px;
-        top: 0;
-        left: 0;
-        display: flex;
-        width: 100%;
-        height: 100%;
-        justify-content: space-between;
-        li{
-            opacity: 0;
-            display: flex;
-            align-items: center;
-            height: 100%;
-            padding: 0 5px 0 5px;
-            transition: all .2s ease-in-out;
-            img{
-                height: 20px;
-            }
-            .controlPrev{
-                border-radius: 0 8px 8px 0;
-            }
-        }
-        &:hover{
-            li{
-                opacity: 1;
-                background: transparentize($bg_dark-color, 0.6);
-                cursor: pointer;
-            }
-        }
-        &:not(:hover){
-            li{
-                opacity: 0;
-            }
-        }
-    }
-}
-
-.lotTexts{
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    gap: .5rem;
-}
-
-.lotTitle{
-    padding-left: 5px ;
-    
-    input{
-        font-weight: 700;
-        font-size: 1.8rem;
-        max-width: fit-content;
-        color: $text-black;
-    }
-}
-.lotDescription{
-    flex-grow: 1;
-    padding-left: 5px ;
-    textarea{
-        width: 100%;
-        outline: 1px solid $gray_color-4;
-        border-radius: 3px;
-        padding: 3px;
-        height: 80px;
-        word-wrap: break-word;
-        resize: none;
-        font-size: 1rem;
-        color: lighten($text-black, 40%) ;
-        &::-webkit-scrollbar{
-            width: 8px;
-            background: transparentize($gray_color-4, 0.8);
-            border-radius: 5px;
-        }
-        &::-webkit-scrollbar-thumb{
-            background: transparentize($gray_color-1, 0.4);
-            border-radius: 5px;
-        }
-    }
-
-}
-
-.lotDivision{
-    position: relative;
-    .divisionSelected{
-        display: flex;
-        align-items: center;
-        max-width: max-content;
-        gap: .5rem;
-        padding: 5px 12px 5px 5px;
-        border-radius: 12px;
-        -webkit-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        transition: all .2s ease-in-out;
-        &:hover{
-            cursor: pointer;
-            background: $gray_color-4;
-        }
-        img{
-            outline: 1px solid $gray_color-4;
-            border-radius: 50%;	
-            width: 50px;
-        }
-        span{
-            font-size: 1.2rem;
-            color: $text-black;
-        }
-    }
-}
-
-
-.divisionOptionsSelector{
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    top: 4rem;
+    height: 100%;
     left: 0;
-    background: $bg_white-color;
-    outline: 1px solid $gray_color-4;
-    max-height: 300px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    padding: 1rem 1rem 1.5rem;
-    border-radius: 5px;
-    z-index: 1;
-    &::-webkit-scrollbar{
-        width: 8px;
-        background: transparentize($gray_color-4, 0.8);
-        border-radius: 5px;
+    opacity: 0;
+    &::file-selector-button {
+      cursor: pointer;
     }
-    &::-webkit-scrollbar-thumb{
-        background: transparentize($gray_color-1, 0.4);
-        border-radius: 5px;
-    }
-    .divisionSearchInput{
-        div{
-            justify-content: space-between;
-        }
-    }
-    .divisionOption{
-        display: flex;
-        align-items: center;
-        width: 100%;
-        gap: .5rem;
-        padding: 5px 12px 5px 5px;
-        border-radius: 12px;
-        &:hover{
-            cursor: pointer;
-            background: $gray_color-4;
-        }
-        img{
-            outline: 1px solid $gray_color-4;
-            border-radius: 50%;	
-            width: 50px;
-        }
-        span{
-            font-size: 1.2rem;
-            color: $text-black;
-        }
-    }
-
+  }
 }
 
-.lotDataWrapper{
+.lotImagesWrapper {
+  width: 100%;
+  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.lotImages {
+  outline: 1px solid $gray_color-4;
+  border-radius: 8px;
+  max-width: 100%;
+  position: relative;
+
+  .lotImagesCarrousel {
+    display: flex;
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+    border-radius: 8px;
+    scroll-behavior: smooth;
+    max-width: 240px;
+    max-height: 120px;
+    > img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+  .carrouselControllers {
+    overflow: hidden;
+    position: absolute;
+    border-radius: 8px;
+    top: 0;
+    left: 0;
+    display: flex;
     width: 100%;
-    display: flex;
+    height: 100%;
     justify-content: space-between;
-    gap: 1rem;
-    .lotDataInputs{
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        width: 500px;
-        gap: 1.5rem;
-        .locationArea{
-            display: flex;
-            flex-direction: column;
-            gap: .4rem; 
-            h3{
-                font-size: 1.2rem;
-                color: $text-black;
-                font-weight: 700;
-            }
-            .locationInputs{
-                width: 100%;
-                display: flex;
-                font-size: .9rem;
-                input{
-                    border-bottom: 1px solid $gray_color-1;
-                    padding-bottom: 5px;
-                    &::placeholder {
-                        opacity: .5;
-                      }
-                }
-                input:nth-of-type(1){
-                   flex-grow: 1; 
-                }
-            }
-        }
+    li {
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0 5px 0 5px;
+      transition: all 0.2s ease-in-out;
+      img {
+        height: 20px;
+      }
+      .controlPrev {
+        border-radius: 0 8px 8px 0;
+      }
     }
-    .lotDataActions{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        flex-grow: 1;
-        min-height: 400px;
-        height: 100%;
-        align-items: flex-end;
+    &:hover {
+      li {
+        opacity: 1;
+        background: transparentize($bg_dark-color, 0.6);
+        cursor: pointer;
+      }
     }
+    &:not(:hover) {
+      li {
+        opacity: 0;
+      }
+    }
+  }
 }
 
-.metricsArea{
+.lotTexts {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 0.5rem;
+}
+
+.lotTitle {
+  padding-left: 5px;
+
+  input {
+    font-weight: 700;
+    font-size: 1.8rem;
+    max-width: fit-content;
+    color: $text-black;
+  }
+}
+.lotDescription {
+  flex-grow: 1;
+  padding-left: 5px;
+  textarea {
+    width: 100%;
+    outline: 1px solid $gray_color-4;
+    border-radius: 3px;
+    padding: 3px;
+    height: 80px;
+    word-wrap: break-word;
+    resize: none;
+    font-size: 1rem;
+    color: lighten($text-black, 40%);
+    &::-webkit-scrollbar {
+      width: 8px;
+      background: transparentize($gray_color-4, 0.8);
+      border-radius: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: transparentize($gray_color-1, 0.4);
+      border-radius: 5px;
+    }
+  }
+}
+
+.lotDivision {
+  position: relative;
+  .divisionSelected {
     display: flex;
-    justify-content: space-between;
-    h3{
+    align-items: center;
+    max-width: max-content;
+    gap: 0.5rem;
+    padding: 5px 12px 5px 5px;
+    border-radius: 12px;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      cursor: pointer;
+      background: $gray_color-4;
+    }
+    img {
+      outline: 1px solid $gray_color-4;
+      border-radius: 50%;
+      width: 50px;
+    }
+    span {
+      font-size: 1.2rem;
+      color: $text-black;
+    }
+  }
+}
+
+.divisionOptionsSelector {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  top: 4rem;
+  left: 0;
+  background: $bg_white-color;
+  outline: 1px solid $gray_color-4;
+  max-height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 1rem 1rem 1.5rem;
+  border-radius: 5px;
+  z-index: 1;
+  &::-webkit-scrollbar {
+    width: 8px;
+    background: transparentize($gray_color-4, 0.8);
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: transparentize($gray_color-1, 0.4);
+    border-radius: 5px;
+  }
+  .divisionSearchInput {
+    div {
+      justify-content: space-between;
+    }
+  }
+  .divisionOption {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
+    padding: 5px 12px 5px 5px;
+    border-radius: 12px;
+    &:hover {
+      cursor: pointer;
+      background: $gray_color-4;
+    }
+    img {
+      outline: 1px solid $gray_color-4;
+      border-radius: 50%;
+      width: 50px;
+    }
+    span {
+      font-size: 1.2rem;
+      color: $text-black;
+    }
+  }
+}
+
+.lotDataWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  .lotDataInputs {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    gap: 1.5rem;
+    .locationArea {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      h3 {
         font-size: 1.2rem;
         color: $text-black;
         font-weight: 700;
-    }
-    .metricsInputs{
-        display: flex;
-        input{
-            font-size: 1.2rem;
-            padding: 0 5px 0 5px;
-            text-align: end;
-            font-weight: 700;
-            max-width: 8ch;
-            &::-webkit-outer-spin-button,
-            &::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-            }
-            background: $gray_color-5;
-            border-radius: 5px 0 0 5px;
-
-        }
-        span{
-            background: $green_color-2;
-            color: $text-black;
-            padding: 3px 5px;
-            font-size: 1rem;
-            font-weight: 700;
-            border-radius:  0 5px 5px 0;
-        }
-        sup{
-            vertical-align: super;
-            font-size: smaller;
-        }
-    }
-}
-
-
-.priceArea{
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    .salePrice{
-        display: flex;
-        justify-content: space-between;
-        h3{
-            font-size: 1.2rem;
-            color: $text-black;
-            font-weight: 700;
-        }
-        .priceInputs{
-            display: flex;
-        input{
-            text-align: end;
-            font-size: 1.2rem;
-            font-weight: 700;
-            max-width: 8ch;
-            &::-webkit-outer-spin-button,
-            &::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-            }
-            background: $gray_color-5;
-            border-radius:  0 5px 5px 0;
-            padding: 0 5px 0 0;
-        }
-        span{
-            background: $green_color-2;
-            color: $text-black;
-            padding: 3px 5px;
-            font-size: 1rem;
-            font-weight: 700;
-            border-radius: 5px 0 0 5px;
-        }
-    
-    }
-    }
-    
-    .basePrice{
-        display: flex;
-        justify-content: space-between;
-        input{
-            text-align: end;
-            max-width: 10ch;
-            padding: 0 5px 0 5px;
-            &::-webkit-outer-spin-button,
-            &::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-            }
-        }
-    }
-}
-
-.hiddenPrice{
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    span{
-        font-size: 1.1rem;
-    }
-    input[type=checkbox] {
-        position: relative;
-          border: 2px solid $bg_dark-color;
-          border-radius: 2px;
-          background: none;
-          cursor: pointer;
-          line-height: 0;
-          margin: 0 .4em 0 0;
-          outline: 0;
-          padding: 0 !important;
-          vertical-align: text-top;
-          height: 18px;
-          width: 18px;
-          -webkit-appearance: none;
-        opacity: .5;
       }
-      
-      input[type=checkbox]:hover {
-        opacity: 1;
-      }
-      
-      input[type=checkbox]:checked {
-        background-color: $bg_dark-color;
-        opacity: 1;
-      }
-      
-      input[type=checkbox]:before {
-        content: "";
-        position: absolute;
-        right: 50%;
-        top: 50%;
-        width: 6px;
-        height: 12px;
-        border: solid #FFF;
-        border-width: 0 2px 2px 0;
-        margin: -1px -1px 0 0px;
-        transform: rotate(45deg) translate(-50%, -50%);
-        z-index: 2;
-    }
-}
-
-.parcelQuantity{
-    display: flex;
-    justify-content: space-between;
-
-
-    .parcelQuantityInput{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: .2rem;
-        button{
-            background: $bg_white-color;
-            width: 20px;
-            height: 22px;
-            font-size: 1.2rem;
-            font-weight: 500;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            padding: 5px;
-            outline: .5px solid $gray_color-2;  
-        }
-        input{
-            font-size: 1.2rem;
-            color: $text-black;
-            font-weight: 600;
-            text-align: center;
-            width: 30px;
-            &::-webkit-outer-spin-button,
-            &::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-            }
-        }
-    }
-    
-}
-
-
-.parcelArea{
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    
-    .taxes{
-        font-size: 1.1rem;
-        display: flex;
+      .locationInputs {
         width: 100%;
-        justify-content: space-between; 
-        input{
-            max-width: 4ch;
-            text-align: end;
-            &::-webkit-outer-spin-button,
-            &::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-            }
+        display: flex;
+        font-size: 0.9rem;
+        input {
+          border-bottom: 1px solid $gray_color-1;
+          padding-bottom: 5px;
+          &::placeholder {
+            opacity: 0.5;
+          }
         }
-        span{
-            color: $text-black;
-            font-weight: 700;
+        input:nth-of-type(1) {
+          flex-grow: 1;
         }
+      }
     }
-    .parcelQuantity{
-        h3 {
-            font-size: 1.2rem;
-            color: $text-black;
-            font-weight: 700;
-        }
-    }
+  }
+  .lotDataActions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+    min-height: 400px;
+    height: 100%;
+    align-items: flex-end;
+  }
 }
-.lotStatus{
+
+.metricsArea {
+  display: flex;
+  justify-content: space-between;
+  h3 {
+    font-size: 1.2rem;
+    color: $text-black;
+    font-weight: 700;
+  }
+  .metricsInputs {
+    display: flex;
+    input {
+      font-size: 1.2rem;
+      padding: 0 5px 0 5px;
+      text-align: end;
+      font-weight: 700;
+      max-width: 8ch;
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      background: $gray_color-5;
+      border-radius: 5px 0 0 5px;
+    }
+    span {
+      background: $green_color-2;
+      color: $text-black;
+      padding: 3px 5px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 0 5px 5px 0;
+    }
+    sup {
+      vertical-align: super;
+      font-size: smaller;
+    }
+  }
+}
+
+.priceArea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  .salePrice {
     display: flex;
     justify-content: space-between;
     h3 {
-        font-size: 1.2rem;
-        color: $text-black;
-        font-weight: 700;
+      font-size: 1.2rem;
+      color: $text-black;
+      font-weight: 700;
     }
-}
+    .priceInputs {
+      display: flex;
+      input {
+        text-align: end;
+        font-size: 1.2rem;
+        font-weight: 700;
+        max-width: 8ch;
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        background: $gray_color-5;
+        border-radius: 0 5px 5px 0;
+        padding: 0 5px 0 0;
+      }
+      span {
+        background: $green_color-2;
+        color: $text-black;
+        padding: 3px 5px;
+        font-size: 1rem;
+        font-weight: 700;
+        border-radius: 5px 0 0 5px;
+      }
+    }
+  }
 
-.dropdownMenu{
-    @include dropDown();
-}
-.statusInfo{
-    font-size: .9rem;
-    font-weight: 400;
-}
-
-.partnersArea{
+  .basePrice {
     display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    .lotDataActionsHeader{
+    justify-content: space-between;
+    input {
+      text-align: end;
+      max-width: 10ch;
+      padding: 0 5px 0 5px;
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+  }
+}
+
+.hiddenPrice {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  span {
+    font-size: 1.1rem;
+  }
+  input[type="checkbox"] {
+    position: relative;
+    border: 2px solid $bg_dark-color;
+    border-radius: 2px;
+    background: none;
+    cursor: pointer;
+    line-height: 0;
+    margin: 0 0.4em 0 0;
+    outline: 0;
+    padding: 0 !important;
+    vertical-align: text-top;
+    height: 18px;
+    width: 18px;
+    -webkit-appearance: none;
+    opacity: 0.5;
+  }
+
+  input[type="checkbox"]:hover {
+    opacity: 1;
+  }
+
+  input[type="checkbox"]:checked {
+    background-color: $bg_dark-color;
+    opacity: 1;
+  }
+
+  input[type="checkbox"]:before {
+    content: "";
+    position: absolute;
+    right: 50%;
+    top: 50%;
+    width: 6px;
+    height: 12px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    margin: -1px -1px 0 0px;
+    transform: rotate(45deg) translate(-50%, -50%);
+    z-index: 2;
+  }
+}
+
+.parcelQuantity {
+  display: flex;
+  justify-content: space-between;
+
+  .parcelQuantityInput {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    button {
+      background: $bg_white-color;
+      width: 20px;
+      height: 22px;
+      font-size: 1.2rem;
+      font-weight: 500;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      padding: 5px;
+      outline: 0.5px solid $gray_color-2;
+    }
+    input {
+      font-size: 1.2rem;
+      color: $text-black;
+      font-weight: 600;
+      text-align: center;
+      width: 30px;
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+  }
+}
+
+.parcelArea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .taxes {
+    font-size: 1.1rem;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    input {
+      max-width: 4ch;
+      text-align: end;
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+    span {
+      color: $text-black;
+      font-weight: 700;
+    }
+  }
+  .parcelQuantity {
+    h3 {
+      font-size: 1.2rem;
+      color: $text-black;
+      font-weight: 700;
+    }
+  }
+}
+.lotStatus {
+  display: flex;
+  justify-content: space-between;
+  h3 {
+    font-size: 1.2rem;
+    color: $text-black;
+    font-weight: 700;
+  }
+}
+
+.dropdownMenu {
+  @include dropDown();
+}
+.statusInfo {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.partnersArea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  .lotDataActionsHeader {
+    display: flex;
+    justify-content: space-between;
+  }
+  .partners {
+    background: $text-dark-blue;
+    padding: 1rem;
+    .partnersListHeader {
+      color: $text-white;
+    }
+    .partnersList {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 100px;
+      overflow-y: scroll;
+      .partnersListItemWrapper {
         display: flex;
-        justify-content: space-between;
-    }
-    .partners{
-        background: $text-dark-blue;
-        padding: 1rem;
-        .partnersListHeader{
-            color: $text-white;
+        flex-direction: column-reverse;
+      }
+      &::-webkit-scrollbar {
+        width: 4px;
+        background: transparentize($gray_color-4, 0.8);
+        border-radius: 5px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: transparentize($green_color-1, 0.4);
+        border-radius: 5px;
+      }
+      .partnersListHeader {
+        display: flex;
+        opacity: 0.5;
+        font-size: 0.9rem;
+
+        span {
+          width: 140px;
+          &:nth-of-type(3) {
+            width: 6ch;
+            text-align: right;
+          }
         }
-        .partnersList{
-            display: flex;
-            flex-direction: column;
-            gap: .5rem;
-            max-height: 100px;
-            overflow-y: scroll;
-            .partnersListItemWrapper{
-                display: flex;
-                flex-direction: column-reverse;
-            }
-            &::-webkit-scrollbar{
-                width: 4px;
-                background: transparentize($gray_color-4, 0.8);
-                border-radius: 5px;
-            }
-            &::-webkit-scrollbar-thumb{
-                background: transparentize($green_color-1, 0.4);
-                border-radius: 5px;
-            }
-            .partnersListHeader{
-            display: flex;
-            opacity: .5;    
-            font-size: .9rem;
-
-            span{
-                width: 140px;
-                &:nth-of-type(3){
-                    width: 6ch;
-                    text-align: right;
-                }
-            }         
-            }
-            .partnersListItem{
-                border-bottom: 1px solid transparentize($text-white, .5) ;
-                color: $text-white;
-                display: flex;
-                font-size: .9rem;
-                padding: .2rem 0;
-                &:hover{
-                    background: transparentize($text-white, 0.8);
-                    cursor: pointer;
-                }
-                
-                div{
-                    width: 6ch;
-                }
-                input{
-                    max-width: 140px;
-                    &.partnerPercentage{
-                        width: 4.5ch;
-                        text-align: right;
-                        &::-webkit-outer-spin-button,
-                        &::-webkit-inner-spin-button {
-                        -webkit-appearance: none;
-                        margin: 0;
-                    }
-                }
-            }
-
+      }
+      .partnersListItem {
+        border-bottom: 1px solid transparentize($text-white, 0.5);
+        color: $text-white;
+        display: flex;
+        font-size: 0.9rem;
+        padding: 0.2rem 0;
+        &:hover {
+          background: transparentize($text-white, 0.8);
+          cursor: pointer;
         }
-    }
-}
-    h3{
-        font-size: 1.2rem;
-        color: $text-black;
-        font-weight: 700;
-    }
-}
 
-.deletePartner{
-    cursor: pointer;
-    max-height: 20px;
-}
-.partnersListItemEdit{
-    color: $text-white;
-    display: flex;
-    font-size: .9rem;
-    padding: .2rem 0;
-    background: transparentize($text-white, 0.8);
-    cursor: pointer;
-    div{
-        width: 6ch;
-    }
-    input{
-        max-width: 140px;
-        &.partnerPercentage{
+        div {
+          width: 6ch;
+        }
+        input {
+          max-width: 140px;
+          &.partnerPercentage {
             width: 4.5ch;
             text-align: right;
             &::-webkit-outer-spin-button,
             &::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
+              -webkit-appearance: none;
+              margin: 0;
+            }
+          }
         }
+      }
     }
-    }
-    
+  }
+  h3 {
+    font-size: 1.2rem;
+    color: $text-black;
+    font-weight: 700;
+  }
 }
 
-.addPartner{
-    display: flex;
-    justify-content: space-between;
-    gap: .5rem;
-    .addPartnerToLot{
-        @include actionButton( $text-black, $gray_color-6 );
-        img{
-            max-height: 20px;
-        }
-        display: flex;
-        gap: 5px;
-    }
-    .addNewPartnerToLot{
-        @include actionButton( $text-white, $green_color-1 );
-        img{
-            max-height: 20px;
-            filter: invert(1);
-        }
-        display: flex;
-        gap: 5px;
-    }
+.deletePartner {
+  cursor: pointer;
+  max-height: 20px;
 }
-.partnersOptionsSelector{
+.partnersListItemEdit {
+  color: $text-white;
+  display: flex;
+  font-size: 0.9rem;
+  padding: 0.2rem 0;
+  background: transparentize($text-white, 0.8);
+  cursor: pointer;
+  div {
+    width: 6ch;
+  }
+  input {
+    max-width: 140px;
+    &.partnerPercentage {
+      width: 4.5ch;
+      text-align: right;
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+  }
+}
+
+.addPartner {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  .addPartnerToLot {
+    @include actionButton($text-black, $gray_color-6);
+    img {
+      max-height: 20px;
+    }
+    display: flex;
+    gap: 5px;
+  }
+  .addNewPartnerToLot {
+    @include actionButton($text-white, $green_color-1);
+    img {
+      max-height: 20px;
+      filter: invert(1);
+    }
+    display: flex;
+    gap: 5px;
+  }
+}
+.partnersOptionsSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: $text-dark-blue;
+  color: $text-white;
+  padding: 1rem;
+  .partnersOptionsSelectorHeader {
+    border-bottom: 2px solid $text-white;
+    display: flex;
+    gap: 5px;
+    padding: 3px;
+    input {
+      flex-grow: 1;
+    }
+    img {
+      filter: invert(1);
+    }
+  }
+  .partnersOptionsSelectorList {
+    font-size: 0.9rem;
+    padding: 0.2rem 0;
     display: flex;
     flex-direction: column;
-    gap: .5rem;
-    background: $text-dark-blue;
-    color: $text-white;
-    padding: 1rem;
-    .partnersOptionsSelectorHeader{
-        border-bottom: 2px solid $text-white;
-        display: flex;
-        gap: 5px;
-        padding: 3px;
-        input{
-            flex-grow: 1;
-        }
-        img{
-            filter: invert(1);
-        }
+    max-height: 150px;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      width: 8px;
+      background: transparentize($gray_color-4, 0.8);
+      border-radius: 5px;
     }
-    .partnersOptionsSelectorList{
-        font-size: .9rem;
-        padding: .2rem 0;
-        display: flex;
-        flex-direction: column;
-        max-height: 150px;
-        overflow-y: scroll;
-        &::-webkit-scrollbar{
-            width: 8px;
-            background: transparentize($gray_color-4, 0.8);
-            border-radius: 5px;
-        }
-        &::-webkit-scrollbar-thumb{
-            background: transparentize($gray_color-1, 0.4);
-            border-radius: 5px;
-        }
-        .lotDivisionPartnersItem{
-            display: grid;
-            padding: 10px 5px;
-            grid-template-columns: .7fr .7fr .2fr;
-            &:hover{
-                background: transparentize($text-white, 0.8);
-                cursor: pointer;
-            }
-            span{
-                &:nth-of-type(1){
-                    text-align: left;
-                    overflow-x: hidden;
-                }
-                &:nth-of-type(2){
-                    text-align: left;
-                    overflow-x: hidden;
-                }
-                &:nth-of-type(3){
-                    text-align: right;
-                }
-            }
-        }
+    &::-webkit-scrollbar-thumb {
+      background: transparentize($gray_color-1, 0.4);
+      border-radius: 5px;
     }
-
+    .lotDivisionPartnersItem {
+      display: grid;
+      padding: 10px 5px;
+      grid-template-columns: 0.7fr 0.7fr 0.2fr;
+      &:hover {
+        background: transparentize($text-white, 0.8);
+        cursor: pointer;
+      }
+      span {
+        &:nth-of-type(1) {
+          text-align: left;
+          overflow-x: hidden;
+        }
+        &:nth-of-type(2) {
+          text-align: left;
+          overflow-x: hidden;
+        }
+        &:nth-of-type(3) {
+          text-align: right;
+        }
+      }
+    }
+  }
 }
 
-
-.saveLotDataButton{
-    @include actionButton( $text-white, $green_color-1 );
-    padding: .5rem 4rem;
+.saveLotDataButton {
+  @include actionButton($text-white, $green_color-1);
+  padding: 0.5rem 4rem;
 }

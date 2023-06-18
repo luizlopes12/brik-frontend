@@ -1,11 +1,16 @@
 import { createContext, useState } from "react";
 
-const globalDivisionsDataContext = createContext()
-const GlobalDivisionsDataProvider = ({children}) =>{
-    
-  const [globalDivisionsData, setGlobalDivisionsData] = useState([]) 
+const globalDivisionsDataContext = createContext();
+const GlobalDivisionsDataProvider = ({ children }) => {
+  const [globalDivisionsData, setGlobalDivisionsData] = useState([]);
 
-    return <globalDivisionsDataContext.Provider value={{globalDivisionsData, setGlobalDivisionsData}}>{children}</globalDivisionsDataContext.Provider>
-}
+  return (
+    <globalDivisionsDataContext.Provider
+      value={{ globalDivisionsData, setGlobalDivisionsData }}
+    >
+      {children}
+    </globalDivisionsDataContext.Provider>
+  );
+};
 
-export {GlobalDivisionsDataProvider, globalDivisionsDataContext};
+export { GlobalDivisionsDataProvider, globalDivisionsDataContext };

@@ -1,17 +1,17 @@
-@import '../../styles/colors.scss';
+@import "../../styles/colors.scss";
 
-.searchContent{
- border-bottom: 2px solid $text-black;
- display: flex;
- gap: 5px;
+.searchContent {
+  border-bottom: 2px solid $text-black;
+  display: flex;
+  gap: 5px;
 }
 
-.searchInput{
-    min-width: 150px;
+.searchInput {
+  min-width: 150px;
 }
 
-.searchBtn{
-    img{
-        max-width: 25px;
-    }
+.searchBtn {
+  img {
+    max-width: 25px;
+  }
 }

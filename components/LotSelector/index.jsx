@@ -1,7 +1,6 @@
-import React from 'react';
-import style from './style.module.scss';
-import SearchInput from '../SearchInput';
-
+import React from "react";
+import style from "./style.module.scss";
+import SearchInput from "../SearchInput";
 
 const LotSelector = ({
   lotSelected,
@@ -15,7 +14,12 @@ const LotSelector = ({
   return (
     <div className={style.lotDivision}>
       <div className={style.divisionSelected} onClick={handleShowLotOptions}>
-        <img src={lotSelected.loteImages?.[0].imageUrl || 'https://i.imgur.com/YQOzMWA.png'} />
+        <img
+          src={
+            lotSelected.loteImages?.[0].imageUrl ||
+            "https://i.imgur.com/YQOzMWA.png"
+          }
+        />
         <span>{lotSelected.name}</span>
       </div>
       {showLotOptions && (
@@ -32,10 +36,15 @@ const LotSelector = ({
               className={style.lotOption}
               onClick={() => handleSelectLot(lot)}
             >
-              <img src={lot.loteImages?.[0].imageUrl || 'https://i.imgur.com/YQOzMWA.png'} />
+              <img
+                src={
+                  lot.loteImages?.[0].imageUrl ||
+                  "https://i.imgur.com/YQOzMWA.png"
+                }
+              />
               <span>
                 {lot.name.length > 18
-                  ? lot.name.substring(18, '...')
+                  ? lot.name.substring(18, "...")
                   : lot.name}
               </span>
             </li>

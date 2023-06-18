@@ -1,24 +1,25 @@
-.mainContainer{
+.mainContainer {
     display: flex;
     gap: 20px;
     width: 100%;
 }
 
-.contentContainer{
+.contentContainer {
     flex-grow: 1;
     padding-left: 16vw;
 }
-.content{
+
+.content {
     padding-right: 3rem;
 }
 
-@media(max-width: 1080px){
-    .content{
+@media(max-width: 1080px) {
+    .content {
         padding-right: 0;
         padding: .5rem;
     }
-    .contentContainer{
+
+    .contentContainer {
         padding-left: 0;
     }
 }
-

@@ -19,12 +19,14 @@ const Footer = ({
 
           <div className={style.footerItem}>
             <span className={style.itemTitle}>Email</span>
-            <span className={style.itemContent}>atendimento@brikempreendimentos.com</span>
+            <span className={style.itemContent}>
+              atendimento@brikempreendimentos.com
+            </span>
           </div>
           <div className={style.footerItem}>
             <span className={style.itemTitle}>Endereço</span>
             <span className={style.itemContent}>
-            Rua Tamekichi Osawa, 348 - Vila Sao Nicolau, Registro - SP
+              Rua Tamekichi Osawa, 348 - Vila Sao Nicolau, Registro - SP
             </span>
           </div>
           <div className={style.footerItem}>

@@ -1,292 +1,287 @@
-@import '../../styles/colors.scss';
-@import '../../styles/mixins.scss';
+@import "../../styles/colors.scss";
+@import "../../styles/mixins.scss";
 
-
-.lotInfoSection{
-    width: 100%;
-    max-width: 1180px;
-    padding: 0 1rem;
-    margin: 0 auto 2rem;
+.lotInfoSection {
+  width: 100%;
+  max-width: 1180px;
+  padding: 0 1rem;
+  margin: 0 auto 2rem;
+  display: flex;
+  justify-content: space-between;
+  @media (max-width: 800px) {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  @media (max-width: 425px) {
+    padding: 0 0.5rem;
+  }
+  .lotInfoContainer {
     display: flex;
-    justify-content: space-between;
-    @media(max-width: 800px) {
-        flex-direction: column;
-        gap: 2rem;
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 60%;
+    max-width: 60%;
+    @media (max-width: 1024px) {
+      min-width: 60%;
+      max-width: 60%;
     }
-    @media(max-width: 425px) {
-    padding: 0 .5rem;
+    @media (max-width: 800px) {
+      min-width: 100%;
+      max-width: 100%;
     }
-    .lotInfoContainer{
+    .lotInfo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid $gray_color-4;
+      margin-bottom: 2rem;
+      .divisionInfo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        img {
+          max-width: 40px;
+        }
+      }
+      .lotName {
+        font-size: 2.4rem;
+        @media (max-width: 500px) {
+          font-size: 1.8rem;
+        }
+      }
+      .lotPrice {
+        font-size: 2rem;
+        font-weight: 800;
+        color: $text-black;
+        @media (max-width: 500px) {
+          font-size: 1.6rem;
+        }
+      }
+      .lotLocation {
+        display: flex;
+        gap: 0.5rem;
+        font-size: 1rem;
+        font-weight: 300;
+        color: $text-black;
+        margin-bottom: 0.5rem;
+        img {
+          max-width: 1rem;
+        }
+      }
+      .lotMetrics {
+        display: flex;
+        gap: 0.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        background: $bg_white-color;
+        padding: 0.5rem 0.5rem;
+        max-width: fit-content;
+        border-radius: 5px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+        color: $text-black;
+        margin-bottom: 0.5rem;
+        img {
+          max-width: 1rem;
+        }
+      }
+      .lotDescTitle {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: $text-black;
+        margin-bottom: 0;
+      }
+
+      .lotDesc {
+        font-size: 1rem;
+        font-weight: 300;
+        color: transparentize($text-black, 0.1);
+        margin-bottom: 0;
+      }
+    }
+    .lotSimulation {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 310px;
+      @media (max-width: 800px) {
+        align-self: center;
+      }
+      .simulationTitle {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: $text-black;
+      }
+      .simulationDesc {
+        font-size: 1rem;
+        font-weight: 300;
+        color: transparentize($text-black, 0.1);
+      }
+      .lotSimulationList {
+        width: 100%;
         display: flex;
         flex-direction: column;
-        flex-grow: 1;
-        min-width: 60%;
-        max-width: 60%;
-        @media(max-width: 1024px) {
-            min-width: 60%;
-            max-width: 60%;
-        }
-        @media(max-width: 800px) {
-            min-width: 100%;
-            max-width: 100%;
-        }
-        .lotInfo{
-            display: flex;
-            flex-direction: column;
-            gap: .5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 2px solid $gray_color-4;
-            margin-bottom: 2rem;
-            .divisionInfo{
-                display: flex;
-                align-items: center;
-                gap: .5rem;
-                font-size: .8rem;
-                font-weight: 700;
-                img{
-                    max-width: 40px;
-                }
-            }
-            .lotName{
-                font-size: 2.4rem;
-                @media(max-width: 500px) {
-                    font-size: 1.8rem;
-                }
-            }
-            .lotPrice{
-                font-size: 2rem;
-                font-weight: 800;
-                color: $text-black;
-                @media(max-width: 500px) {
-                    font-size: 1.6rem;
-                }
-            }
-            .lotLocation{
-                display: flex;
-                gap: .5rem;
-                font-size: 1rem;
-                font-weight: 300;
-                color: $text-black;
-                margin-bottom: .5rem;
-                img{
-                    max-width: 1rem;
-                }
-            }
-            .lotMetrics{
-                display: flex;
-                gap: .5rem;
-                font-size: 1rem;
-                font-weight: 500;
-                background: $bg_white-color;
-                padding: .5rem .5rem;
-                max-width: fit-content;
-                border-radius: 5px;
-                box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
-                color: $text-black;
-                margin-bottom: .5rem;
-                img{
-                    max-width: 1rem;
-                }
-                
-            }
-            .lotDescTitle{
-                font-size: 1.1rem;
-                font-weight: 700;
-                color: $text-black;
-                margin-bottom: 0;
-            }
+        gap: 0.5rem;
+        li {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
 
-            .lotDesc{
-                font-size: 1rem;
-                font-weight: 300;
-                color: transparentize($text-black,0.1);
-                margin-bottom: 0;
-            }
-            
-        }
-        .lotSimulation{
+          p {
             display: flex;
-            flex-direction: column;
-            gap: .5rem;
-            max-width: 310px;
-            @media(max-width: 800px) {
-                align-self: center;
-            }
-            .simulationTitle{
-                font-size: 1.1rem;
-                font-weight: 700;
-                color: $text-black;
-            }
-            .simulationDesc{
-                font-size: 1rem;
-                font-weight: 300;
-                color: transparentize($text-black,0.1);
-            }
-            .lotSimulationList{
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                gap: .5rem;
-                li{
-                    width: 100%;
-                    display: flex;
-                    justify-content: space-between;
-
-                    p{
-                        display: flex;
-                        flex-grow: 1;
-                        justify-content: space-between;
-                        padding: .5rem;
-                        border-bottom: 1px solid $gray_color-4;
-                    }
-                    .input{
-                        display: flex;
-                        justify-content: center;
-                        width: 20%;
-                        padding: .5rem;
-                        input{
-                            border-radius: 50%;
-                            outline: 1px solid $green_color-3;
-                            border: 2px solid $bg_white-color;
-                            width: 1.1rem;
-                            height: 1.1rem;
-                            padding: .2rem;
-                            accent-color: #232323;
-                            &:checked{
-                                background: $green_color-3;
-                            }
-                        }
-                    }
-                    
-                }
-
-            }
-            .simulationResult{
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                margin-top: 1rem;
-                p{
-                    display: flex;
-                    height: fit-content;
-                    width: 100%;
-                }
-                b{
-                    font-weight: 700;
-                    background: $green_color-3;
-                    color: $bg_white-color;
-                    padding: 1rem;
-                }
-                span{
-                    font-weight: 500;
-                    padding: 1rem;
-                    color: $text-black;
-                    background: $gray_color-5;
-                    flex-grow: 1;
-                    text-align: right;
-                }
-            }
-        }
-    }
-    .makeVisitContainer{
-        height: max-content;
-        min-width: 35%;
-        max-width: 35%;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-        border-radius: 8px;
-        padding: 3rem 2rem;
-        display: flex;
-        flex-direction: column;
-        gap: .5rem;
-        @media(max-width: 1024px) {
-            min-width: 40%;
-            max-width: 40%;
-        }
-        @media(max-width: 800px) {
-            min-width: 100%;
-            max-width: 100%;
-        }
-        @media(max-width: 375px) {
-            padding: 2rem 1rem;
-        }
-        h3{
-            font-size: 2rem;
-            font-weight: 700;
-            color: $text-black;
-        }
-        p{
-            font-size: 1rem;
-            font-weight: 300;
-            color: transparentize($text-black,0.1);
-            margin-bottom: 1rem;
-        }
-        .makeVisitForm{
+            flex-grow: 1;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-bottom: 1px solid $gray_color-4;
+          }
+          .input {
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            .visitInput{
-                width: 100%;
-                padding: 1rem;
-                font-size: 1rem;
-                font-weight: 400;
-                color: $text-black;
-                background: $gray_color-5;
-                &::placeholder{
-                    color: $green_color-10;
-                }
-            }
-            .dateGroup{
-                display: flex;
-                width: 100%;
-                gap: 1rem; 
-                flex-wrap: wrap;
-                .inputItem{
-                    width: fit-content;
-                    max-width: 100%;
-                    flex-grow: 1;
-                    position: relative;
-                    display: flex;
-                    input::-webkit-calendar-picker-indicator,
-                    input::-webkit-calendar-picker-indicator {
-                        position: absolute;
-                        right: 1.3rem;
-                        top: 1.2rem;
-                        width: 1.5rem;
-                        opacity: 0;
-                        z-index: 100;
-                    }
-                    
-                    input{
-                        flex-grow: 1;
-                    }
-                    label{
-                        z-index: 99;
-                        position: absolute;
-                        right: 1.8rem;
-                        top: 1.2rem;
-                        img{
-                            z-index: 99;
-                            width: 1.2rem;
-                        }
-                    }
-                }
-                .visitInput{
-                    width: fit-content;
-                    max-width: 100%;
-                }
-            }
-            .visitBtn{
+            justify-content: center;
+            width: 20%;
+            padding: 0.5rem;
+            input {
+              border-radius: 50%;
+              outline: 1px solid $green_color-3;
+              border: 2px solid $bg_white-color;
+              width: 1.1rem;
+              height: 1.1rem;
+              padding: 0.2rem;
+              accent-color: #232323;
+              &:checked {
                 background: $green_color-3;
-                color: $bg_white-color;
-                width: 100%;
-                padding: 1rem;
-                display: grid;
-                place-items: center;
-                cursor: pointer;
-                font-size: 1.2rem;
-                font-weight: 500;
-                margin-top: 2rem;
+              }
             }
+          }
         }
+      }
+      .simulationResult {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+        p {
+          display: flex;
+          height: fit-content;
+          width: 100%;
+        }
+        b {
+          font-weight: 700;
+          background: $green_color-3;
+          color: $bg_white-color;
+          padding: 1rem;
+        }
+        span {
+          font-weight: 500;
+          padding: 1rem;
+          color: $text-black;
+          background: $gray_color-5;
+          flex-grow: 1;
+          text-align: right;
+        }
+      }
     }
+  }
+  .makeVisitContainer {
+    height: max-content;
+    min-width: 35%;
+    max-width: 35%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    @media (max-width: 1024px) {
+      min-width: 40%;
+      max-width: 40%;
+    }
+    @media (max-width: 800px) {
+      min-width: 100%;
+      max-width: 100%;
+    }
+    @media (max-width: 375px) {
+      padding: 2rem 1rem;
+    }
+    h3 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: $text-black;
+    }
+    p {
+      font-size: 1rem;
+      font-weight: 300;
+      color: transparentize($text-black, 0.1);
+      margin-bottom: 1rem;
+    }
+    .makeVisitForm {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      .visitInput {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1rem;
+        font-weight: 400;
+        color: $text-black;
+        background: $gray_color-5;
+        &::placeholder {
+          color: $green_color-10;
+        }
+      }
+      .dateGroup {
+        display: flex;
+        width: 100%;
+        gap: 1rem;
+        flex-wrap: wrap;
+        .inputItem {
+          width: fit-content;
+          max-width: 100%;
+          flex-grow: 1;
+          position: relative;
+          display: flex;
+          input::-webkit-calendar-picker-indicator,
+          input::-webkit-calendar-picker-indicator {
+            position: absolute;
+            right: 1.3rem;
+            top: 1.2rem;
+            width: 1.5rem;
+            opacity: 0;
+            z-index: 100;
+          }
+
+          input {
+            flex-grow: 1;
+          }
+          label {
+            z-index: 99;
+            position: absolute;
+            right: 1.8rem;
+            top: 1.2rem;
+            img {
+              z-index: 99;
+              width: 1.2rem;
+            }
+          }
+        }
+        .visitInput {
+          width: fit-content;
+          max-width: 100%;
+        }
+      }
+      .visitBtn {
+        background: $green_color-3;
+        color: $bg_white-color;
+        width: 100%;
+        padding: 1rem;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin-top: 2rem;
+      }
+    }
+  }
 }
