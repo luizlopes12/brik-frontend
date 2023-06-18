@@ -7,6 +7,7 @@ import { globalDivisionsDataContext } from "../../context/globalDivisionsDataCon
 import { toast } from "react-toastify";
 
 const RegisterSalePopUp = () => {
+
   const { popUps, setPopUps } = useContext(popUpsContext);
   const { globalDivisionsData, setGlobalDivisionsData } = useContext(
     globalDivisionsDataContext
@@ -145,25 +146,27 @@ const RegisterSalePopUp = () => {
   let month = String(currentDate.getMonth() + 1).padStart(2, '0');
   let day = String(currentDate.getDate()).padStart(2, '0');
   let formattedDate = `${year}-${month}-${day}`;
-    await fetch(`${process.env.BACKEND_URL}/sales/contract/email/send`, {
-      type: "POST",
+  let saleData = {
+      seller: {
+          name: "Vendedor",
+          email: textsInputs.seller
+      },
+      buyer: {
+          name: "Cliente",
+          email: textsInputs.buyer
+      },
+      loteId: lotSelected.id,
+      parcelsQuantity: lotSelected.maxPortionsQuantity,
+      entryValue: lotSelected.entryValue,
+      initDate: formattedDate
+  }
+  console.log(saleData);
+    await fetch(`${process.env.BACKEND_URL_LOCAL}/sales/contract/email/send`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      data: {
-        "seller": {
-            "name": "Vendedor",
-            "email": textsInputs.seller
-        },
-        "buyer": {
-            "name": "Cliente",
-            "email": textsInputs.buyer
-        },
-        "loteId": lotSelected.id,
-        "parcelsQuantity": lotSelected.maxPortionsQuantity,
-        "entryValue": lotSelected.entryValue,
-        "initDate": formattedDate
-    },
+      body: JSON.stringify(saleData)
     }
     ).then(res => res.json())
     .then((data) =>{
@@ -171,6 +174,7 @@ const RegisterSalePopUp = () => {
     })
     .catch((err) => {
       toast.error(err.message);
+      console.log(err);
     })
   }
 
