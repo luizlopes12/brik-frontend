@@ -41,7 +41,7 @@ const BannersEditSlider = ({ imagesData, fetchBanners, trashIcon }) => {
         fetchBanners();
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
       });
   };
 

@@ -35,11 +35,11 @@ function LotLocation({ address }) {
               lng: parseFloat(data[0].lon),
             });
           } else {
-            // console.log("Could not find the location");
+            console.log("Could not find the location");
           }
         })
         .catch((error) => {
-          // console.log("Error fetching location:", error);
+          console.log("Error fetching location:", error);
         });
     }
   }, [address]);

@@ -41,7 +41,7 @@ const Navbar = () => {
           setNotifications([]);
         }
       } catch (err) {
-        // console.log(err);
+        console.log(err);
       }
     };
     const intervalId = setInterval(fetchData, 5000);
@@ -82,7 +82,7 @@ const Navbar = () => {
           setNotifications([]);
         }
       } catch (err) {
-        // console.log(err);
+        console.log(err);
       }
     };
   }, []);
@@ -117,7 +117,7 @@ const Navbar = () => {
   const actualDate = new Date().toShortFormat();
   const handleToggleNotifications = () => {
     setShowNotifications((prev) => !prev);
-    // console.log("Notificações");
+    console.log("Notificações");
   };
 
   const handleVisualizeNotification = (id) => {
@@ -129,7 +129,7 @@ const Navbar = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        // console.log(data);
+        console.log(data);
         setNotifications((prev) =>
           prev.map((notification) => {
             if (notification.id === id) {
@@ -139,7 +139,7 @@ const Navbar = () => {
           })
         );
       })
-      .catch((err) => // console.log(err));
+      .catch((err) => console.log(err));
   };
 
   return (

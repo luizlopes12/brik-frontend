@@ -47,7 +47,7 @@ const BannerAddPopUp = ({ closeIcon, defaultBanner }) => {
       () => {
         // Handle successful upload
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          // console.log("Image download URL:", downloadURL);
+          console.log("Image download URL:", downloadURL);
           setSelectedImage(downloadURL);
           // Do something with the download URL (e.g., save it to state or send it to the server)
         });

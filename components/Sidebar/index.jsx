@@ -231,7 +231,7 @@ const Sidebar = () => {
     }
   }, [initialPermissions]);
 
-  // console.log(userPermissions);
+  console.log(userPermissions);
   const handleUserLogout = () => {
     Cookie.remove("token");
     Cookie.remove("refreshToken");

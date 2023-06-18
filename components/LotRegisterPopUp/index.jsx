@@ -274,9 +274,9 @@ const LotRegisterPopUp = () => {
   }, [lotDivision, showDivisionOptions, partnerSearchInput, lotData.partners]);
 
   const handleSaveLotData = async () => {
-    // console.log("AA");
+    console.log("AA");
     if (lotData.price > 0) {
-      // console.log("VVVV");
+      console.log("VVVV");
 
       try {
         let lotDataToAdd = JSON.stringify({
@@ -303,7 +303,7 @@ const LotRegisterPopUp = () => {
         })
           .then((res) => res.json())
           .then(async (data) => {
-            // console.log(data);
+            console.log(data);
             if (lotImages[0] === "/images/labels/without-image.png") {
               lotImages[0] =
                 "https://firebasestorage.googleapis.com/v0/b/brik-files.appspot.com/o/files%2Flotes%2Fwithout-image.png?alt=media&token=9f495f37-2003-4a9a-b733-71e5b603a2e4";
@@ -321,8 +321,8 @@ const LotRegisterPopUp = () => {
                 }
               )
                 .then((res) => res.json())
-                .then((data) => // console.log(data))
-                .catch((imageErr) => // console.log(imageErr));
+                .then((data) => console.log(data))
+                .catch((imageErr) => console.log(imageErr));
             });
             lotData.partners.forEach(async (partner) => {
               partner.idLote = data.newLot.id;
@@ -338,11 +338,11 @@ const LotRegisterPopUp = () => {
                 }
               )
                 .then((res) => res.json())
-                .then((data) => // console.log(data))
-                .catch((partnerErr) => // console.log(partnerErr));
+                .then((data) => console.log(data))
+                .catch((partnerErr) => console.log(partnerErr));
             });
           })
-          .catch((lotErr) => // console.log(lotErr))
+          .catch((lotErr) => console.log(lotErr))
           .finally(async () => {
             setLotDataSaved(true);
             toast.success("Lote cadastrado com sucesso!");
@@ -377,13 +377,13 @@ const LotRegisterPopUp = () => {
               .then((updatedResponse) => updatedResponse.json())
               .then(
                 (updatedData) => setGlobalDivisionsData(updatedData),
-                // console.log("Lote cadastrado com sucesso!")
+                console.log("Lote cadastrado com sucesso!")
               )
-              .catch((err) => // console.log(err));
+              .catch((err) => console.log(err));
           });
       } catch (error) {
         alert("Ocorreu um erro ao cadastrar o lote, tente novamente!");
-        // console.log(error);
+        console.log(error);
       }
     }
   };
