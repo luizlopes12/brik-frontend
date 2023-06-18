@@ -166,9 +166,9 @@ const Vendas = ({
   const handleGenerateExcelReport = () => {
     const dataToSales = sales.map((sale) => {
       return {
-        Cliente: sale.users.name,
-        "CPF/CNPJ": sale.users.CPF,
-        Email: sale.users.email,
+        Cliente: "Teste",
+        "CPF/CNPJ": "Teste",
+        Email: "Teste",
         Lote: sale.lotes.name,
         "Preço inicial": (sale.salePrice / 100).toLocaleString("pt-BR", {
           style: "currency",
