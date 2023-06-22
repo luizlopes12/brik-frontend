@@ -125,7 +125,6 @@ const Loteamentos = ({ firstDivisionsData }) => {
       globalDivisionsData.length > 0 ? globalDivisionsData : firstDivisionsData
     );
   }, [firstDivisionsData, globalDivisionsData]);
-
   return (
     <section className={style.loteamentosContainer}>
       <div className={style.heading}>
@@ -200,7 +199,7 @@ const Loteamentos = ({ firstDivisionsData }) => {
                   <li className={style.lotsListItem} key={lot.id}>
                     <div className={style.lotImage}>
                       <img
-                        src={lot.loteImages[0]?.imageUrl}
+                        src={lot.loteImages[0]?.imageUrl ?? "/images/labels/defaultImage.png"}
                         alt="Imagem do lote"
                       />
                     </div>
